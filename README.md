@@ -2,8 +2,7 @@
 # Final Capstone Project — AI Consulting Team
 Team Member Names:
 - Erick Lanford
-
-
+- Erika Wooldridge
 ## Project Structure
 
 ```
@@ -171,7 +170,7 @@ No manual steps. No "you need to run this notebook first." No "change this path.
 | Data Engineering Lead | | |
 | ML / DNN Lead | | |
 | CNN Lead | | |
-| NLP Lead | | |
+| NLP Lead | Wendy Zhu | |
 
 ---
 
@@ -195,7 +194,7 @@ No manual steps. No "you need to run this notebook first." No "change this path.
 | **Data Engineering Lead** | Data cleaning, feature engineering, pipelines | Supports all |
 | **ML / DNN Lead** | Traditional ML + Deep Learning models | Model 1 & 2 |
 | **CNN Lead** | Image classification, computer vision | Model 3 |
-| **NLP Lead** | Text classification | Model 4 |
+| **NLP Lead** | Wendy Zhu | Text classification | Model 4 |
 
 **Model 5 (Innovation)** is a shared team responsibility. **Everyone** contributes to the web app and presentation.
 
