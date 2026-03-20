@@ -163,7 +163,7 @@ No manual steps. No "you need to run this notebook first." No "change this path.
 
 ## Team Members
 
-| Role | Name | GitHub Username |
+| ML Lead  | Sam | SR-algobull |
 |------|------|-----------------|
 | Data Engineering Lead | | |
 | ML / DNN Lead | | |
