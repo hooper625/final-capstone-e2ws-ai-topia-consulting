@@ -369,15 +369,15 @@ def add_intra_region_distances(df, cluster_col='Geo_Cluster'):
     Calculates the distance from each accident to the center 
     of its assigned cluster/region.
     """
-    # 1. Calculate the 'Hotspot' (Centroid) for each region
+    #Calculate the 'Hotspot' (Centroid) for each region
     centroids = df.groupby(cluster_col)[['Start_Lat', 'Start_Lng']].mean().reset_index()
     centroids.columns = [cluster_col, 'Centroid_Lat', 'Centroid_Lng']
     
-    # 2. Merge these centers back into the main dataframe
+    #Merge these centers back into the main dataframe
     df = df.merge(centroids, on=cluster_col, how='left')
     
-    # 3. Calculate distance (Haversine or simple Euclidean approximation)
-    # 1 degree is roughly 69 miles
+    # Calculate distance (Haversine or simple Euclidean approximation)
+    # A degree is roughly 69 miles
     lat_diff = (df['Start_Lat'] - df['Centroid_Lat']) ** 2
     lng_diff = (df['Start_Lng'] - df['Centroid_Lng']) ** 2
     
@@ -701,6 +701,7 @@ def encode_top_geo_features(df, columns=['City', 'County']):
     df = pd.get_dummies(df, columns=columns, prefix=['City', 'Cty'])
     
     return df
+
 # ==================================================================================================
 # A WAY TO COMBINE WEATHER CONDITIONS INTO A SINGLE RISK SCORE
 # ==================================================================================================
@@ -729,20 +730,20 @@ def calculate_dangerous_score(row):
     # Get weather text and handle potential missing values
     weather = str(row.get('Weather_Condition', '')).strip().lower()
 
-    # 1. Visibility
+    # Visibility
     visibility = row.get('Visibility(mi)')
     if pd.notna(visibility):
         if visibility < 1: score += 3
         elif visibility < 3: score += 2
         elif visibility < 5: score += 1
 
-    # 2. Precipitation
+    # Precipitation
     precip = row.get('Precipitation(in)')
     if pd.notna(precip):
         if precip > 0.3: score += 2
         elif precip > 0: score += 1
     
-    # 3. Temperature / Wind Chill
+    # Temperature / Wind Chill
     temp = row.get('Temperature(F)')
     wind_chill = row.get('Wind_Chill(F)')
     effective_temp = wind_chill if pd.notna(wind_chill) else temp
@@ -751,17 +752,17 @@ def calculate_dangerous_score(row):
         if effective_temp < 32: score += 2   # freezing
         elif effective_temp > 100: score += 1 # extreme heat
 
-    # 4. Wind speed
+    # Wind speed
     wind = row.get('Wind_Speed(mph)')
     if pd.notna(wind):
         if wind > 40: score += 2
         elif wind > 25: score += 1
 
-    # 5. Darkness
+    # Darkness
     if row.get('Sunrise_Sunset') == 'Night': score += 1
     if row.get('Astronomical_Twilight') == 'Night': score += 1
 
-    # 6. Weather text categories
+    # Weather text categories
     if any(term in weather for term in ['tornado', 'thunderstorm', 'hail', 'squalls']):
         score += 3
     elif any(term in weather for term in ['freezing', 'sleet', 'ice', 'wintry']):
@@ -781,28 +782,28 @@ def engineer_road_features(df):
     # Create a copy to avoid SettingWithCopy warnings
     df = df.copy()
 
-    # 1. Define all possible road features
+    # Define all possible road features
     road_features = [
         'Amenity', 'Bump', 'Crossing', 'Give_Way', 'Junction',
         'No_Exit', 'Railway', 'Roundabout', 'Station', 'Stop',
         'Traffic_Calming', 'Traffic_Signal', 'Turning_Loop'
     ]
     
-    # Filter for features that actually exist in the current dataframe
+    #Filter for features that actually exist in the current dataframe
     existing = [f for f in road_features if f in df.columns]
     print(f"Aggregating {len(existing)} road features...")
 
-    # 2. Total road features present (Sum of booleans)
+    #Total road features present (Sum of booleans)
     df['n_road_features'] = df[existing].sum(axis=1)
 
-    # 3. Traffic control presence (Specific Subset)
+    #Traffic control presence (Specific Subset)
     control_features = ['Traffic_Signal', 'Stop', 'Give_Way', 'Traffic_Calming']
     existing_control = [f for f in control_features if f in df.columns]
     
     # Create binary flag (1 if ANY control features are true, else 0)
     df['has_traffic_control'] = df[existing_control].any(axis=1).astype(int)
 
-    # 4. Remove original individual road features to reduce dimensionality
+    # Remove original individual road features to reduce dimensionality
     # This helps models like Random Forest focus on the aggregated signal
     df = df.drop(columns=existing)
     
