@@ -64,10 +64,10 @@ def run_linear_baseline(X_train_scaled, X_test_scaled, y_train, y_test, target_r
     Trains and evaluates the baseline Linear Regression model.
     Includes context for RMSE relative to the target's range and variation.
     """
-    # 1. Create the model instance
+    #Create the model instance
     model_linear = LinearRegression()
 
-    # 2. Use the evaluate_regression_model helper (defined in your previous block)
+    # Use the evaluate_regression_model helper (defined in your previous block)
     baseline_results, baseline_trained, baseline_preds = evaluate_regression_model(
         model_linear,
         X_train_scaled,
@@ -105,18 +105,18 @@ def run_ridge_model(X_train_scaled, X_test_scaled, y_train, y_test, alpha=100):
     Trains a Ridge model using only scaled data.
     Evaluates performance and prints a formatted metric table.
     """
-    # 1. Initialize and Fit (Using Scaled Data)
+    # Initialize and Fit (Using Scaled Data)
     ridge_model = Ridge(alpha=alpha)
     ridge_model.fit(X_train_scaled, y_train)
 
-    # 2. Get built-in scores (R²)
+    # Get built-in scores (R²)
     r2_ridge_train = ridge_model.score(X_train_scaled, y_train) 
     r2_ridge_test = ridge_model.score(X_test_scaled, y_test)
 
-    # 3. Generate Predictions for Manual Metrics
+    #Generate Predictions for Manual Metrics
     y_pred_Ridge = ridge_model.predict(X_test_scaled)
 
-    # 4. Calculate metrics
+    # Calculate metrics
     rmse_Ridge = np.sqrt(mean_squared_error(y_test, y_pred_Ridge))
     r2_manual = r2_score(y_test, y_pred_Ridge)
 
@@ -474,7 +474,6 @@ def run_gradient_boosting_model(X_train, X_test, y_train, y_test, n_estimators=1
     print(f"Gradient Boosting - Test R²: {gbr_r2:.4f}, Test RMSE: {gbr_rmse:,.2f}")
     
     return gbr_results, gbr_model
-
 
 # ==========================================================================================================================================
 # 5-Fold Cross-Validation, you are making sure that your $R^2$ scores weren't just a lucky break on one specific slice of data
