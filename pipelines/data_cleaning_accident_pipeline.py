@@ -470,9 +470,9 @@ def fast_environmental_data(df):
     return df
 
 # =============================================================================
-# Identify top 20 words in the Description column and features for each
+# Identify top 20 words in the Descriptor column and features for each
 # =============================================================================
-def description_word_count(df):
+def descriptor_word_count(df):
     """Add features for the top 20 words in the Description column."""
     if 'Description' in df.columns:
         # Combine all descriptions, lowercase them, and find all words

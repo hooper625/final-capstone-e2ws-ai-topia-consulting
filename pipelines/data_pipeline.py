@@ -91,15 +91,21 @@ def create_temporal_features(df: pd.DataFrame) -> pd.DataFrame:
     - Duration of traffic impact
     - Is it dark? (Sunrise_Sunset column helps, but you can derive from time too)
     """
-    df['hour'] = df['Start_Time'].dt.hour
-    df['day_of_week'] = df['Start_Time'].dt.dayofweek
-    df['month'] = df['Start_Time'].dt.month
-    df['is_weekend'] = (df['day_of_week'] >= 5).astype(int)
+    if 'Start_Time' in df.columns:
+        df['hour'] = df['Start_Time'].dt.hour
+        df['day_of_week'] = df['Start_Time'].dt.dayofweek
+        df['month'] = df['Start_Time'].dt.month
+    
+    if 'day_of_week' in df.columns:
+        df['is_weekend'] = (df['day_of_week'] >= 5).astype(int)
 
     # Rush hour flags
-    df['is_morning_rush'] = df['hour'].between(7, 9).astype(int)
-    df['is_evening_rush'] = df['hour'].between(16, 19).astype(int)
-    df['is_rush_hour'] = (df['is_morning_rush'] | df['is_evening_rush']).astype(int)
+    if 'hour' in df.columns:
+        df['is_morning_rush'] = df['hour'].between(7, 9).astype(int)
+        df['is_evening_rush'] = df['hour'].between(16, 19).astype(int)
+
+    if 'is_morning_rush' in df.columns and 'is_evening_rush' in df.columns:
+        df['is_rush_hour'] = (df['is_morning_rush'] | df['is_evening_rush']).astype(int)
 
     # Duration of traffic impact (in minutes)
     if 'End_Time' in df.columns:
@@ -107,6 +113,26 @@ def create_temporal_features(df: pd.DataFrame) -> pd.DataFrame:
         # Cap extreme values
         df['duration_min'] = df['duration_min'].clip(0, 1440)  # Max 24 hours
 
+    # Handle Created Date
+    if 'created_date' in df.columns:
+        # Convert to datetime first to avoid the AttributeError
+        df['created_date'] = pd.to_datetime(df['created_date'], errors='coerce')
+        
+        # Use specific names so they don't get overwritten
+        df['created_hour'] = df['created_date'].dt.hour
+        df['created_day_of_week'] = df['created_date'].dt.dayofweek
+        df['created_month'] = df['created_date'].dt.month
+
+    # Handle Closed Date
+    if 'closed_date' in df.columns:
+        # Convert to datetime first
+        df['closed_date'] = pd.to_datetime(df['closed_date'], errors='coerce')
+        
+        # Use 'closed_' prefix
+        df['closed_hour'] = df['closed_date'].dt.hour
+        df['closed_day_of_week'] = df['closed_date'].dt.dayofweek
+        df['closed_month'] = df['closed_date'].dt.month
+        
     return df
 
 # =============================================================================
