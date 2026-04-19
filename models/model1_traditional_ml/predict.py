@@ -9,7 +9,7 @@ Output: test_data/model1_results.csv
 """
 import pandas as pd
 from pathlib import Path
-
+from pipelines.data_pipeline import  get_data_and_process_target
 # Paths
 MODEL_PATH = Path("models/model1_traditional_ml/saved_model/")
 TEST_DATA_DIR = Path("test_data/")
@@ -25,7 +25,11 @@ def load_model():
 
     Works with XGBoost, Random Forest, Logistic Regression, etc.
     """
-    # TODO: Load your saved model
+    # Initialize your app variables
+    TARGET = 'Severity'
+
+    # Use the component to load data
+    df, target_stats = get_data_and_process_target("city_traffic_processed.csv", target_column=TARGET)
     raise NotImplementedError("Load your trained model here")
 
 

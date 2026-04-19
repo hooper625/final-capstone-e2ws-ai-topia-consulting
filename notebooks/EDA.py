@@ -31,7 +31,7 @@ if str(root_path) not in sys.path:
     sys.path.insert(0, str(root_path))
 
 #Import
-from pipelines.data_pipeline import load_raw_data, clean_data, accident_engineer_features, complaints_engineer_features, create_temporal_features, save_processed_data, drop_low_variance_columns
+from pipelines.data_pipeline import load_raw_data, clean_data, accident_engineer_features, complaints_engineer_features, save_processed_data, drop_low_variance_columns
 from pipelines.data_pipeline import generate_hourly_heatmap, generate_accident_map # functions to create maps
 
 #Load the City Traffic Accident Database
@@ -258,6 +258,7 @@ plt.tight_layout()
 plt.show()
 
 df_City_Traffic.head()
+
 # 1. Use df.select_dtypes(include=[np.number]) to get numerical columns
 numerical_df = df_City_Traffic.select_dtypes(include=[np.number])
 
@@ -288,6 +289,7 @@ if len(numerical_cols) > 0:
     plt.show()
 else:
     print("No numerical features found (besides target).")
+    
 df_City_Traffic = drop_low_variance_columns(df_City_Traffic)
 
 # 1. Use df.select_dtypes(include=[np.number]) to get numerical columns

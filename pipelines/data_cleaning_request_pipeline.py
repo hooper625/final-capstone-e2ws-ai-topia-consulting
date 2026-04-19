@@ -228,4 +228,28 @@ def handle_rare_words(df, text_col, min_freq=2):
         [word if word not in rare_words else 'UNK' for word in x.split()]
     ))
     return df
+# =============================================================================
+# Core Embedding Function
+# =============================================================================
+def get_document_embedding(text, model, vector_size=100):
+    """
+    Finds the average vector for a piece of text.
+    Works whether you pass a full Gensim model or just the '.wv' part.
+    """
+    # Convert to string (to avoid errors with NaNs) and split
+    words = str(text).split()
+    
+    # Dynamic check: Get the vectors regardless of how the model was loaded
+    # This is the line that uses 'wv' as a string to look for the attribute
+    wv = model.wv if hasattr(model, 'wv') else model
+
+    # Only grab vectors for words that actually exist in the model
+    valid_vectors = [wv[w] for w in words if w in wv]
+
+    # Return zeros if no words found, otherwise return the average
+    if not valid_vectors:
+        return np.zeros(vector_size)
+    
+    return np.mean(valid_vectors, axis=0)
+
 

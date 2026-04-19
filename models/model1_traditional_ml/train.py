@@ -12,7 +12,9 @@ from pathlib import Path
 
 PROCESSED_DATA = Path("data/processed/")
 SAVED_MODEL_DIR = Path("models/model1_traditional_ml/saved_model/")
-
+#Import
+from pipelines.data_pipeline import load_raw_data, clean_data, accident_engineer_features, save_processed_data, drop_low_variance_columns
+from pipelines.data_pipeline import generate_hourly_heatmap, generate_accident_map # functions to create maps
 
 def load_data():
     """Load preprocessed data from data/processed/.
@@ -21,7 +23,9 @@ def load_data():
         from pipelines.data_pipeline import load_processed_data
         df = load_processed_data()
     """
-    # TODO: Load your preprocessed dataset
+    #Load the City Traffic Accident Database
+    df = load_raw_data("city_traffic_accidents.csv")
+    return df
     raise NotImplementedError
 
 
@@ -34,7 +38,16 @@ def preprocess_features(df):
     - Scaling numerical features
     - Handling missing values
     """
-    # TODO: Prepare your feature matrix X and target y
+    df = clean_data(df)                       #Clean the data (handle missing values, convert data types, etc.)
+    df = accident_engineer_features(df)       #Engineer features specific to traffic accidents (e.g., severity, weather conditions, etc.)
+    #Generate the heatmap and accident map for City Traffic Accident
+    generate_hourly_heatmap(df)                            #Generate a heatmap to visualize the density of accidents over time and location
+    generate_accident_map(df)                              #Generate a map to visualize the locations of
+    df = drop_low_variance_columns(df)
+    df = df.dropna(axis=1) 
+
+    return df
+
     raise NotImplementedError
 
 
@@ -92,7 +105,7 @@ def save_model(model):
         SAVED_MODEL_DIR.mkdir(parents=True, exist_ok=True)
         joblib.dump(model, SAVED_MODEL_DIR / "model.joblib")
     """
-    # TODO: Save your model
+    save_processed_data(model, "city_traffic_processed.joblib")
     raise NotImplementedError
 
 
@@ -101,19 +114,19 @@ def main():
     df = load_data()
 
     # 2. Preprocess features
-    # X_train, X_val, y_train, y_val = preprocess_features(df)
+    X_train, X_val, y_train, y_val = preprocess_features(df)
 
     # 3. Train model
-    # model = train_model(X_train, y_train)
+    model = train_model(X_train, y_train)
 
     # 4. Evaluate
-    # evaluate_model(model, X_val, y_val)
+    evaluate_model(model, X_val, y_val)
 
     # 5. Explain — REQUIRED
-    # explain_model(model, X_val)
+    explain_model(model, X_val)
 
     # 6. Save
-    # save_model(model)
+    save_model(model)
 
     print("Training complete!")
 

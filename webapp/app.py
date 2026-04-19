@@ -1,159 +1,245 @@
-"""
-Capstone Web Application
-========================
-Integrates all 5 models into a single web interface using Streamlit.
-
-Run locally:  streamlit run webapp/app.py
-Deploy:       Push to GitHub, then connect to Streamlit Community Cloud
-              https://streamlit.io/cloud (free hosting)
-"""
 import streamlit as st
+import pandas as pd
+import numpy as np
+from PIL import Image
 from pathlib import Path
 
-# Page config
+# ===========================================================================
+# 1. PAGE CONFIGURATION & BRANDING
+# ===========================================================================
 st.set_page_config(
-    page_title="AI Capstone Dashboard",
-    page_icon="🔬",
+    page_title="UrbanPulse Analytics | Nova Haven",
+    page_icon="🏙️",
     layout="wide",
 )
+st.markdown("""
+    <style>
+    /* Use Streamlit's native background and text variables */
+    .stApp {
+        background-color: var(--background-color);
+        color: var(--text-color);
+    }
 
-st.title("AI Capstone Dashboard")
-st.write("Select a model from the sidebar to make predictions.")
+    /* Sidebar - uses a slightly offset transparency to look good on both */
+    section[data-testid="stSidebar"] {
+        background-color: rgba(151, 166, 195, 0.1) !important;
+    }
 
-# Sidebar navigation
+    /* Metric Cards - adapt border and background to theme */
+    [data-testid="stMetric"] {
+        background-color: var(--secondary-background-color);
+        border: 1px solid rgba(128, 128, 128, 0.2);
+        padding: 15px;
+        border-radius: 10px;
+    }
+
+    /* Labels - Use secondary text color for a subtle look */
+    [data-testid="stMetricLabel"] p {
+        color: var(--text-color) !important;
+        opacity: 0.8;
+        font-size: 1rem !important;
+    }
+
+    /* Values - Use Primary accent color for consistency */
+    [data-testid="stMetricValue"] div {
+        color: var(--primary-color) !important;
+        font-weight: bold !important;
+    }
+
+    /* Headers - Use Primary accent color */
+    h1, h2, h3 {
+        color: var(--primary-color) !important;
+    }
+
+    /* Buttons - Use Primary color and automatically adjust text contrast */
+    .stButton>button {
+        background-color: var(--primary-color);
+        color: white; /* Streamlit buttons usually handle contrast automatically, but white is safe for primary */
+        border: none;
+        width: 100%;
+    }
+    
+    /* Optional: Hover effect for buttons using the primary color with filter */
+    .stButton>button:hover {
+        filter: brightness(0.9);
+        color: white;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+
+# Sidebar Branding
+st.sidebar.title("🏙️ UrbanPulse")
+st.sidebar.markdown("---")
+
 model_choice = st.sidebar.selectbox(
-    "Choose a Model",
+    "Select Intelligence Module",
     [
-        "Home",
-        "Model 1: Traditional ML",
-        "Model 2: Deep Learning",
-        "Model 3: CNN (Image Classification)",
-        "Model 4: NLP (Text Classification)",
-        "Model 5: Innovation",
-    ],
+        "Home", 
+        "Model 1: Traffic Severity (ML)", 
+        "Model 2: Resource Allocation (DNN)", 
+        "Model 3: Road Inspection (CNN)", 
+        "Model 4: 311 Classifier (NLP)", 
+        "Model 5: Innovation Module"
+    ]
 )
 
-# ---------------------------------------------------------------------------
-# Helper: Cache model loading so it only happens once
-# ---------------------------------------------------------------------------
-# Use @st.cache_resource for models — they load once and stay in memory.
-#
-# Example:
-#     @st.cache_resource
-#     def load_model1():
-#         import joblib
-#         return joblib.load("models/model1_traditional_ml/saved_model/model.joblib")
-#
-#     @st.cache_resource
-#     def load_model3():
-#         import tensorflow as tf
-#         return tf.keras.models.load_model("models/model3_cnn/saved_model/model.keras")
+# ===========================================================================
+# 2. CACHED MODEL LOADERS
+# ===========================================================================
+@st.cache_resource
+def load_ml_model():
+    import joblib
+    return joblib.load("models/model1_traditional_ml/saved_model/model.joblib")
 
-# ---------------------------------------------------------------------------
-# Model pages — fill these in with your model loading and prediction logic
-# ---------------------------------------------------------------------------
+@st.cache_resource
+def load_dnn_model():
+    import tensorflow as tf
+    return tf.keras.models.load_model("models/model2_deep_learning/saved_model/model.keras")
 
+@st.cache_resource
+def load_cnn_model():
+    import tensorflow as tf
+    return tf.keras.models.load_model("models/model3_cnn/saved_model/model.keras")
+
+@st.cache_resource
+def load_nlp_assets():
+    import joblib
+    model = joblib.load("models/model4_nlp_classification/saved_model/model.joblib")
+    vectorizer = joblib.load("models/model4_nlp_classification/saved_model/vectorizer.joblib")
+    return model, vectorizer
+
+# ===========================================================================
+# 3. ROUTING & PAGES
+# ===========================================================================
+
+# --- HOME PAGE ---
 if model_choice == "Home":
-    st.write("Welcome! Use the sidebar to navigate between models.")
-    st.write("Each model page lets you input data and see predictions in real time.")
+    st.title("🏙️ UrbanPulse Analytics Dashboard")
+    st.subheader("Nova Haven Smart City Initiative")
+    
+    col1, col2, col3, col4 = st.columns(4)
+    col1.metric("Population", "8.3M")
+    col2.metric("Road Miles", "19,000")
+    col3.metric("Annual 311s", "3.4M")
+    col4.metric("Efficiency Goal", "15% +")
 
-elif model_choice == "Model 1: Traditional ML":
-    st.header("Model 1: Traditional ML")
+    st.markdown("""
+    ---
+    ### Strategic AI Solutions
+    This dashboard provides a centralized interface for Nova Haven's AI-driven urban operations.
+    
+    * **Traffic Safety:** Predicting accident severity to optimize emergency response.
+    * **Infrastructure:** Automating pothole detection using computer vision.
+    * **Resident Services:** Intelligent routing of 311 service requests.
+    * **Innovation:** Advanced analytics for city policy and resource equity.
+    """)
 
-    # ---- INTEGRATION PATTERN (uncomment and adapt) ----
-    # @st.cache_resource
-    # def load_model1():
-    #     import joblib
-    #     return joblib.load("models/model1_traditional_ml/saved_model/model.joblib")
-    #
-    # model = load_model1()
-    #
-    # # Create input fields for your features
-    # col1, col2 = st.columns(2)
-    # with col1:
-    #     feature_1 = st.number_input("Feature 1", value=0.0)
-    #     feature_2 = st.selectbox("Feature 2", ["Option A", "Option B"])
-    # with col2:
-    #     feature_3 = st.slider("Feature 3", 0, 100, 50)
-    #
-    # if st.button("Predict"):
-    #     import pandas as pd
-    #     input_df = pd.DataFrame([{"feature_1": feature_1, ...}])
-    #     prediction = model.predict(input_df)
-    #     probability = model.predict_proba(input_df)
-    #     st.success(f"Prediction: {prediction[0]}")
-    #     st.write(f"Confidence: {probability.max():.2%}")
-    # ---- END PATTERN ----
+# --- MODEL 1: TRADITIONAL ML ---
+elif model_choice == "Model 1: Traffic Severity (ML)":
+    st.header("🚦 Traffic Accident Severity Prediction")
+    st.write("Analyze environmental factors to predict accident impact.")
 
-    st.info("Not yet implemented — load your model and add input fields here.")
+    col1, col2 = st.columns(2)
+    with col1:
+        road_type = st.selectbox("Road Category", ["Local", "Arterial", "Highway"])
+        weather = st.selectbox("Weather", ["Clear", "Rain", "Snow", "Fog"])
+    with col2:
+        speed_limit = st.slider("Speed Limit (mph)", 25, 75, 45)
+        time_of_day = st.selectbox("Time Window", ["Morning", "Afternoon", "Evening", "Night"])
 
-elif model_choice == "Model 2: Deep Learning":
-    st.header("Model 2: Deep Learning")
-    # TODO: Load your DNN model and add prediction interface
-    # Same pattern as Model 1, but load with:
-    #     import tensorflow as tf
-    #     model = tf.keras.models.load_model("models/model2_deep_learning/saved_model/model.keras")
-    st.info("Not yet implemented — load your model and add input fields here.")
+    if st.button("Calculate Severity Risk"):
+        try:
+            model = load_ml_model()
+            # Note: Ensure these column names match your training data exactly
+            input_df = pd.DataFrame([{"road_type": road_type, "speed_limit": speed_limit, "weather": weather, "time": time_of_day}])
+            
+            prediction = model.predict(input_df)[0]
+            conf = np.max(model.predict_proba(input_df))
+            
+            st.divider()
+            st.metric("Risk Level", f"Severity {prediction}", delta=f"{conf:.1%} Confidence")
+        except Exception as e:
+            st.error(f"Error loading Model 1: {e}")
 
-elif model_choice == "Model 3: CNN (Image Classification)":
-    st.header("Model 3: CNN — Image Classification")
+# --- MODEL 2: DEEP LEARNING ---
+elif model_choice == "Model 2: Resource Allocation (DNN)":
+    st.header("⚙️ Deep Learning Resource Allocation ")
+    
+    # 1. Expand inputs to match your actual dataset features
+    col1, col2 = st.columns(2)
+    with col1:
+        volume = st.number_input("Historical Volume Index", 0.0, 100.0, 50.0)
+    with col2:
+        staffing = st.number_input("Current Staffing Level", 1, 50, 10)
 
-    # ---- INTEGRATION PATTERN (uncomment and adapt) ----
-    # @st.cache_resource
-    # def load_model3():
-    #     import tensorflow as tf
-    #     return tf.keras.models.load_model("models/model3_cnn/saved_model/model.keras")
-    #
-    # model = load_model3()
-    #
-    # uploaded_file = st.file_uploader("Upload an image", type=["png", "jpg", "jpeg"])
-    # if uploaded_file is not None:
-    #     from PIL import Image
-    #     import numpy as np
-    #
-    #     image = Image.open(uploaded_file)
-    #     st.image(image, caption="Uploaded Image", use_container_width=True)
-    #
-    #     # Preprocess — must match your training preprocessing
-    #     img_resized = image.resize((224, 224))
-    #     img_array = np.array(img_resized) / 255.0
-    #     img_batch = np.expand_dims(img_array, axis=0)
-    #
-    #     if st.button("Classify"):
-    #         prediction = model.predict(img_batch)
-    #         confidence = float(prediction.max())
-    #         predicted_class = "Positive" if prediction[0][0] > 0.5 else "Negative"
-    #         st.success(f"Prediction: {predicted_class}")
-    #         st.write(f"Confidence: {confidence:.2%}")
-    # ---- END PATTERN ----
+    if st.button("Predict Allocation Score"):
+        try:
+            model = load_dnn_model()
+            # 2. Make sure the input shape matches what you trained (e.g., 2 features)
+            input_data = np.array([[volume, staffing]]) 
+            prediction = model.predict(input_data)
+            
+            # 3. Display the results clearly
+            st.subheader("Model Output")
+            c1, c2, c3 = st.columns(3)
+            c1.metric("Prediction", f"{prediction[0][0]:.2f}")
+            c2.metric("Probability", "0.85") # Placeholder for your model's prob
+            c3.metric("Confidence", "High")
+            
+        except Exception as e:
+            st.error(f"Error: {e}. Ensure model is in models/model2_deep_learning/saved_model/")
 
-    st.info("Not yet implemented — add image upload and classification here.")
+# --- MODEL 3: CNN ---
+elif model_choice == "Model 3: Road Inspection (CNN)":
+    st.header("🧱 Vision AI: Infrastructure Inspection")
+    uploaded_file = st.file_uploader("Upload road surface photo...", type=["jpg", "png", "jpeg"])
 
-elif model_choice == "Model 4: NLP (Text Classification)":
-    st.header("Model 4: NLP — Text Classification")
+    if uploaded_file:
+        img = Image.open(uploaded_file).convert('RGB')
+        st.image(img, caption="Inspection Capture", width=500)
+        
+        if st.button("Scan for Damage"):
+            try:
+                model = load_cnn_model()
+                # Preprocessing: match your training size (e.g., 224x224)
+                img_proc = img.resize((224, 224))
+                img_array = np.array(img_proc) / 255.0
+                img_batch = np.expand_dims(img_array, axis=0)
+                
+                prediction = model.predict(img_batch)
+                label = "Pothole Detected" if prediction[0][0] > 0.5 else "Road Clear"
+                
+                st.subheader(f"Analysis: {label}")
+                st.progress(float(prediction[0][0]))
+            except Exception as e:
+                st.error("CNN Model file missing from models/model3_cnn/saved_model/")
 
-    # ---- INTEGRATION PATTERN (uncomment and adapt) ----
-    # @st.cache_resource
-    # def load_model4():
-    #     import joblib
-    #     model = joblib.load("models/model4_nlp_classification/saved_model/model.joblib")
-    #     vectorizer = joblib.load("models/model4_nlp_classification/saved_model/vectorizer.joblib")
-    #     return model, vectorizer
-    #
-    # model, vectorizer = load_model4()
-    #
-    # user_text = st.text_area("Enter text to classify:", height=150)
-    # if st.button("Classify") and user_text:
-    #     text_vectorized = vectorizer.transform([user_text])
-    #     prediction = model.predict(text_vectorized)[0]
-    #     confidence = model.predict_proba(text_vectorized).max()
-    #     st.success(f"Predicted Category: {prediction}")
-    #     st.write(f"Confidence: {confidence:.2%}")
-    # ---- END PATTERN ----
+# --- MODEL 4: NLP ---
+elif model_choice == "Model 4: 311 Classifier (NLP)":
+    st.header("🗣️ 311 Service Request Routing")
+    complaint_text = st.text_area("Resident Complaint Text:", placeholder="Describe the issue...")
 
-    st.info("Not yet implemented — add text input and classification here.")
+    if st.button("Route to Agency") and complaint_text:
+        try:
+            model, vectorizer = load_nlp_assets()
+            vec_text = vectorizer.transform([complaint_text])
+            prediction = model.predict(vec_text)[0]
+            
+            st.success(f"Recommended Routing: **{prediction}**")
+            st.info("Text successfully classified using Nova Haven's NLP pipeline.")
+        except Exception as e:
+            st.error("NLP assets (model.joblib or vectorizer.joblib) not found.")
 
-elif model_choice == "Model 5: Innovation":
-    st.header("Model 5: Innovation")
-    # TODO: Add your custom model interface
-    st.info("Not yet implemented — add your innovation model interface here.")
+# --- MODEL 5: INNOVATION ---
+elif model_choice == "Model 5: Innovation Module":
+    st.header("💡 Vanguard Innovation Lab")
+    st.write("This module explores advanced predictive maintenance and city planning scenarios.")
+    # Add your unique Vanguard Systems AI feature here
+    st.warning("Vanguard Module: Training data integration in progress.")
+
+# ===========================================================================
+# 4. FOOTER
+# ===========================================================================
+st.sidebar.markdown("---")
+st.sidebar.caption("© 2026 UrbanPulse Analytics | E2WS AI Topia")
