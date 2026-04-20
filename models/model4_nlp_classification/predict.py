@@ -15,6 +15,10 @@ Saved artifacts expected:
 - /mnt/data/model4_category_label_encoder.pkl
 - /mnt/data/model4_routing_classifier_char_tfidf_SGD.pkl
 - /mnt/data/model4_routing_label_encoder.pkl
+
+
+to run, go to project root folder
+python -u models/model4_nlp_classification/predict.py
 """
 
 from __future__ import annotations
