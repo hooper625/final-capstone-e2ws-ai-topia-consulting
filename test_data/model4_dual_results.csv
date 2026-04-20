@@ -1,0 +1,12 @@
+id,predicted_category,recommended_agency
+14,illegal parking,NYPD
+58,other,HPD
+62,noise - residential,NYPD
+68,illegal parking,NYPD
+71,noise - residential,NYPD
+853,snow or ice,DSNY
+8410,other,DOT
+16745,illegal parking,NYPD
+18839,other,DSNY
+274624,blocked driveway,NYPD
+434687,heat/hot water,HPD
