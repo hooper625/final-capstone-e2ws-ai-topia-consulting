@@ -90,7 +90,11 @@ model_choice = st.sidebar.selectbox(
 @st.cache_resource
 def load_ml_model():
     import joblib
-    return joblib.load("models/model1_traditional_ml/saved_model/model.joblib")
+    model        = joblib.load("models/model1_traditional_ml/saved_model/model.joblib")
+    scaler       = joblib.load("models/model1_traditional_ml/saved_model/scaler.joblib")
+    le           = joblib.load("models/model1_traditional_ml/saved_model/label_encoder.joblib")
+    feature_cols = joblib.load("models/model1_traditional_ml/saved_model/feature_columns.joblib")
+    return model, scaler, le, feature_cols
 
 @st.cache_resource
 def load_dnn_model():
@@ -149,24 +153,43 @@ elif model_choice == "Model 1: Traffic Severity (ML)":
         time_of_day = st.selectbox("Time Window", ["Morning", "Afternoon", "Evening", "Night"])
 
     if st.button("Calculate Severity Risk"):
-        road_mapping    = {"Local": 0, "Arterial": 1, "Highway": 2}
-        weather_mapping = {"Clear": 0, "Rain": 1, "Fog": 2, "Snow": 3}
-        time_mapping    = {"Morning": 0, "Afternoon": 1, "Evening": 2, "Night": 3}
-
         try:
-            model = load_ml_model()
-            input_data = pd.DataFrame({
-                "road_type":   [road_mapping[road_type]],
-                "weather":     [weather_mapping[weather]],
-                "time":        [time_mapping[time_of_day]],
-                "speed_limit": [speed_limit],
-            })
-            prediction = model.predict(input_data)
-            conf = np.max(model.predict_proba(input_data))
+            model, scaler, le, feature_cols = load_ml_model()
+
+            hour = {"Morning": 8, "Afternoon": 14, "Evening": 17, "Night": 22}[time_of_day]
+            is_morning_rush = int(7 <= hour <= 9)
+            is_evening_rush = int(16 <= hour <= 19)
+
+            overrides = {
+                "Distance(mi)":                   speed_limit / 50.0,
+                "is_morning_rush":                is_morning_rush,
+                "is_evening_rush":                is_evening_rush,
+                "is_rush_hour":                   int(is_morning_rush or is_evening_rush),
+                "is_freezing":                    int(weather == "Snow"),
+                "low_visibility_severity":        int(weather == "Fog"),
+                "has_precipitation":              int(weather in ("Rain", "Snow")),
+                "weather_cluster_clear":          int(weather == "Clear"),
+                "weather_cluster_rain":           int(weather == "Rain"),
+                "weather_cluster_snow_ice":       int(weather == "Snow"),
+                "weather_cluster_low_visibility": int(weather == "Fog"),
+                "n_road_features":                {"Local": 1, "Arterial": 3, "Highway": 2}[road_type],
+                "has_traffic_control":            {"Local": 0, "Arterial": 1, "Highway": 0}[road_type],
+                "DangerousScore":                 (2 if weather == "Snow" else 1 if weather in ("Rain", "Fog") else 0)
+                                                  + int(is_morning_rush or is_evening_rush)
+                                                  + int(speed_limit >= 65),
+            }
+
+            row = {col: overrides.get(col, 0) for col in feature_cols}
+            X = pd.DataFrame([row])[feature_cols]
+            X_scaled = scaler.transform(X)
+
+            proba      = model.predict_proba(X_scaled)[0]
+            pred_enc   = np.argmax(proba)
+            prediction = le.inverse_transform([pred_enc])[0]
+            conf       = float(proba[pred_enc])
+
             st.divider()
-            st.metric("Risk Level", f"Severity {prediction[0]}", delta=f"{conf:.1%} Confidence")
-        except KeyError as e:
-            st.error(f"Mapping error: {e}. Please ensure the category names match exactly.")
+            st.metric("Risk Level", f"Severity {prediction}", delta=f"{conf:.1%} Confidence")
         except Exception as e:
             st.error(f"Error loading Model 1: {e}")
 
