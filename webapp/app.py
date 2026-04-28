@@ -179,8 +179,9 @@ elif model_choice == "Model 1: Traffic Severity (ML)":
                                                   + int(speed_limit >= 65),
             }
 
-            row = {col: overrides.get(col, 0) for col in feature_cols}
-            X = pd.DataFrame([row])[feature_cols]
+            expected = list(model.get_booster().feature_names)
+            row = {col: overrides.get(col, 0) for col in expected}
+            X = pd.DataFrame([row])[expected]
             X_scaled = scaler.transform(X)
 
             proba      = model.predict_proba(X_scaled)[0]
