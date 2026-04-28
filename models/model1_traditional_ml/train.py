@@ -18,7 +18,7 @@ PROCESSED_DATA = Path("data/processed/")
 SAVED_MODEL_DIR = Path("models/model1_traditional_ml/saved_model/")
 #Import
 from pipelines.data_pipeline import load_raw_data, clean_data, save_processed_data, drop_low_variance_columns, get_data_and_process_target, label_encode_target, split_data, scale_features
-from pipelines.data_cleaning_accident_pipeline import accident_engineer_features, generate_hourly_heatmap, generate_accident_map  # noqa: F401
+from pipelines.data_cleaning_accident_pipeline import accident_engineer_features
 from pipelines.Classification_pipelines import evaluate_classification_model, run_hist_gradient_boosting, run_random_forest, run_decision_tree,run_gradient_boosting, run_knn, run_svm_linear, run_voting_classifier, plot_feature_importance, run_xgb_classifier_feature
 
 def load_data():
@@ -47,10 +47,6 @@ def preprocess_features(df):
     df = clean_data(df)                                     #Clean the data (handle missing values, convert data types, etc.)
     df = accident_engineer_features(df)                     #Engineer features specific to traffic accidents (e.g., severity, weather conditions, etc.)
 
-    #Generate the heatmap and accident map for City Traffic Accident
-    generate_hourly_heatmap(df)                             #Generate a heatmap to visualize the density of accidents over time and location
-    generate_accident_map(df)                               #Generate a map to visualize the locations of
-
     df = drop_low_variance_columns(df)
     df = df.dropna(axis=1) 
     save_processed_data(df, "city_traffic_processed.csv")
@@ -78,63 +74,24 @@ def preprocess_features(df):
     return X_train_res, X_test_scaled, y_train_res, y_test, scaler, le, features
 
 
-def train_model(X_train, y_train):
-    """Train your traditional ML model.
-
-    Recommended algorithms:
-        from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
-        from xgboost import XGBClassifier
-
-    IMPORTANT: Handle class imbalance!
-        model = RandomForestClassifier(class_weight='balanced')
-    """
-    # Extracts, prints, and plots feature importances
-    mdl = run_xgb_classifier_feature(
-        X_train, y_train,
-        max_depth=6, 
+def train_model(X_train, X_test, y_train, y_test):
+    _, mdl = run_xgb_classifier_feature(
+        X_train, X_test, y_train, y_test,
+        max_depth=6,
         n_estimators=200
     )
     return mdl
 
 
-def evaluate_model(model, X_val, y_val):
-    """Evaluate model performance on validation data.
-
-    Must include:
-    - Classification report (precision, recall, F1 per class)
-    - Confusion matrix
-    - Weighted F1 score (primary metric for imbalanced data)
-    - AUC-ROC (for binary classification scenarios)
-    """
+def evaluate_model(model, X_train, X_val, y_train, y_val):
     print("\n--- Model Evaluation ---")
-    # This function from your Classification_pipelines likely prints 
-    # the report, confusion matrix, and F1 score automatically
-    metrics = evaluate_classification_model(model, X_val, y_val)
-    
-    # If your pipeline function returns a dictionary, you can print specific needs:
-    # print(f"Weighted F1 Score: {metrics.get('weighted_f1')}")
-    
+    metrics, _, _ = evaluate_classification_model(model, X_train, X_val, y_train, y_val, "XGBoost")
     return metrics
 
 
-def explain_model(model, X_val):
-    """Generate SHAP or feature importance analysis.
-
-    This is REQUIRED — your model must be interpretable.
-
-    Option 1 — SHAP (recommended):
-        import shap
-        explainer = shap.TreeExplainer(model)
-        shap_values = explainer.shap_values(X_val)
-        shap.summary_plot(shap_values, X_val)
-
-    Option 2 — Built-in feature importance:
-        importances = model.feature_importances_
-        # Plot top 15 features
-    """
+def explain_model(model, X_val, y_val):
     print("\n--- Feature Importance Analysis ---")
-    # Option 1: Using your imported pipeline function
-    plot_feature_importance(model, X_val)
+    plot_feature_importance(model, X_val, y_val, "XGBoost")
 
 
 def save_model(model, scaler, le, feature_cols):
@@ -153,13 +110,13 @@ def main():
     X_train, X_val, y_train, y_val, scaler, le, feature_cols = preprocess_features(df)
 
     # 3. Train model
-    model = train_model(X_train, y_train)
+    model = train_model(X_train, X_val, y_train, y_val)
 
     # 4. Evaluate
-    evaluate_model(model, X_val, y_val)
+    evaluate_model(model, X_train, X_val, y_train, y_val)
 
     # 5. Explain — REQUIRED
-    explain_model(model, X_val)
+    explain_model(model, X_val, y_val)
 
     # 6. Save
     save_model(model, scaler, le, feature_cols)
