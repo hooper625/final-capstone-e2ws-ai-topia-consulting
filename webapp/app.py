@@ -280,14 +280,15 @@ elif model_choice == "Model 5: Innovation Module":
     col1, col2 = st.columns(2)
     with col1:
         complaint_type = st.selectbox("Complaint Type", [
-            "Noise - Residential", "HEAT/HOT WATER", "Street Light Condition",
-            "Blocked Driveway", "Illegal Parking", "Noise - Commercial",
-            "Rodent", "Water System", "Graffiti", "Pothole",
+            "Illegal Parking", "HEAT/HOT WATER", "Noise - Residential", "Snow or Ice",
+            "Blocked Driveway", "Street Condition", "UNSANITARY CONDITION", "PLUMBING",
+            "Traffic Signal Condition", "Noise - Street/Sidewalk", "Water System",
+            "PAINT/PLASTER", "Dirty Condition", "Abandoned Vehicle", "WATER LEAK",
         ])
-        agency = st.selectbox("Agency", ["NYPD", "DOT", "DSNY", "DEP", "HPD", "DPR", "Other"])
+        agency = st.selectbox("Agency", ["DCWP", "DEP", "DHS", "DOB", "DOE", "DOHMH", "DOT", "DPR", "DSNY", "HPD", "NYPD", "OOS", "OTI", "TLC"])
     with col2:
-        borough = st.selectbox("Borough", ["MANHATTAN", "BROOKLYN", "QUEENS", "BRONX", "STATEN ISLAND"])
-        channel = st.selectbox("Submission Channel", ["PHONE", "ONLINE", "MOBILE", "OTHER"])
+        borough = st.selectbox("Borough", ["BRONX", "BROOKLYN", "MANHATTAN", "QUEENS", "STATEN ISLAND", "Unspecified"])
+        channel = st.selectbox("Submission Channel", ["MOBILE", "ONLINE", "OTHER", "PHONE", "UNKNOWN"])
 
     col3, col4 = st.columns(2)
     with col3:
