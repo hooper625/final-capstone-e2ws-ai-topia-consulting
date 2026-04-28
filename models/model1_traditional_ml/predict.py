@@ -1,68 +1,134 @@
 #!/usr/bin/env python3
 """
-Model 1: Traditional ML — Prediction Script
-=============================================
-Loads your trained model and generates predictions on test data.
+Model 1: Traditional ML — Training Script
+===========================================
+Train a classical ML model (XGBoost, Random Forest, etc.) on your scenario's
+tabular data.
 
-Usage: python predict.py
-Output: test_data/model1_results.csv
+IMPORTANT: This model must be interpretable. Include SHAP or feature importance
+analysis so stakeholders can understand WHY the model makes its predictions.
 """
-import pandas as pd
 from pathlib import Path
-from pipelines.data_pipeline import  get_data_and_process_target
-# Paths
-MODEL_PATH = Path("models/model1_traditional_ml/saved_model/")
-TEST_DATA_DIR = Path("test_data/")
-OUTPUT_FILE = TEST_DATA_DIR / "model1_results.csv"
+
+PROCESSED_DATA = Path("data/processed/")
+SAVED_MODEL_DIR = Path("models/model1_traditional_ml/saved_model/")
+#Import
+from pipelines.data_pipeline import load_raw_data, clean_data, accident_engineer_features, save_processed_data, drop_low_variance_columns
+from pipelines.data_pipeline import generate_hourly_heatmap, generate_accident_map # functions to create maps
+
+def load_data():
+    """Load preprocessed data from data/processed/.
+
+    Use the shared pipeline:
+        from pipelines.data_pipeline import load_processed_data
+        df = load_processed_data()
+    """
+    #Load the City Traffic Accident Database
+    df = load_raw_data("city_traffic_accidents.csv")
+    return df
+    raise NotImplementedError
 
 
-def load_model():
-    """Load your trained model from saved_model/.
+def preprocess_features(df):
+    """Select and prepare features for training.
 
-    Typical approaches:
+    Consider:
+    - Feature selection (drop leaky or irrelevant columns)
+    - Encoding categorical variables
+    - Scaling numerical features
+    - Handling missing values
+    """
+    df = clean_data(df)                       #Clean the data (handle missing values, convert data types, etc.)
+    df = accident_engineer_features(df)       #Engineer features specific to traffic accidents (e.g., severity, weather conditions, etc.)
+    #Generate the heatmap and accident map for City Traffic Accident
+    generate_hourly_heatmap(df)                            #Generate a heatmap to visualize the density of accidents over time and location
+    generate_accident_map(df)                              #Generate a map to visualize the locations of
+    df = drop_low_variance_columns(df)
+    df = df.dropna(axis=1) 
+
+    return df
+
+    raise NotImplementedError
+
+
+def train_model(X_train, y_train):
+    """Train your traditional ML model.
+
+    Recommended algorithms:
+        from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+        from xgboost import XGBClassifier
+
+    IMPORTANT: Handle class imbalance!
+        model = RandomForestClassifier(class_weight='balanced')
+    """
+    # TODO: Train your model
+    raise NotImplementedError
+
+
+def evaluate_model(model, X_val, y_val):
+    """Evaluate model performance on validation data.
+
+    Must include:
+    - Classification report (precision, recall, F1 per class)
+    - Confusion matrix
+    - Weighted F1 score (primary metric for imbalanced data)
+    - AUC-ROC (for binary classification scenarios)
+    """
+    # TODO: Print evaluation metrics
+    raise NotImplementedError
+
+
+def explain_model(model, X_val):
+    """Generate SHAP or feature importance analysis.
+
+    This is REQUIRED — your model must be interpretable.
+
+    Option 1 — SHAP (recommended):
+        import shap
+        explainer = shap.TreeExplainer(model)
+        shap_values = explainer.shap_values(X_val)
+        shap.summary_plot(shap_values, X_val)
+
+    Option 2 — Built-in feature importance:
+        importances = model.feature_importances_
+        # Plot top 15 features
+    """
+    # TODO: Generate explainability analysis
+    raise NotImplementedError
+
+
+def save_model(model):
+    """Save the trained model to saved_model/.
+
+    Example:
         import joblib
-        model = joblib.load(MODEL_PATH / "model.joblib")
-
-    Works with XGBoost, Random Forest, Logistic Regression, etc.
+        SAVED_MODEL_DIR.mkdir(parents=True, exist_ok=True)
+        joblib.dump(model, SAVED_MODEL_DIR / "model.joblib")
     """
-    # Initialize your app variables
-    TARGET = 'Severity'
-
-    # Use the component to load data
-    df, target_stats = get_data_and_process_target("city_traffic_processed.csv", target_column=TARGET)
-    raise NotImplementedError("Load your trained model here")
-
-
-def predict(model, test_data):
-    """Generate predictions on test data.
-
-    Should return a DataFrame with columns: id, prediction, probability, confidence
-    """
-    # TODO: Run your model on the test data
-    raise NotImplementedError("Generate predictions here")
+    save_processed_data(model, "model.joblib")
+    raise NotImplementedError
 
 
 def main():
-    # Load model
-    model = load_model()
+    # 1. Load data
+    df = load_data()
 
-    # Load test data
-    # TODO: Update this path to match your test data file
-    # test_df = pd.read_csv(TEST_DATA_DIR / "test_data_file.csv")
+    # 2. Preprocess features
+    X_train, X_val, y_train, y_val = preprocess_features(df)
 
-    # Generate predictions
-    # predictions = predict(model, test_df)
+    # 3. Train model
+    model = train_model(X_train, y_train)
 
-    # Save results — MUST match output template exactly
-    # results = pd.DataFrame({
-    #     "id": test_df["id"],
-    #     "prediction": predictions,
-    #     "probability": model.predict_proba(X_test)[:, 1],
-    #     "confidence": confidence_scores,
-    # })
-    # results.to_csv(OUTPUT_FILE, index=False)
+    # 4. Evaluate
+    evaluate_model(model, X_val, y_val)
 
-    print(f"Predictions saved to {OUTPUT_FILE}")
+    # 5. Explain — REQUIRED
+    explain_model(model, X_val)
+
+    # 6. Save
+    save_model(model)
+
+    print("Training complete!")
 
 
 if __name__ == "__main__":

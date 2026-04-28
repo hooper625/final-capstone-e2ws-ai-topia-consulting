@@ -8,16 +8,20 @@ tabular data.
 IMPORTANT: This model must be interpretable. Include SHAP or feature importance
 analysis so stakeholders can understand WHY the model makes its predictions.
 """
+import sys
+import os
 from pathlib import Path
 import joblib
 from imblearn.over_sampling import SMOTE
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 
 PROCESSED_DATA = Path("data/processed/")
 SAVED_MODEL_DIR = Path("models/model1_traditional_ml/saved_model/")
 #Import
-from pipelines.data_pipeline import load_raw_data, clean_data, accident_engineer_features, save_processed_data, drop_low_variance_columns, get_data_and_process_target, label_encode_target, split_data, scale_features
-from pipelines.data_pipeline import generate_hourly_heatmap, generate_accident_map # functions to create maps
-from pipelines.Classification_pipelines import evaluate_classification_model, run_hist_gradient_boosting, run_random_forest, run_decision_tree,run_gradient_boosting, run_knn, run_svm_linear, run_voting_classifier, plot_feature_importance, run_xgb_classifier_feature
+from pipelines.data_pipeline import load_raw_data, clean_data, save_processed_data, drop_low_variance_columns, get_data_and_process_target, label_encode_target, split_data, scale_features
+from pipelines.data_cleaning_accident_pipeline import generate_hourly_heatmap, generate_accident_map # functions to create maps
+from pipelines.data_cleaning_accident_pipeline import accident_engineer_features
+from pipelines.Classification_pipelines import evaluate_classification_model, plot_feature_importance, run_xgb_classifier_feature
 
 def load_data():
     """Load preprocessed data from data/processed/.

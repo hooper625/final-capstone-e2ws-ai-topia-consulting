@@ -66,7 +66,7 @@ def accident_engineer_features(df):
     df = accident_engineer_empty_columns(df)
 
     #Feature Engineering non-numertical columns
-    df= description_word_count(df)      #Engineer a feature that counts the number of words in the Description column, which may correlate with accident severity or complexity.
+    df= descriptor_word_count(df)      #Engineer a feature that counts the number of words in the Description column, which may correlate with accident severity or complexity.
 
     #Categorize Weather Conditions
     df = process_weather_features(df)

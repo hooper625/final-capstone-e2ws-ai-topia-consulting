@@ -31,7 +31,7 @@ from sklearn.metrics import (
 
 from imblearn.over_sampling import SMOTE
 
-from data_pipeline import plot_feature_importance, print_model_report, plot_prediction_probabilities
+from pipelines.data_pipeline import plot_feature_importance, print_model_report, plot_prediction_probabilities
 
 # Settings
 import warnings
