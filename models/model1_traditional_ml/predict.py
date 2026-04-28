@@ -1,134 +1,88 @@
 #!/usr/bin/env python3
 """
-Model 1: Traditional ML — Training Script
-===========================================
-Train a classical ML model (XGBoost, Random Forest, etc.) on your scenario's
-tabular data.
-
-IMPORTANT: This model must be interpretable. Include SHAP or feature importance
-analysis so stakeholders can understand WHY the model makes its predictions.
+Model 1: Traditional ML — Prediction Script
+Usage: python predict.py
+Output: test_data/model1_results.csv
 """
+import sys
+import joblib
+import numpy as np
+import pandas as pd
 from pathlib import Path
+
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(PROJECT_ROOT))
 
 PROCESSED_DATA = Path("data/processed/")
 SAVED_MODEL_DIR = Path("models/model1_traditional_ml/saved_model/")
-#Import
-from pipelines.data_pipeline import load_raw_data, clean_data, accident_engineer_features, save_processed_data, drop_low_variance_columns
-from pipelines.data_pipeline import generate_hourly_heatmap, generate_accident_map # functions to create maps
+TEST_DATA_DIR = Path("test_data/")
+OUTPUT_FILE = TEST_DATA_DIR / "model1_results.csv"
+
+from pipelines.data_pipeline import load_raw_data, clean_data, drop_low_variance_columns
+from pipelines.data_cleaning_accident_pipeline import accident_engineer_features
+
+
+def load_model():
+    model       = joblib.load(SAVED_MODEL_DIR / "model.joblib")
+    scaler      = joblib.load(SAVED_MODEL_DIR / "scaler.joblib")
+    le          = joblib.load(SAVED_MODEL_DIR / "label_encoder.joblib")
+    feature_cols= joblib.load(SAVED_MODEL_DIR / "feature_columns.joblib")
+    return model, scaler, le, feature_cols
+
 
 def load_data():
-    """Load preprocessed data from data/processed/.
-
-    Use the shared pipeline:
-        from pipelines.data_pipeline import load_processed_data
-        df = load_processed_data()
-    """
-    #Load the City Traffic Accident Database
-    df = load_raw_data("city_traffic_accidents.csv")
-    return df
-    raise NotImplementedError
+    candidates = [
+        p for p in TEST_DATA_DIR.glob("*.csv")
+        if p.name != OUTPUT_FILE.name and "model" not in p.name.lower()
+    ]
+    test_file = sorted(candidates, key=lambda p: p.stat().st_mtime, reverse=True)[0]
+    print(f"Test file: {test_file.name}")
+    return pd.read_csv(test_file)
 
 
 def preprocess_features(df):
-    """Select and prepare features for training.
-
-    Consider:
-    - Feature selection (drop leaky or irrelevant columns)
-    - Encoding categorical variables
-    - Scaling numerical features
-    - Handling missing values
-    """
-    df = clean_data(df)                       #Clean the data (handle missing values, convert data types, etc.)
-    df = accident_engineer_features(df)       #Engineer features specific to traffic accidents (e.g., severity, weather conditions, etc.)
-    #Generate the heatmap and accident map for City Traffic Accident
-    generate_hourly_heatmap(df)                            #Generate a heatmap to visualize the density of accidents over time and location
-    generate_accident_map(df)                              #Generate a map to visualize the locations of
+    df = clean_data(df)
+    df = accident_engineer_features(df)
     df = drop_low_variance_columns(df)
-    df = df.dropna(axis=1) 
-
+    df = df.dropna(axis=1)
     return df
 
-    raise NotImplementedError
 
-
-def train_model(X_train, y_train):
-    """Train your traditional ML model.
-
-    Recommended algorithms:
-        from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
-        from xgboost import XGBClassifier
-
-    IMPORTANT: Handle class imbalance!
-        model = RandomForestClassifier(class_weight='balanced')
-    """
-    # TODO: Train your model
-    raise NotImplementedError
-
-
-def evaluate_model(model, X_val, y_val):
-    """Evaluate model performance on validation data.
-
-    Must include:
-    - Classification report (precision, recall, F1 per class)
-    - Confusion matrix
-    - Weighted F1 score (primary metric for imbalanced data)
-    - AUC-ROC (for binary classification scenarios)
-    """
-    # TODO: Print evaluation metrics
-    raise NotImplementedError
-
-
-def explain_model(model, X_val):
-    """Generate SHAP or feature importance analysis.
-
-    This is REQUIRED — your model must be interpretable.
-
-    Option 1 — SHAP (recommended):
-        import shap
-        explainer = shap.TreeExplainer(model)
-        shap_values = explainer.shap_values(X_val)
-        shap.summary_plot(shap_values, X_val)
-
-    Option 2 — Built-in feature importance:
-        importances = model.feature_importances_
-        # Plot top 15 features
-    """
-    # TODO: Generate explainability analysis
-    raise NotImplementedError
-
-
-def save_model(model):
-    """Save the trained model to saved_model/.
-
-    Example:
-        import joblib
-        SAVED_MODEL_DIR.mkdir(parents=True, exist_ok=True)
-        joblib.dump(model, SAVED_MODEL_DIR / "model.joblib")
-    """
-    save_processed_data(model, "model.joblib")
-    raise NotImplementedError
+def predict(model, test_data):
+    proba = model.predict_proba(test_data)
+    y_pred_encoded = model.predict(test_data)
+    confidence = np.round(proba.max(axis=1), 6)
+    return y_pred_encoded, confidence
 
 
 def main():
-    # 1. Load data
+    model, scaler, le, feature_cols = load_model()
+
     df = load_data()
+    ids = df["ID"] if "ID" in df.columns else pd.Series(range(1, len(df) + 1))
 
-    # 2. Preprocess features
-    X_train, X_val, y_train, y_val = preprocess_features(df)
+    df = preprocess_features(df)
 
-    # 3. Train model
-    model = train_model(X_train, y_train)
+    # Align to the exact columns the model was trained on
+    X = pd.DataFrame(index=df.index)
+    for col in feature_cols:
+        X[col] = df[col] if col in df.columns else 0
 
-    # 4. Evaluate
-    evaluate_model(model, X_val, y_val)
+    X_scaled = scaler.transform(X)
 
-    # 5. Explain — REQUIRED
-    explain_model(model, X_val)
+    y_pred_encoded, confidence = predict(model, X_scaled)
+    y_pred = le.inverse_transform(y_pred_encoded)
 
-    # 6. Save
-    save_model(model)
+    results = pd.DataFrame({
+        "id":         ids.values,
+        "prediction": y_pred,
+        "probability":confidence,
+        "confidence": confidence,
+    })
 
-    print("Training complete!")
+    TEST_DATA_DIR.mkdir(parents=True, exist_ok=True)
+    results.to_csv(OUTPUT_FILE, index=False)
+    print(f"Predictions saved to {OUTPUT_FILE}")
 
 
 if __name__ == "__main__":
