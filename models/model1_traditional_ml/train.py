@@ -77,7 +77,7 @@ def preprocess_features(df):
     X_train_res, y_train_res = smote.fit_resample(X_train_scaled, y_train)
 
     # Return scaled training AND scaled test/validation data
-    return X_train_res, X_test_scaled, y_train_res, y_test, scaler, le
+    return X_train_res, X_test_scaled, y_train_res, y_test, scaler, le, features
 
 
 def train_model(X_train, y_train):
@@ -139,22 +139,12 @@ def explain_model(model, X_val):
     plot_feature_importance(model, X_val)
 
 
-def save_model(model,scaler, le):
-    """Save the trained model to saved_model/.
-
-    Example:
-        import joblib
-        SAVED_MODEL_DIR.mkdir(parents=True, exist_ok=True)
-        joblib.dump(model, SAVED_MODEL_DIR / "model.joblib")
-    """
+def save_model(model, scaler, le, feature_cols):
     SAVED_MODEL_DIR.mkdir(parents=True, exist_ok=True)
-    
-    # Save the model
     joblib.dump(model, SAVED_MODEL_DIR / "model.joblib")
-    
-    # CRITICAL: Save these for the predict.py script!
     joblib.dump(scaler, SAVED_MODEL_DIR / "scaler.joblib")
     joblib.dump(le, SAVED_MODEL_DIR / "label_encoder.joblib")
+    joblib.dump(feature_cols, SAVED_MODEL_DIR / "feature_columns.joblib")
 
 
 def main():
@@ -162,7 +152,7 @@ def main():
     df = load_data()
 
     # 2. Preprocess features
-    X_train, X_val, y_train, y_val, scaler, le= preprocess_features(df)
+    X_train, X_val, y_train, y_val, scaler, le, feature_cols = preprocess_features(df)
 
     # 3. Train model
     model = train_model(X_train, y_train)
@@ -174,7 +164,7 @@ def main():
     explain_model(model, X_val)
 
     # 6. Save
-    save_model(model, scaler, le)
+    save_model(model, scaler, le, feature_cols)
 
     print("Training complete!")
 
