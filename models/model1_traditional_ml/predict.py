@@ -16,30 +16,35 @@ TEST_DATA_DIR = Path("test_data/")
 OUTPUT_FILE = TEST_DATA_DIR / "model1_results.csv"
 
 
+import joblib
+
 def load_model():
-    """Load your trained model from saved_model/.
+    # Load all the components you saved in train.py
+    model = joblib.load(MODEL_PATH / "model.joblib")
+    scaler = joblib.load(MODEL_PATH / "scaler.joblib")
+    le = joblib.load(MODEL_PATH / "label_encoder.joblib")
+    features = joblib.load(MODEL_PATH / "feature_columns.joblib")
+    return model, scaler, le, features
 
-    Typical approaches:
-        import joblib
-        model = joblib.load(MODEL_PATH / "model.joblib")
-
-    Works with XGBoost, Random Forest, Logistic Regression, etc.
-    """
-    # Initialize your app variables
-    TARGET = 'Severity'
-
-    # Use the component to load data
-    df, target_stats = get_data_and_process_target("city_traffic_processed.csv", target_column=TARGET)
-    raise NotImplementedError("Load your trained model here")
-
-
-def predict(model, test_data):
-    """Generate predictions on test data.
-
-    Should return a DataFrame with columns: id, prediction, probability, confidence
-    """
-    # TODO: Run your model on the test data
-    raise NotImplementedError("Generate predictions here")
+def predict(model, scaler, feature_cols, test_df):
+    # 1. Apply your custom pipeline steps
+    from pipelines.data_pipeline import clean_data
+    from pipelines.data_cleaning_accident_pipeline import accident_engineer_features
+    
+    processed_df = clean_data(test_df)
+    processed_df = accident_engineer_features(processed_df)
+    
+    # 2. Match the columns exactly to what the model expects
+    processed_df = processed_df.reindex(columns=feature_cols, fill_value=0)
+    
+    # 3. Scale the data using the training scaler
+    X_scaled = scaler.transform(processed_df)
+    
+    # 4. Get predictions and probabilities
+    preds = model.predict(X_scaled)
+    probs = model.predict_proba(X_scaled).max(axis=1) # Highest probability as confidence
+    
+    return preds, probs
 
 
 def main():
