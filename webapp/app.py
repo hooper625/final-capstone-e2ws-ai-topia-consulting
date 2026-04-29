@@ -3,6 +3,28 @@ import pandas as pd
 import numpy as np
 from PIL import Image
 from pathlib import Path
+from scipy.sparse import csr_matrix
+from sklearn.base import BaseEstimator, TransformerMixin
+
+
+# Must be defined at module level so joblib can unpickle model4 pipelines
+# (pickled as __main__.ExtraTextFeatures when train.py ran as __main__)
+class ExtraTextFeatures(BaseEstimator, TransformerMixin):
+    def fit(self, X, y=None):
+        return self
+
+    def transform(self, X):
+        s = pd.Series(X).fillna("").astype(str).str.lower()
+        extra = pd.DataFrame({
+            "is_driveway": s.str.contains(r"\bdriveway\b", regex=True).astype(int),
+            "is_parking":  s.str.contains(r"\bparking\b|\bparked\b|\bvehicle\b|\bcar\b", regex=True).astype(int),
+            "is_blocked":  s.str.contains(r"\bblocked\b|\bblocking\b", regex=True).astype(int),
+            "is_noise":    s.str.contains(r"\bbanging\b|\bpounding\b|\bloud\b|\bmusic\b", regex=True).astype(int),
+        })
+        return csr_matrix(extra.values)
+
+# Default ZIP code for Nova Haven city center — change this to set the map default
+CITY_CENTER_ZIP = "95336"
 
 # ===========================================================================
 # 1. PAGE CONFIGURATION & BRANDING
@@ -97,6 +119,17 @@ def load_ml_model():
     return model, scaler, le, feature_cols
 
 @st.cache_data
+def load_hourly_points():
+    df = pd.read_csv(
+        Path(__file__).resolve().parents[1] / "data/raw/city_traffic_accidents.csv",
+        usecols=["Start_Lat", "Start_Lng", "Start_Time"],
+    )
+    df["Start_Time"] = pd.to_datetime(df["Start_Time"], errors="coerce")
+    df["hour"] = df["Start_Time"].dt.hour
+    df = df.dropna(subset=["Start_Lat", "Start_Lng", "hour"])
+    return [df[df["hour"] == h][["Start_Lat", "Start_Lng"]].values.tolist() for h in range(24)]
+
+@st.cache_data
 def load_geo_data():
     df = pd.read_csv(
         "data/raw/city_traffic_accidents.csv",
@@ -119,6 +152,7 @@ def load_geo_data():
     )
     return hotspots, zip_lookup
 
+
 def haversine_miles(lat1, lon1, lat2, lon2):
     R = 3958.8
     dlat = np.radians(lat2 - lat1)
@@ -128,8 +162,14 @@ def haversine_miles(lat1, lon1, lat2, lon2):
 
 @st.cache_resource
 def load_dnn_model():
+    import joblib
     import tensorflow as tf
-    return tf.keras.models.load_model("models/model2_deep_learning/saved_model/model.keras")
+    model         = tf.keras.models.load_model("models/model2_deep_learning/saved_model/model.keras")
+    scaler        = joblib.load("models/model2_deep_learning/saved_model/scaler.joblib")
+    label_encoder = joblib.load("models/model2_deep_learning/saved_model/label_encoder.joblib")
+    feature_cols  = joblib.load("models/model2_deep_learning/saved_model/feature_columns.joblib")
+    metrics       = joblib.load("models/model2_deep_learning/saved_model/metrics.joblib")
+    return model, scaler, label_encoder, feature_cols, metrics
 
 @st.cache_resource
 def load_cnn_model():
@@ -139,9 +179,11 @@ def load_cnn_model():
 @st.cache_resource
 def load_nlp_assets():
     import joblib
-    model = joblib.load("models/model4_nlp_classification/saved_model/model.joblib")
-    vectorizer = joblib.load("models/model4_nlp_classification/saved_model/vectorizer.joblib")
-    return model, vectorizer
+    routing_pipeline = joblib.load("models/model4_nlp_classification/saved_model/model4_routing_classifier_char_tfidf_SGD.pkl")
+    routing_le       = joblib.load("models/model4_nlp_classification/saved_model/model4_routing_label_encoder.pkl")
+    category_pipeline = joblib.load("models/model4_nlp_classification/saved_model/model4_category_classifier_char_tfidf_SGD.pkl")
+    category_le       = joblib.load("models/model4_nlp_classification/saved_model/model4_category_label_encoder.pkl")
+    return routing_pipeline, routing_le, category_pipeline, category_le
 
 @st.cache_resource
 def load_innovation_model():
@@ -184,28 +226,76 @@ elif model_choice == "Model 1: Traffic Severity (ML)":
     st.header("🚦 Traffic Accident Severity Prediction")
     st.write("Analyze environmental factors to predict accident impact.")
 
-    # --- Accident Map (pre-generated HTML — no recreation on reload) ---
-    st.subheader("Accident Locations Map")
-    map_path = Path(__file__).resolve().parents[1] / "data/maps/accident_map.html"
-    with open(map_path, "r", encoding="utf-8") as f:
-        st.components.v1.html(f.read(), height=450, scrolling=False)
+    # --- Hourly Accident Heatmap (cached data, dynamic center based on ZIP) ---
+    import folium as _folium
+    from folium.plugins import HeatMapWithTime
 
-    _, zip_lookup = load_geo_data()
-    zip_input = st.text_input("Enter your ZIP code to find distance to nearest hotspot", max_chars=5, placeholder="e.g. 90210")
+    st.subheader("Accident Hotspot Heatmap by Hour")
 
-    if zip_input:
-        z = zip_input.strip().zfill(5)
-        if z in zip_lookup.index:
-            u_lat = zip_lookup.loc[z, "lat"]
-            u_lon = zip_lookup.loc[z, "lon"]
-            hotspots, _ = load_geo_data()
-            dists = hotspots.apply(lambda r: haversine_miles(u_lat, u_lon, r["lat"], r["lon"]), axis=1)
-            nearest_idx = dists.idxmin()
-            dist_to_hotspot = dists[nearest_idx]
-            nearest_zip = hotspots.loc[nearest_idx, "Zipcode"]
-            st.info(f"Nearest hotspot: ZIP **{nearest_zip}** — **{dist_to_hotspot:.1f} miles away**")
-        else:
-            st.warning("ZIP not found in dataset.")
+    hotspots, zip_lookup = load_geo_data()
+
+    def compute_hotspot_distance(z, hotspots, zip_lookup):
+        z = z.strip().zfill(5)
+        if z not in zip_lookup.index:
+            return None, None, None
+        u_lat = zip_lookup.loc[z, "lat"]
+        u_lon = zip_lookup.loc[z, "lon"]
+        dists = hotspots.apply(lambda r: haversine_miles(u_lat, u_lon, r["lat"], r["lon"]), axis=1)
+        nearest_idx = dists.idxmin()
+        return float(dists[nearest_idx]), hotspots.loc[nearest_idx, "Zipcode"], z
+
+    # Read zip input from session state BEFORE building the map so the center is always current
+    raw_zip = st.session_state.get("m1_zip_input", "")
+    active_input = raw_zip.strip() if raw_zip.strip() else CITY_CENTER_ZIP
+    dist, nearest_zip, resolved_z = compute_hotspot_distance(active_input, hotspots, zip_lookup)
+
+    if dist is not None:
+        st.session_state.zip_dist    = dist
+        st.session_state.zip_source  = resolved_z
+        st.session_state.nearest_zip = nearest_zip
+        active_z = resolved_z
+    else:
+        active_z = CITY_CENTER_ZIP.zfill(5)
+
+    if active_z in zip_lookup.index:
+        center = [zip_lookup.loc[active_z, "lat"], zip_lookup.loc[active_z, "lon"]]
+        zoom   = 11
+    else:
+        center = [37.0902, -95.7129]
+        zoom   = 4
+
+    hourly_points = load_hourly_points()
+    m = _folium.Map(location=center, zoom_start=zoom)
+    HeatMapWithTime(
+        hourly_points,
+        index=[f"{h}:00" for h in range(24)],
+        radius=10,
+        auto_play=True,
+        max_opacity=0.8,
+    ).add_to(m)
+    _folium.Marker(
+        center,
+        popup=f"ZIP: {active_z}",
+        icon=_folium.Icon(color="blue", icon="home"),
+    ).add_to(m)
+    st.components.v1.html(m.get_root().render(), height=450, scrolling=False)
+
+    # ZIP input below the map — key persists value into session state for next render
+    st.text_input(
+        "Enter your ZIP code to re-center map and use distance as a feature",
+        max_chars=5,
+        placeholder=f"Default: {CITY_CENTER_ZIP}",
+        key="m1_zip_input",
+    )
+    if raw_zip and dist is None:
+        st.warning("ZIP not found in dataset — using city center distance.")
+
+    if st.session_state.get("zip_dist") is not None:
+        st.info(
+            f"ZIP **{st.session_state.zip_source}** → nearest hotspot ZIP "
+            f"**{st.session_state.nearest_zip}** — "
+            f"**{st.session_state.zip_dist:.1f} miles** (used as Distance feature)"
+        )
     st.divider()
 
     col1, col2 = st.columns(2)
@@ -231,6 +321,10 @@ elif model_choice == "Model 1: Traffic Severity (ML)":
             }
             for k, v in road_map[road_type].items():
                 if k in row: row[k] = v
+
+            # ZIP distance overrides the road-type default when available
+            if st.session_state.zip_dist is not None and "Distance(mi)" in row:
+                row["Distance(mi)"] = st.session_state.zip_dist
 
             # --- Weather → weather cluster + condition flags ---
             weather_map = {
@@ -286,31 +380,144 @@ elif model_choice == "Model 1: Traffic Severity (ML)":
 
 # --- MODEL 2: DEEP LEARNING ---
 elif model_choice == "Model 2: Resource Allocation (DNN)":
-    st.header("⚙️ Deep Learning Resource Allocation ")
-    
-    # 1. Expand inputs to match your actual dataset features
+    st.header("🧠 Traffic Accident Severity — Deep Neural Network")
+
+
+    # --- Static hotspot map (no time animation, no ZIP input) ---
+    import folium as _folium
+
+    st.subheader("Top Accident Hotspots")
+
+    hotspots, zip_lookup = load_geo_data()
+
+    z = CITY_CENTER_ZIP.zfill(5)
+    if z in zip_lookup.index:
+        center = [zip_lookup.loc[z, "lat"], zip_lookup.loc[z, "lon"]]
+        zoom   = 11
+    else:
+        center = [hotspots["lat"].mean(), hotspots["lon"].mean()]
+        zoom   = 5
+    m2 = _folium.Map(location=center, zoom_start=zoom)
+
+    for _, row in hotspots.iterrows():
+        _folium.CircleMarker(
+            location=[row["lat"], row["lon"]],
+            radius=6 + int(row["count"] / hotspots["count"].max() * 10),
+            color="#dc3545",
+            fill=True,
+            fill_color="#dc3545",
+            fill_opacity=0.6,
+            popup=f"ZIP {row['Zipcode']} — {int(row['count'])} severe accidents",
+        ).add_to(m2)
+
+    st.components.v1.html(m2.get_root().render(), height=450, scrolling=False)
+    st.divider()
+
     col1, col2 = st.columns(2)
     with col1:
-        volume = st.number_input("Historical Volume Index", 0.0, 100.0, 50.0)
+        road_type_dnn = st.selectbox("Road Category", ["Local", "High-Capacity Road", "Highway"], key="dnn_road")
+        weather_dnn   = st.selectbox("Weather", ["Clear", "Rain", "Snow", "Fog"], key="dnn_weather")
     with col2:
-        staffing = st.number_input("Current Staffing Level", 1, 50, 10)
+        speed_limit_dnn = st.slider("Speed Limit (mph)", 25, 75, 45, key="dnn_speed")
+        time_of_day_dnn = st.selectbox("Time Window", ["Morning", "Afternoon", "Evening", "Night"], key="dnn_time")
 
-    if st.button("Predict Allocation Score"):
+    if st.button("Predict Severity (DNN)"):
         try:
-            model = load_dnn_model()
-            # 2. Make sure the input shape matches what you trained (e.g., 2 features)
-            input_data = np.array([[volume, staffing]]) 
-            prediction = model.predict(input_data)
-            
-            # 3. Display the results clearly
-            st.subheader("Model Output")
-            c1, c2, c3 = st.columns(3)
-            c1.metric("Prediction", f"{prediction[0][0]:.2f}")
-            c2.metric("Probability", "0.85") # Placeholder for your model's prob
-            c3.metric("Confidence", "High")
-            
+            model, scaler, label_encoder, feature_cols, dnn_metrics = load_dnn_model()
+
+            row = {col: 0 for col in feature_cols}
+
+            road_map = {
+                "Local":              {"Distance(mi)": 0.3, "n_road_features": 3, "has_traffic_control": 1},
+                "High-Capacity Road": {"Distance(mi)": 0.8, "n_road_features": 2, "has_traffic_control": 1},
+                "Highway":            {"Distance(mi)": 2.5, "n_road_features": 0, "has_traffic_control": 0},
+            }
+            for k, v in road_map[road_type_dnn].items():
+                if k in row: row[k] = v
+
+            weather_map = {
+                "Clear": {"weather_cluster_clear": 1},
+                "Rain":  {"weather_cluster_rain": 1, "has_precipitation": 1},
+                "Snow":  {"weather_cluster_snow_ice": 1, "is_freezing": 1,
+                          "low_visibility_severity": 1, "has_precipitation": 1},
+                "Fog":   {"weather_cluster_low_visibility": 1, "low_visibility_severity": 1},
+            }
+            for k, v in weather_map[weather_dnn].items():
+                if k in row: row[k] = v
+
+            time_map = {
+                "Morning":   {"is_morning_rush": 1, "is_rush_hour": 1},
+                "Afternoon": {},
+                "Evening":   {"is_evening_rush": 1, "is_rush_hour": 1, "low_visibility_severity": 1},
+                "Night":     {"low_visibility_severity": 1},
+            }
+            for k, v in time_map[time_of_day_dnn].items():
+                if k in row: row[k] = v
+
+            speed_danger = 4 if speed_limit_dnn > 65 else (3 if speed_limit_dnn > 55 else (1 if speed_limit_dnn > 45 else 0))
+            weather_danger = {"Clear": 0, "Rain": 2, "Fog": 2, "Snow": 3}[weather_dnn]
+            if "DangerousScore" in row:
+                row["DangerousScore"] = speed_danger + weather_danger
+
+            X = pd.DataFrame([row])[feature_cols]
+            X_scaled = scaler.transform(X)
+            proba = model.predict(X_scaled, verbose=0)[0]
+
+            # Apply same custom thresholds used in training
+            if proba[0] >= 0.30:
+                pred_enc = 0
+            elif proba[3] >= 0.20:
+                pred_enc = 3
+            else:
+                pred_enc = int(np.argmax(proba))
+
+            severity    = int(label_encoder.inverse_transform([pred_enc])[0])
+            confidence  = float(proba[pred_enc])
+
+            severity_meta = {
+                1: ("Minor",    "#28a745"),
+                2: ("Moderate", "#ffc107"),
+                3: ("Serious",  "#fd7e14"),
+                4: ("Severe",   "#dc3545"),
+            }
+            sev_name, sev_color = severity_meta[severity]
+
+            st.divider()
+
+            # Colored severity badge
+            st.markdown(
+                f"""<div style="background:{sev_color};padding:22px 16px;border-radius:12px;text-align:center;">
+                <h2 style="color:white;margin:0;">SEVERITY LEVEL {severity} — {sev_name.upper()}</h2>
+                <p style="color:white;margin:6px 0 0;font-size:1.1rem;">
+                    DNN Confidence: <strong>{confidence:.1%}</strong> &nbsp;|&nbsp;
+                    Model Weighted F1: <strong>{dnn_metrics['weighted_f1']:.4f}</strong>
+                </p></div>""",
+                unsafe_allow_html=True,
+            )
+
+            st.divider()
+
+            # Probability bar chart — all 4 severity levels
+            st.subheader("Severity Class Probabilities")
+            prob_chart = pd.DataFrame(
+                {"Probability": proba},
+                index=[f"Level {c}" for c in label_encoder.classes_],
+            )
+            st.bar_chart(prob_chart, color=sev_color)
+
+            st.divider()
+
+            # DNN vs XGBoost grouped bar chart
+            st.subheader("DNN vs Traditional ML (XGBoost)")
+            compare_chart = pd.DataFrame({
+                "DNN":     [round(dnn_metrics["accuracy"], 2), round(dnn_metrics["weighted_f1"], 2), 0.47, 0.45],
+                "XGBoost": [0.84, 0.81, 0.39, 0.11],
+            }, index=["Accuracy", "Weighted F1", "Class 3 Recall", "Class 4 Recall"])
+            st.bar_chart(compare_chart)
+            st.caption("DNN trades some overall accuracy for better detection of severe (class 3 & 4) accidents.")
+
         except Exception as e:
-            st.error(f"Error: {e}. Ensure model is in models/model2_deep_learning/saved_model/")
+            st.error(f"Error: {e}. Run models/model2_deep_learning/train.py first.")
 
 # --- MODEL 3: CNN ---
 elif model_choice == "Model 3: Road Inspection (CNN)":
@@ -340,18 +547,77 @@ elif model_choice == "Model 3: Road Inspection (CNN)":
 # --- MODEL 4: NLP ---
 elif model_choice == "Model 4: 311 Classifier (NLP)":
     st.header("🗣️ 311 Service Request Routing")
-    complaint_text = st.text_area("Resident Complaint Text:", placeholder="Describe the issue...")
+
+    AGENCY_NAMES = {
+        "DCWP": "Dept. of Consumer & Worker Protection",
+        "DEP":  "Dept. of Environmental Protection",
+        "DHS":  "Dept. of Homeless Services",
+        "DOB":  "Dept. of Buildings",
+        "DOE":  "Dept. of Education",
+        "DOHMH":"Dept. of Health & Mental Hygiene",
+        "DOT":  "Dept. of Transportation",
+        "DPR":  "Dept. of Parks & Recreation",
+        "DSNY": "Dept. of Sanitation",
+        "HPD":  "Housing Preservation & Development",
+        "NYPD": "Police Department",
+        "OOS":  "Out of Scope",
+        "OTI":  "Office of Technology & Innovation",
+        "TLC":  "Taxi & Limousine Commission",
+    }
+
+    EXAMPLES = [
+        "There is a car blocking my driveway and I cannot get out.",
+        "No heat or hot water in my apartment for three days.",
+        "Loud music and banging coming from upstairs neighbor after midnight.",
+        "Large pile of snow and ice blocking the sidewalk on my street.",
+        "Illegally parked vehicle on the corner blocking the fire hydrant.",
+    ]
+
+    st.markdown("**Try an example complaint:**")
+    ex_cols = st.columns(len(EXAMPLES))
+    for i, (col, ex) in enumerate(zip(ex_cols, EXAMPLES)):
+        if col.button(f"Example {i+1}", key=f"ex_{i}"):
+            st.session_state["nlp_complaint"] = ex
+
+    complaint_text = st.text_area(
+        "Resident Complaint Text:",
+        value=st.session_state.get("nlp_complaint", ""),
+        placeholder="Describe the issue...",
+    )
 
     if st.button("Route to Agency") and complaint_text:
         try:
-            model, vectorizer = load_nlp_assets()
-            vec_text = vectorizer.transform([complaint_text])
-            prediction = model.predict(vec_text)[0]
-            
-            st.success(f"Recommended Routing: **{prediction}**")
-            st.info("Text successfully classified using Nova Haven's NLP pipeline.")
+            import re as _re
+            routing_pipeline, routing_le, category_pipeline, category_le = load_nlp_assets()
+            clean = lambda t: _re.sub(r"\s+", " ", _re.sub(r"[^\w\s\-/&]", " ", str(t).strip().lower())).strip()
+            cleaned = clean(complaint_text)
+
+            # Agency routing
+            route_encoded = routing_pipeline.predict([cleaned])[0]
+            agency_code   = routing_le.inverse_transform([route_encoded])[0]
+            route_proba   = routing_pipeline.predict_proba([cleaned])[0]
+            confidence    = float(route_proba.max())
+
+            # Complaint category
+            cat_encoded   = category_pipeline.predict([cleaned])[0]
+            category      = category_le.inverse_transform([cat_encoded])[0].title()
+
+            st.divider()
+            c1, c2, c3 = st.columns(3)
+            c1.metric("Complaint Category", category)
+            c2.metric("Route to Agency", f"{agency_code} — {AGENCY_NAMES.get(agency_code, '')}")
+            c3.metric("Confidence", f"{confidence:.1%}")
+            st.progress(confidence)
+
+            # Top-3 agency probabilities
+            top3_idx    = route_proba.argsort()[-3:][::-1]
+            top3_labels = routing_le.inverse_transform(top3_idx)
+            top3_probs  = route_proba[top3_idx]
+            st.markdown("**Top agency matches:**")
+            for label, prob in zip(top3_labels, top3_probs):
+                st.markdown(f"- **{label}** ({AGENCY_NAMES.get(label, '')}) — {prob:.1%}")
         except Exception as e:
-            st.error("NLP assets (model.joblib or vectorizer.joblib) not found.")
+            st.error(f"NLP prediction error: {e}")
 
 # --- MODEL 5: INNOVATION ---
 elif model_choice == "Model 5: Innovation Module":
