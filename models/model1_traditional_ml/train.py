@@ -12,14 +12,15 @@ import sys, os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 from pathlib import Path
 import joblib
-from imblearn.over_sampling import SMOTE
+from xgboost import XGBClassifier
+from sklearn.utils.class_weight import compute_sample_weight
 
 PROCESSED_DATA = Path("data/processed/")
 SAVED_MODEL_DIR = Path("models/model1_traditional_ml/saved_model/")
 #Import
-from pipelines.data_pipeline import load_raw_data, clean_data, save_processed_data, drop_low_variance_columns, get_data_and_process_target, label_encode_target, split_data, scale_features
+from pipelines.data_pipeline import load_raw_data, clean_data, save_processed_data, drop_low_variance_columns, get_data_and_process_target, split_data, scale_features
 from pipelines.data_cleaning_accident_pipeline import accident_engineer_features
-from pipelines.Classification_pipelines import evaluate_classification_model, run_hist_gradient_boosting, run_random_forest, run_decision_tree,run_gradient_boosting, run_knn, run_svm_linear, run_voting_classifier, plot_feature_importance, run_xgb_classifier_feature
+from pipelines.Classification_pipelines import plot_feature_importance
 
 def load_data():
     """Load preprocessed data from data/processed/.
@@ -34,59 +35,84 @@ def load_data():
 
 
 def preprocess_features(df):
-    """Select and prepare features for training.
-
-    Consider:
-    - Feature selection (drop leaky or irrelevant columns)
-    - Encoding categorical variables
-    - Scaling numerical features
-    - Handling missing values
-    """
+    """Select and prepare features for training."""
     TARGET = 'Severity'
+    processed_path = PROCESSED_DATA / "city_traffic_processed.csv"
 
-    df = clean_data(df)                                     #Clean the data (handle missing values, convert data types, etc.)
-    df = accident_engineer_features(df)                     #Engineer features specific to traffic accidents (e.g., severity, weather conditions, etc.)
+    if not processed_path.exists():
+        # Full pipeline — only needed the first time or after raw data changes
+        UI_FEATURES = [
+            'is_weekend', 'is_morning_rush', 'is_evening_rush', 'is_rush_hour',
+            'Distance(mi)', 'n_road_features', 'has_traffic_control',
+            'is_freezing', 'low_visibility_severity', 'has_precipitation',
+            'weather_cluster_clear', 'weather_cluster_cloudy',
+            'weather_cluster_low_visibility', 'weather_cluster_rain',
+            'weather_cluster_snow_ice', 'DangerousScore',
+        ]
+        df = clean_data(df)
+        df = accident_engineer_features(df)
+        df = drop_low_variance_columns(df)
+        df = df.dropna(axis=1)
+        available = [c for c in UI_FEATURES if c in df.columns]
+        df = df[[TARGET] + available]
+        save_processed_data(df, "city_traffic_processed.csv")
+    else:
+        print("Processed data found — skipping feature engineering.")
 
-    df = drop_low_variance_columns(df)
-    df = df.dropna(axis=1) 
-    save_processed_data(df, "city_traffic_processed.csv")
-
-    # Use the component to load data
     df, target_stats = get_data_and_process_target("city_traffic_processed.csv", target_column=TARGET)
     if target_stats:
         print(f"\nReady to process models for {TARGET}...")
-    
+
     X = df.drop(columns=[TARGET]).copy()
-    y = df[TARGET]
 
-    # 2. Encode and Split
-    y_encoded, le = label_encode_target(y)
-    X_train, X_test, y_train, y_test = split_data(X, y_encoded, test_size=0.2)
+    # Binary target: High Risk (Severity 3+4) = 1, Standard Risk (Severity 1+2) = 0
+    y = (df[TARGET] >= 3).astype(int)
+    print(f"  Standard Risk (0): {(y==0).sum():,} ({(y==0).mean():.1%})")
+    print(f"  High Risk     (1): {(y==1).sum():,} ({(y==1).mean():.1%})")
 
-    # 3. Scale (Crucial: Keep the Scaled versions!)
+    label_map = {0: "Standard Risk", 1: "High Risk"}
+
+    X_train, X_test, y_train, y_test = split_data(X, y, test_size=0.2)
     X_train_scaled, X_test_scaled, scaler, features = scale_features(X_train, X_test)
 
-    # 4. SMOTE on Scaled training data
-    smote = SMOTE(random_state=42)
-    X_train_res, y_train_res = smote.fit_resample(X_train_scaled, y_train)
-
-    # Return scaled training AND scaled test/validation data
-    return X_train_res, X_test_scaled, y_train_res, y_test, scaler, le, features
+    return X_train_scaled, X_test_scaled, y_train, y_test, scaler, label_map, features
 
 
-def train_model(X_train, X_test, y_train, y_test):
-    _, mdl = run_xgb_classifier_feature(
-        X_train, X_test, y_train, y_test,
-        max_depth=6,
-        n_estimators=200
+def train_model(X_train, y_train):
+    # Subsample to 80k rows — sufficient for 16 features and much faster to train
+    if len(X_train) > 80_000:
+        from sklearn.model_selection import train_test_split
+        X_train, _, y_train, _ = train_test_split(
+            X_train, y_train, train_size=80_000, random_state=42, stratify=y_train
+        )
+        print(f"Subsampled to {len(y_train):,} rows for training.")
+
+    sample_weights = compute_sample_weight('balanced', y_train)
+
+    mdl = XGBClassifier(
+        n_estimators=100,
+        max_depth=5,
+        learning_rate=0.1,
+        min_child_weight=1,
+        subsample=0.8,
+        n_jobs=-1,
+        random_state=42,
+        objective='binary:logistic',
     )
+    mdl.fit(X_train, y_train, sample_weight=sample_weights)
     return mdl
 
 
-def evaluate_model(model, X_train, X_val, y_train, y_val):
+def evaluate_model(model, X_val, y_val):
+    # Evaluate only — never re-fit, which would erase the sample weights
+    from sklearn.metrics import f1_score, accuracy_score, classification_report
     print("\n--- Model Evaluation ---")
-    metrics, _, _ = evaluate_classification_model(model, X_train, X_val, y_train, y_val, "XGBoost")
-    return metrics
+    y_pred = model.predict(X_val)
+    print(f"Test Accuracy : {accuracy_score(y_val, y_pred):.4f}")
+    print(f"Test F1 (wtd) : {f1_score(y_val, y_pred, average='weighted'):.4f}")
+    print(classification_report(y_val, y_pred))
+    return {"accuracy": accuracy_score(y_val, y_pred),
+            "f1_weighted": f1_score(y_val, y_pred, average='weighted')}
 
 
 def explain_model(model, X_val, y_val):
@@ -110,16 +136,16 @@ def main():
     X_train, X_val, y_train, y_val, scaler, le, feature_cols = preprocess_features(df)
 
     # 3. Train model
-    model = train_model(X_train, X_val, y_train, y_val)
+    model = train_model(X_train, y_train)
 
-    # 4. Evaluate
-    evaluate_model(model, X_train, X_val, y_train, y_val)
-
-    # 5. Explain — REQUIRED
-    explain_model(model, X_val, y_val)
-
-    # 6. Save
+    # 4. Save BEFORE evaluate so the weighted model is never overwritten
     save_model(model, scaler, le, feature_cols)
+
+    # 5. Evaluate (predict-only, no re-fit)
+    evaluate_model(model, X_val, y_val)
+
+    # 6. Explain — REQUIRED
+    explain_model(model, X_val, y_val)
 
     print("Training complete!")
 

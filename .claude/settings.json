@@ -1,7 +1,10 @@
 {
   "permissions": {
     "allow": [
-      "Bash(.venv/bin/python -c ' *)"
+      "Bash(.venv/bin/python -c ' *)",
+      "Bash(python3 -c ' *)",
+      "Bash(python3 -c \"import joblib; cols = joblib.load\\('models/model1_traditional_ml/saved_model/feature_columns.joblib'\\); print\\('\\\\n'.join\\(cols\\)\\)\")",
+      "Bash(python3 -c \"import pandas as pd; df = pd.read_csv\\('data/processed/city_traffic_processed.csv', nrows=1\\); word_cols = [c for c in df.columns if c.startswith\\('word_'\\)]; print\\(f'Word cols found: {len\\(word_cols\\)}'\\); print\\('\\\\n'.join\\(word_cols\\)\\)\")"
     ]
   }
 }

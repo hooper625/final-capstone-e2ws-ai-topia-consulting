@@ -9,7 +9,7 @@ Output: test_data/model1_results.csv
 """
 import pandas as pd
 from pathlib import Path
-from pipelines.data_pipeline import  get_data_and_process_target
+
 # Paths
 MODEL_PATH = Path("models/model1_traditional_ml/saved_model/")
 TEST_DATA_DIR = Path("test_data/")

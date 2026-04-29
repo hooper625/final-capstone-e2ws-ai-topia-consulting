@@ -96,6 +96,36 @@ def load_ml_model():
     feature_cols = joblib.load("models/model1_traditional_ml/saved_model/feature_columns.joblib")
     return model, scaler, le, feature_cols
 
+@st.cache_data
+def load_geo_data():
+    df = pd.read_csv(
+        "data/raw/city_traffic_accidents.csv",
+        usecols=["Start_Lat", "Start_Lng", "Severity", "Zipcode"],
+    )
+    df = df.dropna(subset=["Start_Lat", "Start_Lng", "Zipcode"])
+    df["Zipcode"] = df["Zipcode"].astype(str).str.split("-").str[0].str.zfill(5)
+    hotspots = (
+        df[df["Severity"] >= 3]
+        .groupby("Zipcode")
+        .agg(count=("Severity", "size"), lat=("Start_Lat", "mean"), lon=("Start_Lng", "mean"))
+        .nlargest(30, "count")
+        .reset_index()
+    )
+    zip_lookup = (
+        df.groupby("Zipcode")
+        .agg(lat=("Start_Lat", "mean"), lon=("Start_Lng", "mean"))
+        .reset_index()
+        .set_index("Zipcode")
+    )
+    return hotspots, zip_lookup
+
+def haversine_miles(lat1, lon1, lat2, lon2):
+    R = 3958.8
+    dlat = np.radians(lat2 - lat1)
+    dlon = np.radians(lon2 - lon1)
+    a = np.sin(dlat/2)**2 + np.cos(np.radians(lat1)) * np.cos(np.radians(lat2)) * np.sin(dlon/2)**2
+    return R * 2 * np.arcsin(np.sqrt(a))
+
 @st.cache_resource
 def load_dnn_model():
     import tensorflow as tf
@@ -121,6 +151,7 @@ def load_innovation_model():
     le      = joblib.load("models/model5_innovation/saved_model/label_encoder.joblib")
     metrics = joblib.load("models/model5_innovation/saved_model/metrics.joblib")
     return model, enc, le, metrics
+
 
 # ===========================================================================
 # 3. ROUTING & PAGES
@@ -153,9 +184,33 @@ elif model_choice == "Model 1: Traffic Severity (ML)":
     st.header("🚦 Traffic Accident Severity Prediction")
     st.write("Analyze environmental factors to predict accident impact.")
 
+    # --- Accident Map (pre-generated HTML — no recreation on reload) ---
+    st.subheader("Accident Locations Map")
+    map_path = Path(__file__).resolve().parents[1] / "data/maps/accident_map.html"
+    with open(map_path, "r", encoding="utf-8") as f:
+        st.components.v1.html(f.read(), height=450, scrolling=False)
+
+    _, zip_lookup = load_geo_data()
+    zip_input = st.text_input("Enter your ZIP code to find distance to nearest hotspot", max_chars=5, placeholder="e.g. 90210")
+
+    if zip_input:
+        z = zip_input.strip().zfill(5)
+        if z in zip_lookup.index:
+            u_lat = zip_lookup.loc[z, "lat"]
+            u_lon = zip_lookup.loc[z, "lon"]
+            hotspots, _ = load_geo_data()
+            dists = hotspots.apply(lambda r: haversine_miles(u_lat, u_lon, r["lat"], r["lon"]), axis=1)
+            nearest_idx = dists.idxmin()
+            dist_to_hotspot = dists[nearest_idx]
+            nearest_zip = hotspots.loc[nearest_idx, "Zipcode"]
+            st.info(f"Nearest hotspot: ZIP **{nearest_zip}** — **{dist_to_hotspot:.1f} miles away**")
+        else:
+            st.warning("ZIP not found in dataset.")
+    st.divider()
+
     col1, col2 = st.columns(2)
     with col1:
-        road_type = st.selectbox("Road Category", ["Local", "Arterial", "Highway"])
+        road_type = st.selectbox("Road Category", ["Local", "High-Capacity Road", "Highway"])
         weather = st.selectbox("Weather", ["Clear", "Rain", "Snow", "Fog"])
     with col2:
         speed_limit = st.slider("Speed Limit (mph)", 25, 75, 45)
@@ -165,48 +220,66 @@ elif model_choice == "Model 1: Traffic Severity (ML)":
             model, scaler, le, feature_cols = load_ml_model()
             row = {col: 0 for col in feature_cols}
 
-            # 1. EXTREME SIGNAL to break the 99% bias
-            # We are using 4.0 for Distance and 50 for DangerousScore to 
-            # ensure the Scaler produces a high-value outlier.
-            row.update({
-                "Distance(mi)": 4.0 if speed_limit > 60 else 0.5,
-                "is_rush_hour": 1,
-                "is_freezing": int(weather == "Snow"),
-                "DangerousScore": 50 if speed_limit > 65 and weather != "Clear" else 5,
-                "dist_from_reg_hotspot": 0.01 
-            })
+            # --- Road type → distance & infrastructure features ---
+            road_map = {
+                "Local": {"Distance(mi)": 0.3, "n_road_features": 3, "has_traffic_control": 1},
+                "High-Capacity Road": {"Distance(mi)": 0.8, "n_road_features": 2, "has_traffic_control": 1,
+                                       "word_lane": 1},
+                "Highway":  {"Distance(mi)": 2.5, "n_road_features": 0, "has_traffic_control": 0, "word_exit": 1,
+                             "word_lane": 1, "word_closed": 1, "word_northbound": 1, "word_southbound": 1, "word_eastbound": 1,
+                               "word_westbound": 1, "word_shoulder": 1},
+            }
+            for k, v in road_map[road_type].items():
+                if k in row: row[k] = v
 
-            # 2. NLP Triggering
-            # We turn on EVERY high-impact keyword your model knows
-            if speed_limit > 60:
-                for word in ["word_crash", "word_blocked", "word_incident", "word_exit", "word_lane", "word_caution"]:
-                    if word in row: row[word] = 1
+            # --- Weather → weather cluster + condition flags ---
+            weather_map = {
+                "Clear": {"weather_cluster_clear": 1},
+                "Rain":  {"weather_cluster_rain": 1, "has_precipitation": 1, "weather_cluster_cloudy":1},
+                "Snow":  {"weather_cluster_snow_ice": 1, "is_freezing": 1, "weather_cluster_cloudy":1,
+                          "has_precipitation": 1, "low_visibility_severity": 1, "weather_cluster_low_visibility": 1},
+                "Fog":   {"weather_cluster_low_visibility": 1, "low_visibility_severity": 1, "weather_cluster_cloudy":1, "has_precipitation": 1},
+            }
+            for k, v in weather_map[weather].items():
+                if k in row: row[k] = v
 
-            # 3. Weather Cluster
-            if weather == "Snow": row["weather_cluster_snow_ice"] = 1
-            elif weather == "Rain": row["weather_cluster_rain"] = 1
+            # --- Time of day → rush-hour flags ---
+            time_map = {
+                "Morning":   {"is_morning_rush": 1, "is_rush_hour": 1},
+                "Afternoon": {},
+                "Evening":   {"is_evening_rush": 1, "is_rush_hour": 1, "low_visibility_severity": 1},
+                "Night":     {"low_visibility_severity": 1},
+            }
+            for k, v in time_map[time_of_day].items():
+                if k in row: row[k] = v
 
-            # 4. LOCATION SWAP
-            # Orlando/Orange County often triggers higher severity in this specific dataset
-            row["City_orlando"] = 1
-            row["Cty_orange"] = 1
-            row["region_South"] = 1
+            # --- DangerousScore from speed + weather ---
+            speed_danger = 4 if speed_limit > 65 else (3 if speed_limit > 55 else (1 if speed_limit > 45 else 0))
+            weather_danger = {"Clear": 0, "Rain": 2, "Fog": 2, "Snow": 3}[weather]
+            if "DangerousScore" in row:
+                row["DangerousScore"] = speed_danger + weather_danger
 
-            # 5. Predict
+            # --- Predict ---
             X = pd.DataFrame([row])[feature_cols]
             X_scaled = scaler.transform(X)
             proba = model.predict_proba(X_scaled)[0]
 
-            # --- ADD THIS TO SEE THE RAW DATA ---
-            prob_dict = {f"Sev {le.classes_[i]}": f"{p:.4f}" for i, p in enumerate(proba)}
-            st.write("### Raw Model Probabilities:", prob_dict)
-            # ------------------------------------
-            
-            pred_enc = np.argmax(proba)
-            prediction = le.inverse_transform([pred_enc])[0]
-            
-            # Show the result
-            st.metric("Risk Level", f"Severity {prediction}", delta=f"{max(proba):.1%} Confidence")
+            high_risk_prob = float(proba[1])
+            prediction = "High Risk" if high_risk_prob >= 0.5 else "Standard Risk"
+
+            st.divider()
+            c1, c2 = st.columns(2)
+            c1.metric("Risk Assessment", prediction)
+            c2.metric("High Risk Probability", f"{high_risk_prob:.1%}")
+
+            st.progress(high_risk_prob)
+
+            if high_risk_prob >= 0.5:
+                st.error("High probability of a severe incident (Severity 3 or 4). Exercise extreme caution.")
+            elif high_risk_prob >= 0.25:
+                st.warning("Moderate severe incident risk. Conditions warrant caution.")
+            else:
+                st.success("Conditions indicate standard risk.")
 
         except Exception as e:
             st.error(f"Error: {e}")

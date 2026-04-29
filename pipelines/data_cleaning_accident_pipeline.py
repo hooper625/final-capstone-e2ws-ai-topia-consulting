@@ -85,9 +85,7 @@ def accident_engineer_features(df):
     # Group cities outside of top 20 into "Other" category to reduce cardinality
     df= encode_top_geo_features(df)
 
-    # Drop any remaining irrelevant or redundant columns (e.g., Street, if it was too noisy and we filled geographic details from lat/lng)
-    df = df.drop(columns=['State', 'Zipcode', 'City', 'County', 'Start_Lat', 'Start_Lng', 'End_Lat', 'End_Lng'], errors='ignore')
-
+  
     #logic for the matching dangerous weather patterns
     df = dangerous_conditions_score(df)
 
@@ -95,6 +93,10 @@ def accident_engineer_features(df):
     df= engineer_road_features(df) 
 
     df=convert_bools_to_ints(df) #Convert boolean columns to integers for modeling
+
+      # Drop any remaining irrelevant or redundant columns (e.g., Street, if it was too noisy and we filled geographic details from lat/lng)
+    df = df.drop(columns=['State', 'Zipcode', 'City', 'County', 'Start_Lat', 'Start_Lng', 'End_Lat', 'End_Lng'], errors='ignore')
+
     #Retrun the processed DataFrame
     return df
 
