@@ -196,6 +196,11 @@ elif model_choice == "Model 1: Traffic Severity (ML)":
             X = pd.DataFrame([row])[feature_cols]
             X_scaled = scaler.transform(X)
             proba = model.predict_proba(X_scaled)[0]
+
+            # --- ADD THIS TO SEE THE RAW DATA ---
+            prob_dict = {f"Sev {le.classes_[i]}": f"{p:.4f}" for i, p in enumerate(proba)}
+            st.write("### Raw Model Probabilities:", prob_dict)
+            # ------------------------------------
             
             pred_enc = np.argmax(proba)
             prediction = le.inverse_transform([pred_enc])[0]
