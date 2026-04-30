@@ -173,8 +173,12 @@ def load_dnn_model():
 
 @st.cache_resource
 def load_cnn_model():
+    import joblib
     import tensorflow as tf
-    return tf.keras.models.load_model("models/model3_cnn/saved_model/model.keras")
+    model     = tf.keras.models.load_model("models/model3_cnn/saved_model/model.keras")
+    threshold = joblib.load("models/model3_cnn/saved_model/threshold.joblib")
+    metrics   = joblib.load("models/model3_cnn/saved_model/metrics.joblib")
+    return model, threshold, metrics
 
 @st.cache_resource
 def load_nlp_assets():
@@ -521,28 +525,102 @@ elif model_choice == "Model 2: Resource Allocation (DNN)":
 
 # --- MODEL 3: CNN ---
 elif model_choice == "Model 3: Road Inspection (CNN)":
-    st.header("🧱 Vision AI: Infrastructure Inspection")
-    uploaded_file = st.file_uploader("Upload road surface photo...", type=["jpg", "png", "jpeg"])
+    st.header("🧱 Pothole Detection — EfficientNetB0")
+    st.write("Upload a road surface photo to detect potholes. "
+             "The model uses transfer learning (EfficientNetB0) with Grad-CAM visualization.")
+
+    uploaded_file = st.file_uploader("Upload road surface photo", type=["jpg", "jpeg", "png"])
 
     if uploaded_file:
-        img = Image.open(uploaded_file).convert('RGB')
-        st.image(img, caption="Inspection Capture", width=500)
-        
-        if st.button("Scan for Damage"):
+        img = Image.open(uploaded_file).convert("RGB")
+        st.image(img, caption="Uploaded Image", width=480)
+
+        if st.button("Scan for Potholes"):
             try:
-                model = load_cnn_model()
-                # Preprocessing: match your training size (e.g., 224x224)
-                img_proc = img.resize((224, 224))
-                img_array = np.array(img_proc) / 255.0
-                img_batch = np.expand_dims(img_array, axis=0)
-                
-                prediction = model.predict(img_batch)
-                label = "Pothole Detected" if prediction[0][0] > 0.5 else "Road Clear"
-                
-                st.subheader(f"Analysis: {label}")
-                st.progress(float(prediction[0][0]))
+                import tensorflow as tf
+                import matplotlib.pyplot as plt
+
+                model, threshold, cnn_metrics = load_cnn_model()
+                preprocess_input = tf.keras.applications.efficientnet.preprocess_input
+
+                # --- Preprocessing (matches training pipeline) ---
+                img_tf = tf.constant(np.array(img), dtype=tf.float32) / 255.0
+
+                # Road crop: vertical 30–78%, horizontal 5–95%
+                h, w  = tf.shape(img_tf)[0], tf.shape(img_tf)[1]
+                y1 = tf.cast(tf.cast(h, tf.float32) * 0.30, tf.int32)
+                y2 = tf.cast(tf.cast(h, tf.float32) * 0.78, tf.int32)
+                x1 = tf.cast(tf.cast(w, tf.float32) * 0.05, tf.int32)
+                x2 = tf.cast(tf.cast(w, tf.float32) * 0.95, tf.int32)
+                img_cropped     = img_tf[y1:y2, x1:x2, :]
+                img_display     = img_cropped.numpy()
+                img_resized     = tf.image.resize(img_cropped, (384, 384))
+                img_preprocessed = preprocess_input(img_resized * 255.0)
+                img_batch       = tf.expand_dims(img_preprocessed, axis=0)
+
+                prob  = float(model.predict(img_batch, verbose=0)[0][0])
+                label = "pothole" if prob >= threshold else "no_pothole"
+                conf  = prob if label == "pothole" else 1 - prob
+
+                # --- Result badge ---
+                st.divider()
+                badge_color = "#dc3545" if label == "pothole" else "#28a745"
+                badge_text  = "POTHOLE DETECTED" if label == "pothole" else "ROAD CLEAR"
+                st.markdown(
+                    f"""<div style="background:{badge_color};padding:20px;border-radius:12px;text-align:center;">
+                    <h2 style="color:white;margin:0;">{badge_text}</h2>
+                    <p style="color:white;margin:6px 0 0;font-size:1.1rem;">
+                        Confidence: <strong>{conf:.1%}</strong> &nbsp;|&nbsp;
+                        Threshold: <strong>{threshold:.2f}</strong> &nbsp;|&nbsp;
+                        Model Weighted F1: <strong>{cnn_metrics['weighted_f1']:.4f}</strong>
+                    </p></div>""",
+                    unsafe_allow_html=True,
+                )
+
+                # --- Grad-CAM ---
+                st.divider()
+                st.subheader("Grad-CAM — What the Model Sees")
+
+                effnet_base    = model.layers[2]   # EfficientNetB0 backbone
+                aug_layer      = model.layers[1]
+                gap_layer      = model.layers[3]
+                dropout_layer  = model.layers[4]
+                dense_layer    = model.layers[5]
+
+                with tf.GradientTape() as tape:
+                    x            = aug_layer(img_batch, training=False)
+                    feature_maps = effnet_base(x, training=False)
+                    tape.watch(feature_maps)
+                    x_out   = gap_layer(feature_maps)
+                    x_out   = dropout_layer(x_out, training=False)
+                    preds   = dense_layer(x_out)
+                    score   = preds[:, 0]
+
+                grads        = tape.gradient(score, feature_maps)
+                pooled_grads = tf.reduce_mean(grads, axis=(0, 1, 2))
+                fm           = feature_maps[0]
+                heatmap      = tf.reduce_sum(fm * pooled_grads, axis=-1)
+                heatmap      = tf.maximum(heatmap, 0)
+                max_val      = tf.reduce_max(heatmap)
+                heatmap      = heatmap / max_val if max_val > 0 else heatmap
+                heatmap_np   = heatmap.numpy()
+
+                heatmap_resized = tf.image.resize(
+                    heatmap_np[..., np.newaxis], (img_display.shape[0], img_display.shape[1])
+                ).numpy().squeeze()
+                cmap    = plt.get_cmap("jet")
+                overlay = np.clip((1 - 0.4) * img_display + 0.4 * cmap(heatmap_resized)[..., :3], 0, 1)
+
+                fig, axes = plt.subplots(1, 3, figsize=(14, 4))
+                axes[0].imshow(img_display);       axes[0].set_title("Cropped Input");  axes[0].axis("off")
+                axes[1].imshow(heatmap_np, cmap="jet"); axes[1].set_title("Grad-CAM Heatmap"); axes[1].axis("off")
+                axes[2].imshow(overlay);           axes[2].set_title(f"Overlay — {badge_text}"); axes[2].axis("off")
+                plt.tight_layout()
+                st.pyplot(fig)
+                plt.close(fig)
+
             except Exception as e:
-                st.error("CNN Model file missing from models/model3_cnn/saved_model/")
+                st.error(f"Error: {e}. Run models/model3_cnn/train.py first.")
 
 # --- MODEL 4: NLP ---
 elif model_choice == "Model 4: 311 Classifier (NLP)":
