@@ -53,25 +53,12 @@ RAW_DATA = PROJECT_ROOT / "data" / "raw"
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 MODEL_PATH = Path("models/model4_nlp_classification/saved_model/")
 #TEST_DATA_DIR = Path("test_data/")
 OUTPUT_FILE = TEST_DATA_DIR / "model4_results.csv"
 
 BASE_DIR = MODEL_PATH
-CATEGORY_MODEL_FILE = BASE_DIR / "model4_complaint_classifier_char_tfidf_SGD.pkl"
+CATEGORY_MODEL_FILE = BASE_DIR / "model4_category_classifier_char_tfidf_SGD.pkl"
 CATEGORY_LABEL_FILE = BASE_DIR / "model4_category_label_encoder.pkl"
 ROUTING_MODEL_FILE = BASE_DIR / "model4_routing_classifier_char_tfidf_SGD.pkl"
 ROUTING_LABEL_FILE = BASE_DIR / "model4_routing_label_encoder.pkl"
@@ -102,32 +89,72 @@ _TRANSLATION_MODEL_CACHE: Dict[str, Tuple[object, object]] = {}
 
 class ExtraTextFeatures(BaseEstimator, TransformerMixin):
     """
-    Must match the custom transformer used when training the saved pipelines.
+    Must match the custom transformer used in the latest train_fix_no_rare_class_overweight.py.
+
+    IMPORTANT:
+    The number and order of columns returned here must match training exactly.
+    If this differs, sklearn will raise:
+    ValueError: X has #### features, but SGDClassifier is expecting #### features.
     """
     def fit(self, X, y=None):
         return self
 
     def transform(self, X):
         s = pd.Series(X).fillna("").astype(str).str.lower()
-        extra = pd.DataFrame(
-            {
-                "is_driveway": s.str.contains(r"\bdriveway\b", regex=True).astype(int),
-                "is_parking": s.str.contains(
-                    r"\bparking\b|\bparked\b|\bvehicle\b|\bcar\b",
-                    regex=True,
-                ).astype(int),
-                "is_blocked": s.str.contains(
-                    r"\bblocked\b|\bblocking\b",
-                    regex=True,
-                ).astype(int),
-                "is_noise": s.str.contains(
-                    r"\bbanging\b|\bpounding\b|\bloud\b|\bmusic\b",
-                    regex=True,
-                ).astype(int),
-            }
-        )
-        return csr_matrix(extra.values)
 
+        extra = pd.DataFrame({
+            # DSNY
+            "has_snow_or_ice": s.str.contains(
+                r"\bsnow\b|\bice\b|\bicy\b|\bslush\b",
+                regex=True
+            ).astype(int),
+            "has_sanitation": s.str.contains(
+                r"\btrash\b|\bgarbage\b|\brecycling\b|\bsanitation\b|\bdumping\b",
+                regex=True
+            ).astype(int),
+
+            # NYPD
+            "has_driveway": s.str.contains(
+                r"\bdriveway\b",
+                regex=True
+            ).astype(int),
+            "has_blocked": s.str.contains(
+                r"\bblocked\b|\bblocking\b|\bobstructing\b",
+                regex=True
+            ).astype(int),
+            "has_parking": s.str.contains(
+                r"\bparking\b|\bparked\b|\bvehicle\b|\bcar\b|\btruck\b|\bdouble parked\b|\bhydrant\b",
+                regex=True
+            ).astype(int),
+            "has_noise": s.str.contains(
+                r"\bnoise\b|\bloud\b|\bmusic\b|\bbanging\b|\byelling\b|\bparty\b",
+                regex=True
+            ).astype(int),
+
+            # HPD
+            "has_heat_hot_water": s.str.contains(
+                r"\bno heat\b|\bheat\b|\bheating\b|\bhot water\b|\bboiler\b|\bradiator\b",
+                regex=True
+            ).astype(int),
+            "has_housing": s.str.contains(
+                r"\bapartment\b|\btenant\b|\blandlord\b|\bresidential\b",
+                regex=True
+            ).astype(int),
+
+            # DOB should require true construction/building-safety language
+            "has_dob_signal": s.str.contains(
+                r"\bconstruction\b|\bpermit\b|\bscaffold\b|\bdemolition\b|\bunsafe construction\b",
+                regex=True
+            ).astype(int),
+
+            # OOS should not fire unless explicit sheriff / marshal / eviction terms exist
+            "has_oos_signal": s.str.contains(
+                r"\bsheriff\b|\bmarshal\b|\beviction\b|\blockout\b|\bcivil enforcement\b",
+                regex=True
+            ).astype(int),
+        })
+
+        return csr_matrix(extra.values)
 
 def setup_logging() -> logging.Logger:
     logger = logging.getLogger("model4_dual_predict")
@@ -153,10 +180,50 @@ def clean_text(text: str) -> str:
     if pd.isna(text):
         return ""
     text = str(text).strip().lower()
+    text = text.replace("drive-way", "driveway")
+    text = text.replace("drive way", "driveway")
+    text = text.replace("hotwater", "hot water")
     text = re.sub(r"\s+", " ", text)
     text = re.sub(r"[^\w\s\-/&]", " ", text)
     text = re.sub(r"\s+", " ", text).strip()
     return text
+
+
+def normalize_complaint_type(x: str) -> str:
+    x = clean_text(x)
+    aliases = {
+        "blocked drive way": "blocked driveway",
+        "blocked drive-way": "blocked driveway",
+        "heat hot water": "heat/hot water",
+        "heat and hot water": "heat/hot water",
+        "heating hot water": "heat/hot water",
+        "noise residential": "noise - residential",
+        "residential noise": "noise - residential",
+        "snow ice": "snow or ice",
+        "snow and ice": "snow or ice",
+    }
+    return aliases.get(x, x)
+
+
+def infer_complaint_type_from_free_text(text: str) -> str:
+    """
+    Helps prediction text match the enhanced training format when the test file
+    has only free-text descriptor / resolution_description.
+    """
+    t = clean_text(text)
+
+    if re.search(r"\bsnow\b|\bice\b|\bicy\b", t):
+        return "snow or ice"
+    if re.search(r"\bdriveway\b", t) and re.search(r"\bblock|\bobstruct|park", t):
+        return "blocked driveway"
+    if re.search(r"\billegal parking\b|\bdouble parked\b|\bno standing\b|\bhydrant\b", t):
+        return "illegal parking"
+    if re.search(r"\bno heat\b|\bhot water\b|\bboiler\b|\bradiator\b", t):
+        return "heat/hot water"
+    if re.search(r"\bnoise\b|\bloud\b|\bmusic\b|\bbanging\b|\bparty\b", t):
+        return "noise - residential"
+
+    return ""
 
 
 def safe_str(x) -> str:
@@ -357,21 +424,27 @@ def translate_spanish_candidate_rows(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def build_category_text(df: pd.DataFrame) -> pd.Series:
-    return (
-        df.get("descriptor", pd.Series([""] * len(df), index=df.index)).fillna("").map(clean_text)
-        + " "
-        + df.get("resolution_description", pd.Series([""] * len(df), index=df.index)).fillna("").map(clean_text)
-    ).str.strip()
+    complaint_type = df.get("complaint_type", pd.Series([""] * len(df), index=df.index)).fillna("").map(normalize_complaint_type)
+    descriptor = df.get("descriptor", pd.Series([""] * len(df), index=df.index)).fillna("").map(clean_text)
+    resolution = df.get("resolution_description", pd.Series([""] * len(df), index=df.index)).fillna("").map(clean_text)
+
+    # If complaint_type is blank, infer a complaint_type-like prefix from free text.
+    inferred = (descriptor + " " + resolution).map(infer_complaint_type_from_free_text)
+    complaint_type = complaint_type.where(complaint_type != "", inferred)
+
+    return (complaint_type + " | " + descriptor + " | " + resolution).str.strip(" |")
 
 
 def build_routing_text(df: pd.DataFrame) -> pd.Series:
-    return (
-        df.get("complaint_type", pd.Series([""] * len(df), index=df.index)).fillna("").map(clean_text)
-        + " | "
-        + df.get("descriptor", pd.Series([""] * len(df), index=df.index)).fillna("").map(clean_text)
-        + " | "
-        + df.get("resolution_description", pd.Series([""] * len(df), index=df.index)).fillna("").map(clean_text)
-    ).str.strip(" |")
+    complaint_type = df.get("complaint_type", pd.Series([""] * len(df), index=df.index)).fillna("").map(normalize_complaint_type)
+    descriptor = df.get("descriptor", pd.Series([""] * len(df), index=df.index)).fillna("").map(clean_text)
+    resolution = df.get("resolution_description", pd.Series([""] * len(df), index=df.index)).fillna("").map(clean_text)
+
+    # Match training format. If complaint_type is absent, infer it from the free text.
+    inferred = (descriptor + " " + resolution).map(infer_complaint_type_from_free_text)
+    complaint_type = complaint_type.where(complaint_type != "", inferred)
+
+    return (complaint_type + " | " + descriptor + " | " + resolution).str.strip(" |")
 
 
 def compute_confidence_scores(model, X_text: pd.Series) -> np.ndarray:
