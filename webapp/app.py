@@ -192,11 +192,16 @@ def load_nlp_assets():
 @st.cache_resource
 def load_innovation_model():
     import joblib
-    model   = joblib.load("models/model5_innovation/saved_model/model.joblib")
-    enc     = joblib.load("models/model5_innovation/saved_model/ordinal_encoder.joblib")
-    le      = joblib.load("models/model5_innovation/saved_model/label_encoder.joblib")
-    metrics = joblib.load("models/model5_innovation/saved_model/metrics.joblib")
-    return model, enc, le, metrics
+    s = "models/model5_innovation/saved_model/"
+    return (
+        joblib.load(s + "outcome_clf.joblib"),
+        joblib.load(s + "time_clf.joblib"),
+        joblib.load(s + "tfidf.joblib"),
+        joblib.load(s + "ord_enc.joblib"),
+        joblib.load(s + "outcome_le.joblib"),
+        joblib.load(s + "time_le.joblib"),
+        joblib.load(s + "metrics.joblib"),
+    )
 
 
 # ===========================================================================
@@ -637,18 +642,18 @@ elif model_choice == "Model 4: 311 Classifier (NLP)":
         "DPR":  "Dept. of Parks & Recreation",
         "DSNY": "Dept. of Sanitation",
         "HPD":  "Housing Preservation & Development",
-        "NYPD": "Police Department",
+        "NPD":  "Nova Haven Police Department",
         "OOS":  "Out of Scope",
         "OTI":  "Office of Technology & Innovation",
         "TLC":  "Taxi & Limousine Commission",
     }
 
     EXAMPLES = [
-        "There is a car blocking my driveway and I cannot get out.",
-        "No heat or hot water in my apartment for three days.",
-        "Loud music and banging coming from upstairs neighbor after midnight.",
-        "Large pile of snow and ice blocking the sidewalk on my street.",
-        "Illegally parked vehicle on the corner blocking the fire hydrant.",
+        "Blocked driveway - car illegally parked blocking my access.",
+        "HEAT/HOT WATER - no heat or hot water in my apartment for three days.",
+        "Noise - residential: loud music and banging upstairs after midnight.",
+        "Snow or ice blocking the sidewalk on my street.",
+        "Illegal parking - vehicle blocking the fire hydrant.",
     ]
 
     st.markdown("**Try an example complaint:**")
@@ -699,58 +704,144 @@ elif model_choice == "Model 4: 311 Classifier (NLP)":
 
 # --- MODEL 5: INNOVATION ---
 elif model_choice == "Model 5: Innovation Module":
-    st.header("💡 311 Complaint Resolution Urgency Predictor")
-    st.write("Predict whether a 311 service request will take a short, moderate, or long time to resolve — enabling smarter dispatch and proactive SLA management.")
+    import re as _re
+
+    st.header("🔍 Resolution Outcome Predictor")
+    st.write(
+        "Predict whether a 311 complaint is likely to be **Resolved**, **Unresolved**, "
+        "or **Referred** to another department — and estimate how long it will take. "
+        "Trained on resolution text from 378 K closed complaints using NLP."
+    )
+
+    _CITY_SUBS = [
+        (_re.compile(r"New York City Police Department", _re.I), "Nova Haven Police Department"),
+        (_re.compile(r"New York City",                   _re.I), "Nova Haven"),
+        (_re.compile(r"New Yorkers?",                    _re.I), "Nova Haven residents"),
+        (_re.compile(r"\bNYC\b",                         _re.I), "Nova Haven"),
+        (_re.compile(r"\bNYPD\b",                        _re.I), "NHPD"),
+        (_re.compile(r"\bManhattan\b",                   _re.I), "Central District"),
+        (_re.compile(r"\bBrooklyn\b",                    _re.I), "East District"),
+        (_re.compile(r"\bBronx\b",                       _re.I), "North District"),
+        (_re.compile(r"\bQueens\b",                      _re.I), "West District"),
+        (_re.compile(r"Staten Island",                   _re.I), "South District"),
+    ]
+
+    def _clean(text):
+        if not text:
+            return ""
+        text = _re.sub(r"[^\w\s\-/&]", " ", str(text).strip().lower())
+        return _re.sub(r"\s+", " ", text).strip()
 
     col1, col2 = st.columns(2)
     with col1:
-        complaint_type = st.selectbox("Complaint Type", [
-            "Illegal Parking", "HEAT/HOT WATER", "Noise - Residential", "Snow or Ice",
-            "Blocked Driveway", "Street Condition", "UNSANITARY CONDITION", "PLUMBING",
-            "Traffic Signal Condition", "Noise - Street/Sidewalk", "Water System",
-            "PAINT/PLASTER", "Dirty Condition", "Abandoned Vehicle", "WATER LEAK",
-        ])
-        agency = st.selectbox("Agency", ["DCWP", "DEP", "DHS", "DOB", "DOE", "DOHMH", "DOT", "DPR", "DSNY", "HPD", "NYPD", "OOS", "OTI", "TLC"])
+        complaint_type = st.text_input(
+            "Complaint Type",
+            placeholder="e.g. Noise - Residential, Heat/Hot Water, Illegal Parking",
+        )
+        descriptor = st.text_input(
+            "Descriptor",
+            placeholder="e.g. Loud Music/Party, Entire Building, Pothole",
+        )
     with col2:
-        borough = st.selectbox("Borough", ["BRONX", "BROOKLYN", "MANHATTAN", "QUEENS", "STATEN ISLAND", "Unspecified"])
-        channel = st.selectbox("Submission Channel", ["MOBILE", "ONLINE", "OTHER", "PHONE", "UNKNOWN"])
+        m5_agency  = st.selectbox(
+            "Agency",
+            ["DCWP", "DEP", "DHS", "DOB", "DOE", "DOHMH", "DOT", "DPR", "DSNY", "HPD", "NPD", "TLC"],
+            key="m5_agency",
+        )
+        m5_channel = st.selectbox(
+            "Submission Channel",
+            ["MOBILE", "ONLINE", "PHONE", "UNKNOWN"],
+            key="m5_channel",
+        )
 
     col3, col4 = st.columns(2)
     with col3:
-        complaint_date = st.date_input("Complaint Date")
+        m5_date = st.date_input("Complaint Date", key="m5_date")
     with col4:
-        complaint_hour = st.slider("Hour of Day", 0, 23, 12)
+        m5_hour = st.slider("Hour of Day", 0, 23, 12, key="m5_hour")
 
-    if st.button("Predict Resolution Urgency"):
-        try:
-            model, enc, le, metrics = load_innovation_model()
+    if st.button("Predict Outcome"):
+        if not complaint_type.strip():
+            st.warning("Please enter a complaint type.")
+        else:
+            try:
+                (outcome_clf, time_clf, tfidf, ord_enc,
+                 outcome_le, time_le, metrics) = load_innovation_model()
 
-            day_of_week = complaint_date.weekday()
-            month       = complaint_date.month
-            is_weekend  = int(day_of_week >= 5)
+                input_text = _clean(complaint_type.strip() + " " + descriptor.strip())
+                X_tfidf    = tfidf.transform([input_text])
 
-            cat_input = np.array([[complaint_type, agency, borough, channel]])
-            X_cat     = enc.transform(cat_input)
-            X_num     = np.array([[complaint_hour, day_of_week, month, is_weekend]])
-            X         = np.hstack([X_cat, X_num])
+                cat_arr    = np.array([[m5_agency, "Unspecified", m5_channel]])
+                X_cat_enc  = ord_enc.transform(cat_arr)
+                X_num      = np.array([[
+                    m5_hour,
+                    m5_date.weekday(),
+                    m5_date.month,
+                ]], dtype=float)
+                X_numeric  = np.hstack([X_cat_enc, X_num])
 
-            proba      = model.predict_proba(X)[0]
-            pred_enc   = np.argmax(proba)
-            prediction = le.inverse_transform([pred_enc])[0]
-            conf       = float(proba[pred_enc])
+                from scipy.sparse import hstack as sp_hstack, csr_matrix
+                X_full = sp_hstack([X_tfidf, csr_matrix(X_numeric)])
 
-            label_map  = {"high_risk": "High Risk (5+ days)", "medium_risk": "Medium Risk (1–5 days)", "low_risk": "Low Risk (same day)"}
-            color_map  = {"high_risk": "error", "medium_risk": "warning", "low_risk": "success"}
-            display    = label_map.get(prediction, prediction)
+                # Outcome prediction
+                out_proba  = outcome_clf.predict_proba(X_full)[0]
+                out_idx    = int(np.argmax(out_proba))
+                outcome    = outcome_le.inverse_transform([out_idx])[0]
+                out_conf   = float(out_proba[out_idx])
 
-            st.divider()
-            getattr(st, color_map.get(prediction, "info"))(f"Resolution Urgency: **{display}**")
-            c1, c2, c3 = st.columns(3)
-            c1.metric("Urgency Level", display.split("(")[0].strip())
-            c2.metric("Confidence", f"{conf:.1%}")
-            c3.metric("Model F1 Score", f"{metrics['weighted_f1']:.4f}")
-        except Exception as e:
-            st.error(f"Error loading Innovation Model: {e}")
+                # Time prediction
+                time_proba = time_clf.predict_proba(X_full)[0]
+                time_idx   = int(np.argmax(time_proba))
+                time_lbl   = time_le.inverse_transform([time_idx])[0]
+                time_conf  = float(time_proba[time_idx])
+
+                outcome_color = {
+                    "Resolved":   "success",
+                    "Unresolved": "error",
+                    "Referred":   "warning",
+                }.get(outcome, "info")
+
+                time_color = {
+                    "Same Day": "success",
+                    "1–7 Days": "warning",
+                    "8+ Days":  "error",
+                }.get(time_lbl, "info")
+
+                st.divider()
+                getattr(st, outcome_color)(f"Predicted Outcome: **{outcome}**")
+                getattr(st, time_color)(f"Estimated Resolution Time: **{time_lbl}**")
+
+                st.divider()
+                c1, c2, c3, c4 = st.columns(4)
+                c1.metric("Outcome",          outcome)
+                c2.metric("Outcome Conf.",     f"{out_conf:.1%}")
+                c3.metric("Est. Time",         time_lbl)
+                c4.metric("Time Conf.",        f"{time_conf:.1%}")
+
+                st.divider()
+                st.markdown("**Outcome probabilities**")
+                for cls, prob in zip(
+                    outcome_le.classes_,
+                    outcome_clf.predict_proba(X_full)[0],
+                ):
+                    st.markdown(f"- **{cls}** — {prob:.1%}")
+
+                st.markdown("**Time probabilities**")
+                for cls, prob in zip(
+                    time_le.classes_,
+                    time_clf.predict_proba(X_full)[0],
+                ):
+                    st.markdown(f"- **{cls}** — {prob:.1%}")
+
+                with st.expander("Model performance"):
+                    st.markdown(
+                        f"Outcome weighted F1: **{metrics['outcome_f1']:.4f}**  \n"
+                        f"Time weighted F1: **{metrics['time_f1']:.4f}**  \n"
+                        f"Trained on **{metrics['n_train']:,}** closed complaints"
+                    )
+
+            except Exception as e:
+                st.error(f"Prediction error: {e}")
 
 # ===========================================================================
 # 4. FOOTER

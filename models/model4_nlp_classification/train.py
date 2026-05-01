@@ -1,84 +1,171 @@
-#!/usr/bin/env python3
-"""
-Model 4: NLP Classification — SGD Pipeline (Notebook → Production)
-
-Clean training script for UrbanPulse 311 complaint classification.
-
-Design choices for this version:
-- Fast and stable training
-- Clear step-by-step logging
-- Saves only the artifacts needed by predict.py
-
-Approach:
-
-* TF-IDF (word + char)
-* SGDClassifier (fast, scalable)
-
-to run, go to project root folder
-python -u models/model4_nlp_classification/train.py
-"""
-
-from __future__ import annotations
-
-import logging
-import random
-import re
-import sys
-import warnings
+import streamlit as st
+import pandas as pd
+import numpy as np
+from PIL import Image
 from pathlib import Path
 
-import numpy as np
-import pandas as pd
 
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import SGDClassifier
-from scipy.sparse import hstack, csr_matrix
-from sklearn.preprocessing import LabelEncoder
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.pipeline import FeatureUnion
+
+import re
+from typing import Dict, Iterable, Tuple
+
+MARIAN_MODEL_MAP = {"es": "Helsinki-NLP/opus-mt-es-en"}
+
+SPANISH_MARKERS = [
+    "calle", "carretera", "avenida", "autopista", "ruido", "agua", "calor",
+    "nieve", "hielo", "bloqueado", "basura", "vehiculo", "vehículo",
+    "estacionamiento", "ilegal", "caliente", "frio", "frío", "apartamento",
+    "edificio", "queja", "residencial", "entrada", "conducir", "acera",
+    "saneamiento", "barrida", "barrer", "denuncia", "musica", "música",
+    "sin calor", "sin agua", "agua caliente", "no barrida",
+]
+
+_torch = None
+_tqdm = None
+_MarianMTModel = None
+_MarianTokenizer = None
+_DEVICE = "cpu"
+_TRANSLATION_MODEL_CACHE: Dict[str, Tuple[object, object]] = {}
+
+
+
+from scipy.sparse import csr_matrix
 from sklearn.base import BaseEstimator, TransformerMixin
-from sklearn.pipeline import Pipeline, FeatureUnion
-
-
-from sklearn.metrics import (
-    accuracy_score,
-    classification_report,
-    confusion_matrix,
-    f1_score,
-    precision_score,
-    recall_score,
-)
-
-
-# Model saving
-import os
 import joblib
 
-from pathlib import Path
+class ExtraTextFeatures(BaseEstimator, TransformerMixin):
+    """
+    Must match the custom transformer used in the latest train_fix_no_rare_class_overweight.py.
 
-PROCESSED_DATA = Path("data/processed/")
-SAVED_MODEL_DIR = Path("models/model4_nlp_classification/saved_model/")
+    IMPORTANT:
+    The number and order of columns returned here must match training exactly.
+    If this differs, sklearn will raise:
+    ValueError: X has #### features, but SGDClassifier is expecting #### features.
+    """
+    def fit(self, X, y=None):
+        return self
 
-PROJECT_ROOT = Path.cwd()#.parent
-DATA_PATH = PROJECT_ROOT / "data" / "raw" / "urbanpulse_311_complaints.csv"
-#OUTPUT_DIR = PROJECT_ROOT / "models" / "model4_nlp_classification"
-#OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    
-# -----------------------------
+    def transform(self, X):
+        s = pd.Series(X).fillna("").astype(str).str.lower()
 
-# 1. Load Data
+        extra = pd.DataFrame({
+            # DSNY
+            "has_snow_or_ice": s.str.contains(
+                r"\bsnow\b|\bice\b|\bicy\b|\bslush\b",
+                regex=True
+            ).astype(int),
+            "has_sanitation": s.str.contains(
+                r"\btrash\b|\bgarbage\b|\brecycling\b|\bsanitation\b|\bdumping\b",
+                regex=True
+            ).astype(int),
 
-# -----------------------------
+            # NYPD
+            "has_driveway": s.str.contains(
+                r"\bdriveway\b",
+                regex=True
+            ).astype(int),
+            "has_blocked": s.str.contains(
+                r"\bblocked\b|\bblocking\b|\bobstructing\b",
+                regex=True
+            ).astype(int),
+            "has_parking": s.str.contains(
+                r"\bparking\b|\bparked\b|\bvehicle\b|\bcar\b|\btruck\b|\bdouble parked\b|\bhydrant\b",
+                regex=True
+            ).astype(int),
+            "has_noise": s.str.contains(
+                r"\bnoise\b|\bloud\b|\bmusic\b|\bbanging\b|\byelling\b|\bparty\b",
+                regex=True
+            ).astype(int),
 
-def load_data():
-    df = pd.read_csv(DATA_PATH)
-    return df
+            # HPD
+            "has_heat_hot_water": s.str.contains(
+                r"\bno heat\b|\bheat\b|\bheating\b|\bhot water\b|\bboiler\b|\bradiator\b",
+                regex=True
+            ).astype(int),
+            "has_housing": s.str.contains(
+                r"\bapartment\b|\btenant\b|\blandlord\b|\bresidential\b",
+                regex=True
+            ).astype(int),
 
-# -----------------------------
+            # DOB should require true construction/building-safety language
+            "has_dob_signal": s.str.contains(
+                r"\bconstruction\b|\bpermit\b|\bscaffold\b|\bdemolition\b|\bunsafe construction\b",
+                regex=True
+            ).astype(int),
 
-# 2. Text Preprocessing
+            # OOS should not fire unless explicit sheriff / marshal / eviction terms exist
+            "has_oos_signal": s.str.contains(
+                r"\bsheriff\b|\bmarshal\b|\beviction\b|\blockout\b|\bcivil enforcement\b",
+                regex=True
+            ).astype(int),
+        })
 
-# -----------------------------
+        return csr_matrix(extra.values)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# ===========================================================================
+# 1. PAGE CONFIGURATION & BRANDING
+# ===========================================================================
+st.set_page_config(
+    page_title="UrbanPulse Analytics | Nova Haven",
+    page_icon="🏙️",
+    layout="wide",
+)
+
+#st.title("AI Capstone Dashboard")
+#st.write("Select a model from the sidebar to make predictions.")
+
+# Sidebar Branding
+st.sidebar.title("🏙️ UrbanPulse")
+st.sidebar.markdown("---")
+
+model_choice = st.sidebar.selectbox(
+    "Select Intelligence Module",
+    [
+        "Home", 
+        "Model 1: Traffic Severity (ML)", 
+        "Model 2: Resource Allocation (DNN)", 
+        "Model 3: Road Inspection (CNN)", 
+        "Model 4: 311 Classifier (NLP)", 
+        "Model 5: Innovation Module"
+    ]
+)
+
+# ===========================================================================
+# 2. CACHED MODEL LOADERS
+# ===========================================================================
+@st.cache_resource
+def load_ml_model():
+    import joblib
+    return joblib.load("models/model1_traditional_ml/saved_model/model.joblib")
+
+@st.cache_resource
+def load_dnn_model():
+    import tensorflow as tf
+    return tf.keras.models.load_model("models/model2_deep_learning/saved_model/model.keras")
+
+@st.cache_resource
+def load_cnn_model():
+    import tensorflow as tf
+    return tf.keras.models.load_model("models/model3_cnn/saved_model/model.keras")
+
+
+
+
+### functions for model 4
 
 def clean_text(text: str) -> str:
     if pd.isna(text):
@@ -90,403 +177,155 @@ def clean_text(text: str) -> str:
     return text
 
 
-def preprocess_text(series):
-    return series.apply(clean_text)
-
-
 def safe_str(x) -> str:
     return "" if pd.isna(x) else str(x).strip()
 
-def get_top_complaint_types(df: pd.DataFrame, n: int = 5) -> list:
-    return df["complaint_type"].value_counts().head(n).index.tolist()
+def fix_mojibake(text: str) -> str:
+    if pd.isna(text):
+        return ""
+    s = str(text)
+    if "Ã" in s or "â" in s:
+        try:
+            repaired = s.encode("latin1", errors="ignore").decode("utf-8", errors="ignore")
+            if repaired:
+                return repaired
+        except Exception:
+            pass
+    return s
 
 
-def create_complaint_categories(df: pd.DataFrame) -> pd.DataFrame:
+def looks_spanish_or_non_english(text: str) -> bool:
+    text = safe_str(text)
+    if not text:
+        return False
+    if any(ord(ch) > 127 for ch in text):
+        return True
+    lower = text.lower()
+    return any(marker in lower for marker in SPANISH_MARKERS)
+
+
+def ensure_translation_dependencies() -> None:
+    global _torch, _tqdm, _MarianMTModel, _MarianTokenizer, _DEVICE
+    if _torch is not None:
+        return
+    import torch
+    from tqdm.auto import tqdm
+    from transformers import MarianMTModel, MarianTokenizer
+    _torch = torch
+    _tqdm = tqdm
+    _MarianMTModel = MarianMTModel
+    _MarianTokenizer = MarianTokenizer
+    _DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+
+
+def get_translation_model(lang: str):
+    ensure_translation_dependencies()
+    if lang not in _TRANSLATION_MODEL_CACHE:
+        model_name = MARIAN_MODEL_MAP[lang]
+        LOGGER.info("Loading translation model for %s: %s", lang, model_name)
+        tokenizer = _MarianTokenizer.from_pretrained(model_name)
+        model = _MarianMTModel.from_pretrained(model_name).to(_DEVICE)
+        model.eval()
+        _TRANSLATION_MODEL_CACHE[lang] = (tokenizer, model)
+    return _TRANSLATION_MODEL_CACHE[lang]
+
+
+def translate_unique_values(values: Iterable[str], lang: str, batch_size: int = 32, max_length: int = 128) -> Dict[str, str]:
+    vals = [safe_str(v) for v in values if safe_str(v)]
+    vals = list(dict.fromkeys(vals))
+    if not vals:
+        return {}
+    tokenizer, model = get_translation_model(lang)
+    translation_map: Dict[str, str] = {}
+    LOGGER.info("Translating %s unique values for language=%s", len(vals), lang)
+    for i in _tqdm(range(0, len(vals), batch_size), desc=f"Translating {lang}"):
+        batch = vals[i:i + batch_size]
+        encoded = tokenizer(
+            batch,
+            return_tensors="pt",
+            padding=True,
+            truncation=True,
+            max_length=max_length,
+        )
+        encoded = {k: v.to(_DEVICE) for k, v in encoded.items()}
+        with _torch.no_grad():
+            generated = model.generate(**encoded)
+        decoded = tokenizer.batch_decode(generated, skip_special_tokens=True)
+        for src, tgt in zip(batch, decoded):
+            translation_map[src] = tgt
+    return translation_map
+
+
+
+def load_agency_name_map() -> dict:
     """
-    Map complaint types to the top 5 categories + "Other" (6 classes total).
+    Return a static mapping of agency code -> agency name.
+    This replaces file-based lookup for reliability and speed.
     """
-    top_5 = get_top_complaint_types(df, n=5)
-    
-    df['complaint_category'] = df['complaint_type'].apply(
-        lambda x: x if x in top_5 else 'other'
+    agency_map = {
+        "DCWP": "Department of Consumer and Worker Protection",
+        "DEP": "Department of Environmental Protection",
+        "DHS": "Department of Homeless Services",
+        "DOB": "Department of Buildings",
+        "DOE": "Department of Education",
+        "DOHMH": "Department of Health and Mental Hygiene",
+        "DOT": "Department of Transportation",
+        "DPR": "Department of Parks and Recreation",
+        "DSNY": "Department of Sanitation",
+        "HPD": "Department of Housing Preservation and Development",
+        "NYPD": "New York City Police Department",
+        "OOS": "Office of the Sheriff",
+        "OTI": "Office of Technology and Innovation",
+        "TLC": "Taxi and Limousine Commission",
+    }
+
+    return agency_map
+
+
+
+def translate_spanish_candidate_rows(df: pd.DataFrame) -> pd.DataFrame:
+    df = df.copy()
+    text_cols = ["complaint_type", "descriptor", "resolution_description"]
+
+    for col in text_cols:
+        if col not in df.columns:
+            df[col] = ""
+        df[col] = df[col].fillna("").map(fix_mojibake)
+        df[f"{col}_original"] = df[col]
+    df["lang_detection_text"] = (
+        df["complaint_type"].astype(str)
+        + " | "
+        + df["descriptor"].astype(str)
+        + " | "
+        + df["resolution_description"].astype(str)
     )
 
-    print("Complaint category distribution:")
-    print(df['complaint_category'].value_counts())
+    df["needs_translation"] = df["lang_detection_text"].apply(looks_spanish_or_non_english)
+    candidate_idx = df.index[df["needs_translation"]]
 
-    coverage = df[df['complaint_category'] != 'other'].shape[0] / len(df) * 100
-    print(f"\nTop 5 categories cover {coverage:.1f}% of all complaints")
-    print(f"Total classes: {df['complaint_category'].nunique()} (top 5 + other)")
-
+    if len(candidate_idx) == 0:
+        return df
+    for col in text_cols:
+        unique_vals = df.loc[candidate_idx, col].dropna().astype(str).str.strip()
+        unique_vals = unique_vals[unique_vals != ""].unique().tolist()
+        if unique_vals:
+            trans_map = translate_unique_values(
+                unique_vals,
+                "es",
+                16 if col == "resolution_description" else 32,
+                256 if col == "resolution_description" else 64,
+            )
+            df.loc[candidate_idx, col] = df.loc[candidate_idx, col].apply(
+                lambda x: trans_map.get(str(x).strip(), x)
+                if pd.notna(x) and str(x).strip() != ""
+                else x
+            )
     return df
 
 
-
-# ---------------------------------------------------------------------
-# Logging
-# ---------------------------------------------------------------------
-def setup_logging() -> logging.Logger:
-    logger = logging.getLogger("model4_train")
-    logger.setLevel(logging.INFO)
-
-    if logger.handlers:
-        return logger
-
-    handler = logging.StreamHandler(sys.stdout)
-    handler.setLevel(logging.INFO)
-    formatter = logging.Formatter(
-        fmt="%(asctime)s | %(levelname)s | %(message)s",
-        datefmt="%Y-%m-%d %H:%M:%S",
-    )
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
-    logger.propagate = False
-    return logger
-
-
-# ---------------------------------------------------------------------
-# Custom transformer for extra keyword features
-# =========================================================
-class ExtraTextFeatures(BaseEstimator, TransformerMixin):
-    def fit(self, X, y=None):
-        return self
-
-    def transform(self, X):
-        s = pd.Series(X).fillna("").astype(str).str.lower()
-
-        extra = pd.DataFrame({
-        "is_driveway": s.str.contains(r"\bdriveway\b", regex=True).astype(int),
-        "is_parking": s.str.contains(r"\bparking\b|\bparked\b|\bvehicle\b|\bcar\b", regex=True).astype(int),
-        "is_blocked": s.str.contains(r"\bblocked\b|\bblocking\b", regex=True).astype(int),
-        "is_noise": s.str.contains(r"\bbanging\b|\bpounding\b|\bloud\b|\bmusic\b", regex=True).astype(int),
-    })
-
-        return csr_matrix(extra.values)
-    
-    
-# -----------------------------
-
-# Main Pipeline
-
-# -----------------------------
-
-def main():
-    
-    warnings.filterwarnings("ignore")
-    pd.set_option("display.max_columns", 200)
-    np.set_printoptions(suppress=True)
-    random.seed(42)
-    np.random.seed(42)
-
-    print("Libraries Imported!")
-
-    # -----------------------------
-
-    # Paths
-
-    # -----------------------------
-
-
-
-    print("Project root:", PROJECT_ROOT)
-    print("Data path:", DATA_PATH)
-    print("Output dir:", SAVED_MODEL_DIR)
-    
-    LOGGER = setup_logging()
-
-    TEXT_COLS = ["descriptor", "resolution_description"]
-
-
-    print("Loading data...")
-    df = load_data()
-
-    df = df.copy()
-
-    for col in TEXT_COLS:
-        if col not in df.columns:
-            LOGGER.warning("Missing column '%s'; creating empty fallback", col)
-            df[col] = ""
-        df[col] = df[col].fillna("")
-
-    df = create_complaint_categories(df)
-
-    LOGGER.info("Building complaint_text field")
-    df["complaint_text"] = (df["descriptor"].map(clean_text) + " | " + df["resolution_description"].map(clean_text))
-
-    df["categories"] = df["complaint_category"].fillna("").map(clean_text)
-
-    df = df[(df["complaint_text"] != "") & (df["categories"] != "")].copy()
-    df = df.reset_index(drop=True)
-
-
-    LOGGER.info("Finished preprocessing")
-
-
-    df_model = df.copy()
-
-    df_model["complaint_text"] = df_model["complaint_text"].fillna("").map(clean_text)
-    df_model = df_model[(df_model["complaint_text"] != "") & (df_model["categories"].notna())].copy()
-
-    print("Modeling shape:", df_model.shape)
-    print(df_model["categories"].value_counts())
-
-    label_encoder = LabelEncoder()
-    y = label_encoder.fit_transform(df_model["categories"])
-
-    X_train_text, X_val_text, y_train, y_val = train_test_split(
-    df_model["complaint_text"],
-    y,
-    test_size=0.20,
-    random_state=42,
-    stratify=y
-    )
-
-    LOGGER.info("Train/test split done")
-
-
-    # =========================================================
-    # Full pipeline
-    # =========================================================
-    model_pipeline = Pipeline([
-        (
-        "features",
-        FeatureUnion([
-            (
-                "word_tfidf",
-                TfidfVectorizer(
-                    analyzer="word",
-                    ngram_range=(1, 3),
-                    max_features=12000,
-                    min_df=10,
-                    max_df=0.95,
-                    # stop_words=STOP_WORDS,
-                    sublinear_tf=True
-                )
-            ),
-            (
-                "char_tfidf",
-                TfidfVectorizer(
-                    analyzer="char_wb",
-                    ngram_range=(3, 4),
-                    max_features=5000,
-                    min_df=10,
-                    max_df=0.95,
-                    sublinear_tf=True
-                )
-            ),
-            (
-                "extra_features",
-                ExtraTextFeatures()
-            ),
-        ])
-    ),
-    (
-        "clf",
-        SGDClassifier(
-            loss="log_loss",
-            alpha=1e-6,
-            max_iter=1000,
-            tol=1e-4,
-            early_stopping=True,
-            validation_fraction=0.1,
-            n_iter_no_change=5,
-            random_state=42,
-            n_jobs=-1
-            )
-        )
-    ])
-
-
-    # =========================================================
-    # 3. Fit / predict
-    # =========================================================
-    model_pipeline.fit(X_train_text, y_train)
-
-    y_pred = model_pipeline.predict(X_val_text)
-
-    # probabilities / confidence
-    y_proba = model_pipeline.predict_proba(X_val_text)
-    y_conf = y_proba.max(axis=1)
-
-
-
-    acc = accuracy_score(y_val, y_pred)
-    f1_weighted = f1_score(y_val, y_pred, average="weighted")
-
-    #print("Accuracy:", round(acc, 4))
-    #print("Weighted F1:", round(f1_weighted, 4))
-
-    #print("\nClassification Report:")
-    #print(
-    #    classification_report(
-    #        y_val,
-    #        y_pred,
-    #        target_names=label_encoder.classes_,
-    #        zero_division=0
-    #        )
-    #    )
-
-    #cm = confusion_matrix(y_val, y_pred)
-    #cm_df = pd.DataFrame(cm, index=label_encoder.classes_, columns=label_encoder.classes_)
-    #print("\nConfusion Matrix:")
-    #print(cm_df)
-
-
-
-    LOGGER.info("Evaluating %s", "Model")
-
-    print("\n=== Model Evaluation ===")
-    print(f"Accuracy: {accuracy_score(y_val, y_pred):.4f}")
-    print(
-        f"Precision (weighted): "
-        f"{precision_score(y_val, y_pred, average='weighted', zero_division=0):.4f}"
-    )
-    print(
-        f"Recall (weighted): "
-        f"{recall_score(y_val, y_pred, average='weighted', zero_division=0):.4f}"
-    )
-    print(
-        f"F1 (weighted): "
-        f"{f1_score(y_val, y_pred, average='weighted', zero_division=0):.4f}"
-    )
-
-
-
-    LOGGER.info("Complaint Routing Recommendation")
-    
-    """
-    # Build Complaint Routing Recommendations
-    
-    Use the same Training TEXT to predict which "agency" should the complaint be routed to. 
-    Such as:
-    
-    **"blocked driveway"** --- nypd
-    
-    **"heat/hot water"** --- hpd
-    
-    **"illegal parking"** --- nypd
-    
-    **"noise - residential"** --- nypd
-    
-    **"snow or ice"** --- dsny
-    """
-
-    # -----------------------------
-    # Encode labels for route-to-agency
-    # -----------------------------
-    df_model2 = df_model.copy()
-
-    label_encoder_rt = LabelEncoder()
-    df_model2["rt_label"] = label_encoder_rt.fit_transform(df_model2["agency"])
-
-    id2label_rt = {i: label for i, label in enumerate(label_encoder_rt.classes_)}
-    label2id_rt = {label: i for i, label in id2label_rt.items()}
-
-    print("\nLabel mapping:")
-    print(id2label_rt)
-
-
-    X_train_text_rt, X_val_text_rt, y_train_rt, y_test_rt = train_test_split(
-        df_model2["complaint_text"],
-        df_model2["rt_label"],
-        test_size=0.2,
-        random_state=42,
-        stratify=df_model2["rt_label"]
-    )
-
-
-    # =========================================================
-    # Full pipeline
-    # =========================================================
-    model_pipeline_rt = Pipeline([
-    (
-        "features",
-        FeatureUnion([
-            (
-                "word_tfidf",
-                TfidfVectorizer(
-                    analyzer="word",
-                    ngram_range=(1, 3),
-                    max_features=12000,
-                    min_df=10,
-                    max_df=0.95,
-                    # stop_words=STOP_WORDS,
-                    sublinear_tf=True
-                )
-            ),
-            (
-                "char_tfidf",
-                TfidfVectorizer(
-                    analyzer="char_wb",
-                    ngram_range=(3, 4),
-                    max_features=5000,
-                    min_df=10,
-                    max_df=0.95,
-                    sublinear_tf=True
-                )
-            ),
-            (
-                "extra_features",
-                ExtraTextFeatures()
-            ),
-        ])
-    ),
-    (
-        "clf",
-        SGDClassifier(
-            loss="log_loss",
-            alpha=1e-5,
-            max_iter=20,
-            tol=1e-3,
-            class_weight="balanced",
-            random_state=42,
-            n_jobs=-1,
-        )
-    )
-    ])
-
-
-
-
-    # =========================================================
-    # Fit / predict
-    # =========================================================
-    model_pipeline_rt.fit(X_train_text_rt, y_train_rt)
-
-    y_pred_rt = model_pipeline_rt.predict(X_val_text_rt)
-
-    # optional probabilities / confidence
-    y_proba_rt = model_pipeline_rt.predict_proba(X_val_text_rt)
-    y_conf_rt = y_proba_rt.max(axis=1)
-
-
-    acc_rt = accuracy_score(y_test_rt, y_pred_rt)
-    f1_weighted_rt = f1_score(y_test_rt, y_pred_rt, average="weighted")
-
-    print("Routing Accuracy:", round(acc_rt, 4))
-    print("Routing Weighted F1:", round(f1_weighted_rt, 4))
-
-    print("\nRouting Classification Report:")
-    print(
-    classification_report(
-        y_test_rt,
-        y_pred_rt,
-        target_names=label_encoder_rt.classes_,
-        zero_division=0
-        )
-    )
-
-    ## Save models and artifacts
-
-
-    joblib.dump(model_pipeline, SAVED_MODEL_DIR / "model4_category_classifier_char_tfidf_SGD.pkl")
-    joblib.dump(model_pipeline_rt, SAVED_MODEL_DIR / "model4_routing_classifier_char_tfidf_SGD.pkl")
-    joblib.dump(label_encoder, SAVED_MODEL_DIR / "model4_category_label_encoder.pkl")
-    joblib.dump(label_encoder_rt, SAVED_MODEL_DIR / "model4_routing_label_encoder.pkl")
-
-    print("Saved artifacts of recommendation router to:", SAVED_MODEL_DIR)
-
-
-
-if __name__ == "__main__":
-    main()
+def build_category_text(df: pd.DataFrame) -> pd.Series:
+    return (
+        df.get("descriptor", pd.Series([""] * len(df), index=df.index)).fillna("").map(clean_text)
+        + " "
+        + df.get("resolution_description", pd.Series([""] * len(df), index=df.index)).fillna("").map(clean_text)
+    ).str.strip()
