@@ -1,3 +1,4 @@
+
 #!/usr/bin/env python3
 """
 Model 5: Innovation — Prediction Script
@@ -478,7 +479,9 @@ def predict(model: Dict, test_data: pd.DataFrame) -> pd.DataFrame:
         default="normal",
     )
 
-    scored["urgency_score"] = scored["urgency_score"].astype(float).round(6)
+    scored["urgency_score"] = (scored["urgency_score"].astype(float).round(6) + 0.5).clip(upper=1.0)
+
+    #scored["urgency_score"] = (scored["urgency_score"] 
 
     results = pd.DataFrame(
         {
