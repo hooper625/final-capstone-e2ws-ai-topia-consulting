@@ -74,6 +74,10 @@ def accident_engineer_features(df):
     #one-hot encode 
     if 'Region' in df.columns:
         df = pd.concat([df.drop(columns=['Region']), pd.get_dummies(df['Region'], prefix='region', dummy_na=False, dtype=int)], axis=1)
+    # Test data may not contain all region values — ensure every column exists before create_zipcode_features
+    for _col in ['region_Midwest', 'region_Northeast', 'region_South', 'region_West', 'region_Other']:
+        if _col not in df.columns:
+            df[_col] = 0
     if 'Wind_Direction' in df.columns:
         df = pd.concat([df.drop(columns=['Wind_Direction']), pd.get_dummies(df['Wind_Direction'], prefix='wind', dummy_na=False, dtype=int)], axis=1)
 

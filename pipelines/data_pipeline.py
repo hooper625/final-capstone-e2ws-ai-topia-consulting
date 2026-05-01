@@ -440,3 +440,93 @@ def plot_prediction_probabilities(trained_model, X_test, model_name):
     plt.legend()
     plt.grid(axis='y', alpha=0.3)
     plt.show()
+
+
+# =============================================================================
+# Accident Feature Engineering — Prediction Pipeline
+# Computes the 16 features Model 1 (XGBoost) expects.
+# No KMeans, no uszipcode lookups, no dynamic OHE — safe on any dataset size.
+# =============================================================================
+def accident_predict_features(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Lean feature engineering for Model 1 prediction.
+    Imports the weather/road helpers from data_cleaning_accident_pipeline
+    at call time to avoid circular imports.
+    """
+    from pipelines.data_cleaning_accident_pipeline import (
+        process_weather_features,
+        dangerous_conditions_score,
+        engineer_road_features,
+    )
+
+    df = df.copy()
+    df = df.drop(columns=['Country', 'ID', 'Source'], errors='ignore')
+
+    # ── Datetime parsing ──────────────────────────────────────────────────────
+    for col in ['Start_Time', 'End_Time', 'Weather_Timestamp']:
+        if col in df.columns:
+            df[col] = pd.to_datetime(df[col], errors='coerce')
+
+    if 'Start_Time' in df.columns and 'Weather_Timestamp' in df.columns:
+        df['Start_Time'] = df['Start_Time'].fillna(df['Weather_Timestamp'])
+
+    # ── Temporal features ─────────────────────────────────────────────────────
+    if 'Start_Time' in df.columns:
+        df['hour']        = df['Start_Time'].dt.hour.fillna(12).astype(int)
+        df['day_of_week'] = df['Start_Time'].dt.dayofweek.fillna(0).astype(int)
+    else:
+        df['hour']        = 12
+        df['day_of_week'] = 0
+
+    df['is_weekend']      = (df['day_of_week'] >= 5).astype(int)
+    df['is_morning_rush'] = df['hour'].between(7, 9).astype(int)
+    df['is_evening_rush'] = df['hour'].between(16, 19).astype(int)
+    df['is_rush_hour']    = (df['is_morning_rush'] | df['is_evening_rush']).astype(int)
+
+    # ── Accident duration (strong severity signal) ────────────────────────────
+    if 'Start_Time' in df.columns and 'End_Time' in df.columns:
+        df['duration_min'] = (
+            (df['End_Time'] - df['Start_Time']).dt.total_seconds() / 60
+        ).clip(0, 1440).fillna(0)
+    else:
+        df['duration_min'] = 0
+
+    # ── Fill missing weather with global medians ──────────────────────────────
+    for col in ['Temperature(F)', 'Wind_Chill(F)', 'Humidity(%)',
+                'Pressure(in)', 'Visibility(mi)', 'Wind_Speed(mph)', 'Precipitation(in)']:
+        if col in df.columns:
+            df[col] = df[col].fillna(df[col].median())
+
+    if 'Wind_Chill(F)' in df.columns and 'Temperature(F)' in df.columns:
+        df['Wind_Chill(F)'] = df['Wind_Chill(F)'].fillna(df['Temperature(F)'])
+
+    for col in ['Weather_Condition', 'Wind_Direction']:
+        if col in df.columns:
+            mode = df[col].dropna().mode()
+            df[col] = df[col].fillna(mode.iloc[0] if len(mode) > 0 else 'Clear')
+
+    for col in ['Sunrise_Sunset', 'Civil_Twilight', 'Nautical_Twilight', 'Astronomical_Twilight']:
+        if col in df.columns:
+            df[col] = df[col].fillna('Day')
+
+    # ── Convert road feature columns from bool/string to int ─────────────────
+    road_cols = [
+        'Amenity', 'Bump', 'Crossing', 'Give_Way', 'Junction', 'No_Exit',
+        'Railway', 'Roundabout', 'Station', 'Stop',
+        'Traffic_Calming', 'Traffic_Signal', 'Turning_Loop',
+    ]
+    bool_map = {True: 1, False: 0, 'True': 1, 'False': 0, 'true': 1, 'false': 0}
+    for col in road_cols:
+        if col in df.columns:
+            df[col] = df[col].map(bool_map).fillna(0).astype(int)
+
+    # ── Weather features (is_freezing, low_visibility_severity, weather clusters) ──
+    df = process_weather_features(df)
+
+    # ── Dangerous conditions composite score ──────────────────────────────────
+    df = dangerous_conditions_score(df)
+
+    # ── Road aggregate features (n_road_features, has_traffic_control) ────────
+    df = engineer_road_features(df)
+
+    return df

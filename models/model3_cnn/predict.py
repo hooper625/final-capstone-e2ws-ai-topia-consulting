@@ -26,7 +26,7 @@ import tensorflow as tf
 PROJECT_ROOT    = Path.cwd()
 MODEL_DIR       = PROJECT_ROOT / "models" / "model3_cnn" / "saved_model"
 TEST_DATA_DIR   = PROJECT_ROOT / "test_data"
-OUTPUT_FILE     = TEST_DATA_DIR / "model3_cnn_results.csv"
+OUTPUT_FILE     = TEST_DATA_DIR / "model3_results.csv"
 
 IMG_SIZE = 384
 

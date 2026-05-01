@@ -26,7 +26,7 @@ import tensorflow as tf
 PROJECT_ROOT    = Path.cwd()
 MODEL_DIR       = PROJECT_ROOT / "models" / "model2_deep_learning" / "saved_model"
 TEST_DATA_DIR   = PROJECT_ROOT / "test_data"
-OUTPUT_FILE     = TEST_DATA_DIR / "model2_dnn_results.csv"
+OUTPUT_FILE     = TEST_DATA_DIR / "model2_results.csv"
 
 
 def setup_logging() -> logging.Logger:
@@ -83,14 +83,22 @@ def preprocess(df: pd.DataFrame, scaler, feature_cols: list) -> np.ndarray:
 
 
 def predict(df: pd.DataFrame, model, scaler, label_encoder, feature_cols) -> pd.DataFrame:
-    X_scaled      = preprocess(df, scaler, feature_cols)
-    proba         = model.predict(X_scaled)
-    pred_encoded  = apply_thresholds(proba)
-    pred_labels   = label_encoder.inverse_transform(pred_encoded)
-    confidence    = proba.max(axis=1)
+    X_scaled     = preprocess(df, scaler, feature_cols)
+    proba        = model.predict(X_scaled)
+    pred_encoded = apply_thresholds(proba)
+    pred_labels  = label_encoder.inverse_transform(pred_encoded)
+    probability  = np.round(proba.max(axis=1), 4)
+
+    # Normalise id column (test CSV may use 'ID' or 'id')
+    id_col = next((c for c in df.columns if c.lower() == 'id'), None)
+    ids    = df[id_col].values if id_col else range(1, len(df) + 1)
+
+    # Must match template exactly: id, prediction, probability, confidence
     return pd.DataFrame({
-        "predicted_severity": pred_labels,
-        "confidence":         np.round(confidence, 4),
+        "id":          ids,
+        "prediction":  pred_labels,
+        "probability": probability,
+        "confidence":  probability,
     })
 
 
@@ -110,8 +118,7 @@ def main():
     results = predict(df, model, scaler, label_encoder, feature_cols)
 
     OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
-    pd.concat([df[["Severity"]].reset_index(drop=True) if "Severity" in df.columns
-               else pd.DataFrame(), results], axis=1).to_csv(OUTPUT_FILE, index=False)
+    results.to_csv(OUTPUT_FILE, index=False)
     logger.info("Predictions saved to %s", OUTPUT_FILE)
     print(results.head())
 
