@@ -2,6 +2,9 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 from PIL import Image
+import pandas as pd
+import numpy as np
+from PIL import Image
 from pathlib import Path
 from scipy.sparse import csr_matrix
 from sklearn.base import BaseEstimator, TransformerMixin
@@ -101,6 +104,8 @@ def _urgency_tier(urgent: int, distress: int, moderate: int):
 st.set_page_config(
     page_title="UrbanPulse Analytics | Nova Haven",
     page_icon="🏙️",
+    page_title="UrbanPulse Analytics | Nova Haven",
+    page_icon="🏙️",
     layout="wide",
 )
 st.markdown("""
@@ -163,9 +168,77 @@ st.markdown("""
 st.sidebar.title("🏙️ UrbanPulse")
 st.sidebar.markdown("---")
 
+st.markdown("""
+    <style>
+    /* Use Streamlit's native background and text variables */
+    .stApp {
+        background-color: var(--background-color);
+        color: var(--text-color);
+    }
+
+    /* Sidebar - uses a slightly offset transparency to look good on both */
+    section[data-testid="stSidebar"] {
+        background-color: rgba(151, 166, 195, 0.1) !important;
+    }
+
+    /* Metric Cards - adapt border and background to theme */
+    [data-testid="stMetric"] {
+        background-color: var(--secondary-background-color);
+        border: 1px solid rgba(128, 128, 128, 0.2);
+        padding: 15px;
+        border-radius: 10px;
+    }
+
+    /* Labels - Use secondary text color for a subtle look */
+    [data-testid="stMetricLabel"] p {
+        color: var(--text-color) !important;
+        opacity: 0.8;
+        font-size: 1rem !important;
+    }
+
+    /* Values - Use Primary accent color for consistency */
+    [data-testid="stMetricValue"] div {
+        color: var(--primary-color) !important;
+        font-weight: bold !important;
+    }
+
+    /* Headers - Use Primary accent color */
+    h1, h2, h3 {
+        color: var(--primary-color) !important;
+    }
+
+    /* Buttons - Use Primary color and automatically adjust text contrast */
+    .stButton>button {
+        background-color: var(--primary-color);
+        color: white; /* Streamlit buttons usually handle contrast automatically, but white is safe for primary */
+        border: none;
+        width: 100%;
+    }
+    
+    /* Optional: Hover effect for buttons using the primary color with filter */
+    .stButton>button:hover {
+        filter: brightness(0.9);
+        color: white;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+
+# Sidebar Branding
+st.sidebar.title("🏙️ UrbanPulse")
+st.sidebar.markdown("---")
+
 model_choice = st.sidebar.selectbox(
     "Select Intelligence Module",
+    "Select Intelligence Module",
     [
+        "Home", 
+        "Model 1: Traffic Severity (ML)", 
+        "Model 2: Resource Allocation (DNN)", 
+        "Model 3: Road Inspection (CNN)", 
+        "Model 4: 311 Classifier (NLP)", 
+        "Model 5: Innovation Module"
+    ]
         "Home", 
         "Model 1: Traffic Severity (ML)", 
         "Model 2: Resource Allocation (DNN)", 

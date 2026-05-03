@@ -1,0 +1,133 @@
+
+$ python -m models.model1_traditional_ml.train
+$ python -m models.model1_traditional_ml.predict --self-test
+
+wzhu2@WendyHomePC MINGW64 /c/Git_Repo_Erica (Update-Branch-Classification-and-Dangerous-Weather)
+$ python -m models.model1_traditional_ml.train
+C:\Users\wzhu2\AppData\Local\Programs\Python\Python313\Lib\site-packages\fuzzywuzzy\fuzz.py:11: UserWarning: Using slow pure-python SequenceMatcher. Install python-Levenshtein to remove this warning
+  warnings.warn('Using slow pure-python SequenceMatcher. Install python-Levenshtein to remove this warning')
+Loaded raw data: (500000, 46)
+
+--- Preprocessing ---
+  Calculating sun data for 1561 rows...
+  Filling weather with regional medians...
+Engineering DangerousScore...
+Aggregating 13 road features...
+Feature engineering complete. New columns: ['n_road_features', 'has_traffic_control']
+Dropped 44 columns with > 99.0% dominance.
+Columns dropped: ['weather_data_available', 'weather_cluster_other', 'weather_cluster_storm', 'Zip_region_Midwest_48507', 'Zip_region_Midwest_55112', 'Zip_region_Midwest_55403', 'Zip_region_Midwest_55404', 'Zip_region_Midwest_55423', 'Zip_region_Northeast_07024', 'Zip_region_Northeast_07114', 'Zip_region_Northeast_10452', 'Zip_region_Northeast_11367', 'Zip_region_Northeast_17601', 'Zip_region_Other_20020', 'Zip_region_Other_20024', 'Zip_region_Other_64106', 'Zip_region_Other_64116', 'Zip_region_Other_64129', 'Zip_region_South_28262', 'Zip_region_South_32819', 'Zip_region_South_33169', 'Zip_region_South_33186', 'Zip_region_South_75243', 'Zip_region_West_91706', 'Zip_region_West_91761', 'Zip_region_West_92324', 'Zip_region_West_92407', 'Zip_region_West_92507', 'City_atlanta', 'City_baton rouge', 'City_columbia', 'City_jacksonville', 'City_minneapolis', 'City_nashville', 'City_oklahoma city', 'City_phoenix', 'City_richmond', 'City_sacramento', 'City_san diego', 'City_tucson', 'Cty_cook', 'Cty_east baton rouge', 'Cty_marion', 'Cty_santa clara']
+Post-processing dataframe shape: (500000, 98)
+Feature matrix shape: (500000, 97)
+Target shape: (500000,)
+--- Label Encoding Component ---
+Label mapping:
+  1 -> 0
+  2 -> 1
+  3 -> 2
+  4 -> 3
+--- Data Split Component ---
+Training set: 400000 samples
+Test set: 100000 samples
+
+Training class distribution:
+ Class 0: 3487 samples (0.9%)
+ Class 1: 318668 samples (79.7%)
+ Class 2: 67250 samples (16.8%)
+ Class 3: 10595 samples (2.6%)
+--- Scaling Component ---
+Features scaled successfully!
+Scaler fitted on 97 features.
+
+--- SMOTE Component ---
+Before SMOTE: X_train=(400000, 97), y_train=400000
+After SMOTE : X_train=(1274672, 97), y_train=1274672
+
+--- Model Training ---
+Model training complete.
+
+--- Evaluation ---
+
+============================================================
+ MODEL: XGBoost Classifier
+============================================================
+              precision    recall  f1-score   support
+
+           0       0.37      0.67      0.48       871
+           1       0.94      0.90      0.92     79667
+           2       0.70      0.78      0.74     16813
+           3       0.58      0.81      0.68      2649
+
+    accuracy                           0.88    100000
+   macro avg       0.65      0.79      0.70    100000
+weighted avg       0.89      0.88      0.88    100000
+
+Confusion Matrix:
+[[  587   275     8     1]
+ [  966 71794  5397  1510]
+ [   34  3624 13105    50]
+ [    5   342   145  2157]]
+============================================================
+
+Accuracy    : 0.8764
+Weighted F1 : 0.8810
+
+--- Model Explainability ---
+
+Calculating feature importance for XGBoost Classifier...
+Top 30 features for XGBoost Classifier:
+  word_exit: 0.0282
+  word_closed: 0.0232
+  word_northbound: 0.0180
+  word_southbound: 0.0175
+  word_eastbound: 0.0115
+  word_accident: 0.0112
+  word_westbound: 0.0109
+  word_crash: 0.0106
+  word_lane: 0.0080
+  word_blocked: 0.0064
+  Geo_Cluster: 0.0061
+  word_caution: 0.0053
+  Distance(mi): 0.0035
+  word_stationary: 0.0026
+  Zip_region_South_other: 0.0022
+  word_shoulder: 0.0020
+  dist_from_reg_hotspot: 0.0020
+  word_right: 0.0015
+  Zip_region_West_other: 0.0013
+  word_incident: 0.0011
+  is_weekend: 0.0009
+  word_left: 0.0009
+  region_West: 0.0007
+  Cty_alameda: 0.0007
+  Cty_riverside: 0.0007
+  Cty_los angeles: 0.0006
+  region_South: 0.0005
+  is_morning_rush: 0.0005
+  Cty_orange: 0.0005
+  Cty_miami-dade: 0.0004
+
+--- Saving Model Bundle ---
+Saved model bundle to: models\model1_traditional_ml\saved_model\EW_xgb_model.pkl
+
+Training complete!
+Final metrics: {'accuracy': 0.87643, 'weighted_f1': 0.8810312613663818}
+
+wzhu2@WendyHomePC MINGW64 /c/Git_Repo_Erica (Update-Branch-Classification-and-Dangerous-Weather)
+$ python -m models.model1_traditional_ml.predict --self-test
+C:\Users\wzhu2\AppData\Local\Programs\Python\Python313\Lib\site-packages\fuzzywuzzy\fuzz.py:11: UserWarning: Using slow pure-python SequenceMatcher. Install python-Levenshtein to remove this warning
+  warnings.warn('Using slow pure-python SequenceMatcher. Install python-Levenshtein to remove this warning')
+Loaded model bundle from: models\model1_traditional_ml\saved_model\EW_xgb_model.pkl
+Running self-test with 2 sample rows.
+  Filling weather with regional medians...
+Engineering DangerousScore...
+Aggregating 13 road features...
+Feature engineering complete. New columns: ['n_road_features', 'has_traffic_control']
+Dropped 7 columns with > 99.0% dominance.
+Columns dropped: ['is_weekend', 'is_evening_rush', 'dist_from_reg_hotspot', 'word_a', 'weather_data_available', 'is_freezing', 'region_West']
+
+Prediction preview:
+   id  prediction  probability confidence
+0   1           2     0.924212  very_high
+1   2           2     0.975974  very_high
+
+Predictions saved to test_data\model1_results.csv

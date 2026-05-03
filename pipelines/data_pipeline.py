@@ -25,11 +25,27 @@ from sklearn.inspection import permutation_importance
 from sklearn.metrics import (
     accuracy_score, precision_score, f1_score, classification_report, confusion_matrix,  RocCurveDisplay, PrecisionRecallDisplay
 )
+import numpy as np
+
+from sklearn.preprocessing import StandardScaler, LabelEncoder
+
+# Visualization
+import matplotlib.pyplot as plt
+from seaborn.objects import Plot
+from sklearn.inspection import permutation_importance
+
+# Sklearn - evaluation
+from sklearn.metrics import (
+    accuracy_score, precision_score, f1_score, classification_report, confusion_matrix,  RocCurveDisplay, PrecisionRecallDisplay
+)
 # Project paths
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 RAW_DATA_DIR = PROJECT_ROOT / "data" / "raw"
 PROCESSED_DATA_DIR = PROJECT_ROOT / "data" / "processed"
 
+# =============================================================================
+# HINT 1: Loading the Accident Data
+# =============================================================================
 # =============================================================================
 # HINT 1: Loading the Accident Data
 # =============================================================================
@@ -53,7 +69,12 @@ def load_raw_data(filename):
         )
     
     return pd.read_csv(filepath)
+    
+    return pd.read_csv(filepath)
 
+# ============================================================================================================================
+# Common Data Cleaning & Feature Engineering
+# ============================================================================================================================
 # ============================================================================================================================
 # Common Data Cleaning & Feature Engineering
 # ============================================================================================================================
@@ -69,6 +90,75 @@ def clean_data(df):
     Returns:
         Cleaned DataFrame
     """
+    #drop Duplicates
+    df = df.drop_duplicates()
+
+    # cleaning - change all text to lower case for consistency
+    df = df.apply(lambda x: x.str.lower() if x.dtype == 'object' else x)
+
+    return df
+
+# =============================================================================
+# HINT 2: Temporal Feature Engineering
+# =============================================================================
+def create_temporal_features(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Time patterns are among the strongest predictors of accident severity.
+
+    Features to extract:
+    - Hour of day (rush hour vs. off-peak)
+    - Day of week (weekday vs. weekend)
+    - Month (seasonal patterns — winter ice, summer heat)
+    - Duration of traffic impact
+    - Is it dark? (Sunrise_Sunset column helps, but you can derive from time too)
+    """
+    if 'Start_Time' in df.columns:
+        df['hour'] = df['Start_Time'].dt.hour
+        df['day_of_week'] = df['Start_Time'].dt.dayofweek
+        df['month'] = df['Start_Time'].dt.month
+    
+    if 'day_of_week' in df.columns:
+        df['is_weekend'] = (df['day_of_week'] >= 5).astype(int)
+
+    # Rush hour flags
+    if 'hour' in df.columns:
+        df['is_morning_rush'] = df['hour'].between(7, 9).astype(int)
+        df['is_evening_rush'] = df['hour'].between(16, 19).astype(int)
+
+    if 'is_morning_rush' in df.columns and 'is_evening_rush' in df.columns:
+        df['is_rush_hour'] = (df['is_morning_rush'] | df['is_evening_rush']).astype(int)
+
+    # Duration of traffic impact (in minutes)
+    if 'End_Time' in df.columns:
+        df['duration_min'] = (df['End_Time'] - df['Start_Time']).dt.total_seconds() / 60
+        # Cap extreme values
+        df['duration_min'] = df['duration_min'].clip(0, 1440)  # Max 24 hours
+
+    # Handle Created Date
+    if 'created_date' in df.columns:
+        # Convert to datetime first to avoid the AttributeError
+        df['created_date'] = pd.to_datetime(df['created_date'], errors='coerce')
+        
+        # Use specific names so they don't get overwritten
+        df['created_hour'] = df['created_date'].dt.hour
+        df['created_day_of_week'] = df['created_date'].dt.dayofweek
+        df['created_month'] = df['created_date'].dt.month
+
+    # Handle Closed Date
+    if 'closed_date' in df.columns:
+        # Convert to datetime first
+        df['closed_date'] = pd.to_datetime(df['closed_date'], errors='coerce')
+        
+        # Use 'closed_' prefix
+        df['closed_hour'] = df['closed_date'].dt.hour
+        df['closed_day_of_week'] = df['closed_date'].dt.dayofweek
+        df['closed_month'] = df['closed_date'].dt.month
+        
+    return df
+
+# =============================================================================
+# Split data into train and validation sets
+# =============================================================================
     #drop Duplicates
     df = df.drop_duplicates()
 
@@ -168,6 +258,35 @@ def split_data(X, y, test_size=0.2, random_state=42):
 # =============================================================================
 # Save processed data 
 # =============================================================================
+    """
+    Split data into train and test sets with stratification.
+    Verifies the balance of the split automatically.
+    """
+    # 1. Perform the split with stratification
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, 
+        test_size=test_size, 
+        random_state=random_state, 
+        stratify=y
+    )
+    
+    # 2. Verify split size (Your requested check)
+    print("--- Data Split Component ---")
+    print(f"Training set: {X_train.shape[0]} samples")
+    print(f"Test set: {X_test.shape[0]} samples")
+
+    # 3. Verify stratification/class distribution
+    print(f"\nTraining class distribution:")
+    unique, counts = np.unique(y_train, return_counts=True)
+    for u, c in zip(unique, counts):
+        percentage = (c / len(y_train)) * 100
+        print(f" Class {u}: {c} samples ({percentage:.1f}%)")
+    
+    return X_train, X_test, y_train, y_test
+
+# =============================================================================
+# Save processed data 
+# =============================================================================
 def save_processed_data(df, filename):
     """Save processed data to data/processed/.
 
@@ -184,9 +303,20 @@ def save_processed_data(df, filename):
         print(f"Existing file {filename} dropped.")
 
     # Save the new version
+
+    # Drop the file if it already exists
+    if output_path.exists():
+        output_path.unlink()
+        print(f"Existing file {filename} dropped.")
+
+    # Save the new version
     df.to_csv(output_path, index=False)
     print(f"Saved fresh processed data to {output_path}")
+    print(f"Saved fresh processed data to {output_path}")
 
+# =============================================================================
+# Load previously processed data 
+# =============================================================================
 # =============================================================================
 # Load previously processed data 
 # =============================================================================

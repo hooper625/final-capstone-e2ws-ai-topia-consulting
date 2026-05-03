@@ -1,0 +1,1001 @@
+synthetic_id,complaint_type,descriptor,resolution_description,agency,source
+1,blocked driveway,I need to report that car blocked private driveway near Main St.,,NYPD,synthetic_rule_training_v2
+2,blocked driveway,Resident reports vehicle blocked garage entrance on Forest Ave.,,NYPD,synthetic_rule_training_v2
+3,blocked driveway,blocked driveway: van blocked my driveway on Forest Ave.,,NYPD,synthetic_rule_training_v2
+4,blocked driveway,Resident reports vehicle preventing access to garage entrance on Forest Ave.,,NYPD,synthetic_rule_training_v2
+5,blocked driveway,blocked driveway: vehicle preventing access to driveway entrance near Main St.,,NYPD,synthetic_rule_training_v2
+6,blocked driveway,There is a complaint about SUV that parked in front of my driveway near Main St.,,NYPD,synthetic_rule_training_v2
+7,blocked driveway,I need to report that van parked in front of private driveway near Main St.,,NYPD,synthetic_rule_training_v2
+8,blocked driveway,Resident reports delivery vehicle parked in front of my driveway on Forest Ave.,,NYPD,synthetic_rule_training_v2
+9,blocked driveway,There is a complaint about car that parked in front of private driveway in front of the building.,,NYPD,synthetic_rule_training_v2
+10,blocked driveway,"Please send help, delivery vehicle blocked driveway entrance in front of the building.",,NYPD,synthetic_rule_training_v2
+11,blocked driveway,van blocked garage entrance outside my house.,,NYPD,synthetic_rule_training_v2
+12,blocked driveway,I need to report that SUV parked in front of garage entrance near Main St.,,NYPD,synthetic_rule_training_v2
+13,blocked driveway,I need to report that car blocked our driveway outside my house.,,NYPD,synthetic_rule_training_v2
+14,blocked driveway,delivery vehicle is blocking my driveway at the curb.,,NYPD,synthetic_rule_training_v2
+15,blocked driveway,"Please send help, van parked in front of our driveway outside my house.",,NYPD,synthetic_rule_training_v2
+16,blocked driveway,"Please send help, vehicle parked in front of my driveway in front of the building.",,NYPD,synthetic_rule_training_v2
+17,blocked driveway,I need to report that vehicle preventing access to our driveway near Main St.,,NYPD,synthetic_rule_training_v2
+18,blocked driveway,There is a complaint about van that parked in front of garage entrance near Main St.,,NYPD,synthetic_rule_training_v2
+19,blocked driveway,I need to report that truck blocked our driveway on Forest Ave.,,NYPD,synthetic_rule_training_v2
+20,blocked driveway,"Please send help, van parked in front of my driveway near Main St.",,NYPD,synthetic_rule_training_v2
+21,blocked driveway,blocked driveway: taxi parked in front of our driveway at the curb.,,NYPD,synthetic_rule_training_v2
+22,blocked driveway,There is a complaint about taxi that obstructing our driveway outside my house.,,NYPD,synthetic_rule_training_v2
+23,blocked driveway,Resident reports vehicle preventing access to garage entrance outside my house.,,NYPD,synthetic_rule_training_v2
+24,blocked driveway,I need to report that SUV obstructing garage entrance at the curb.,,NYPD,synthetic_rule_training_v2
+25,blocked driveway,"Please send help, vehicle is blocking garage entrance at the curb.",,NYPD,synthetic_rule_training_v2
+26,blocked driveway,delivery vehicle blocked my driveway near Main St.,,NYPD,synthetic_rule_training_v2
+27,blocked driveway,I need to report that vehicle obstructing garage entrance on Forest Ave.,,NYPD,synthetic_rule_training_v2
+28,blocked driveway,There is a complaint about van that preventing access to driveway entrance in front of the building.,,NYPD,synthetic_rule_training_v2
+29,blocked driveway,"Please send help, SUV blocked my driveway in front of the building.",,NYPD,synthetic_rule_training_v2
+30,blocked driveway,"Please send help, delivery vehicle parked in front of my driveway outside my house.",,NYPD,synthetic_rule_training_v2
+31,blocked driveway,There is a complaint about vehicle that obstructing my driveway outside my house.,,NYPD,synthetic_rule_training_v2
+32,blocked driveway,blocked driveway: delivery vehicle is blocking garage entrance on Forest Ave.,,NYPD,synthetic_rule_training_v2
+33,blocked driveway,I need to report that truck preventing access to garage entrance near Main St.,,NYPD,synthetic_rule_training_v2
+34,blocked driveway,Resident reports truck is blocking garage entrance in front of the building.,,NYPD,synthetic_rule_training_v2
+35,blocked driveway,SUV parked in front of driveway entrance on Forest Ave.,,NYPD,synthetic_rule_training_v2
+36,blocked driveway,truck parked in front of our driveway on Forest Ave.,,NYPD,synthetic_rule_training_v2
+37,blocked driveway,Resident reports SUV blocked my driveway at the curb.,,NYPD,synthetic_rule_training_v2
+38,blocked driveway,delivery vehicle preventing access to our driveway near Main St.,,NYPD,synthetic_rule_training_v2
+39,blocked driveway,I need to report that van preventing access to our driveway outside my house.,,NYPD,synthetic_rule_training_v2
+40,blocked driveway,blocked driveway: delivery vehicle preventing access to driveway entrance near Main St.,,NYPD,synthetic_rule_training_v2
+41,blocked driveway,blocked driveway: delivery vehicle is blocking private driveway at the curb.,,NYPD,synthetic_rule_training_v2
+42,blocked driveway,I need to report that taxi parked in front of driveway entrance in front of the building.,,NYPD,synthetic_rule_training_v2
+43,blocked driveway,There is a complaint about car that is blocking our driveway on Forest Ave.,,NYPD,synthetic_rule_training_v2
+44,blocked driveway,"Please send help, car preventing access to garage entrance near Main St.",,NYPD,synthetic_rule_training_v2
+45,blocked driveway,blocked driveway: vehicle blocked my driveway on Forest Ave.,,NYPD,synthetic_rule_training_v2
+46,blocked driveway,Resident reports car blocked private driveway on Forest Ave.,,NYPD,synthetic_rule_training_v2
+47,blocked driveway,blocked driveway: vehicle parked in front of driveway entrance near Main St.,,NYPD,synthetic_rule_training_v2
+48,blocked driveway,blocked driveway: vehicle preventing access to garage entrance at the curb.,,NYPD,synthetic_rule_training_v2
+49,blocked driveway,Resident reports delivery vehicle obstructing driveway entrance near Main St.,,NYPD,synthetic_rule_training_v2
+50,blocked driveway,car obstructing private driveway at the curb.,,NYPD,synthetic_rule_training_v2
+51,blocked driveway,There is a complaint about van that blocked my driveway on Forest Ave.,,NYPD,synthetic_rule_training_v2
+52,blocked driveway,There is a complaint about taxi that parked in front of my driveway near Main St.,,NYPD,synthetic_rule_training_v2
+53,blocked driveway,Resident reports vehicle preventing access to driveway entrance near Main St.,,NYPD,synthetic_rule_training_v2
+54,blocked driveway,There is a complaint about vehicle that parked in front of driveway entrance near Main St.,,NYPD,synthetic_rule_training_v2
+55,blocked driveway,van preventing access to my driveway on Forest Ave.,,NYPD,synthetic_rule_training_v2
+56,blocked driveway,I need to report that SUV blocked my driveway near Main St.,,NYPD,synthetic_rule_training_v2
+57,blocked driveway,Resident reports van obstructing driveway entrance near Main St.,,NYPD,synthetic_rule_training_v2
+58,blocked driveway,There is a complaint about car that is blocking driveway entrance on Forest Ave.,,NYPD,synthetic_rule_training_v2
+59,blocked driveway,There is a complaint about truck that obstructing private driveway at the curb.,,NYPD,synthetic_rule_training_v2
+60,blocked driveway,I need to report that taxi preventing access to driveway entrance near Main St.,,NYPD,synthetic_rule_training_v2
+61,blocked driveway,Resident reports truck is blocking my driveway in front of the building.,,NYPD,synthetic_rule_training_v2
+62,blocked driveway,I need to report that SUV blocked private driveway on Forest Ave.,,NYPD,synthetic_rule_training_v2
+63,blocked driveway,SUV obstructing garage entrance in front of the building.,,NYPD,synthetic_rule_training_v2
+64,blocked driveway,Resident reports car preventing access to my driveway near Main St.,,NYPD,synthetic_rule_training_v2
+65,blocked driveway,SUV blocked our driveway at the curb.,,NYPD,synthetic_rule_training_v2
+66,blocked driveway,SUV is blocking garage entrance in front of the building.,,NYPD,synthetic_rule_training_v2
+67,blocked driveway,SUV blocked driveway entrance in front of the building.,,NYPD,synthetic_rule_training_v2
+68,blocked driveway,blocked driveway: SUV parked in front of private driveway near Main St.,,NYPD,synthetic_rule_training_v2
+69,blocked driveway,I need to report that taxi parked in front of our driveway outside my house.,,NYPD,synthetic_rule_training_v2
+70,blocked driveway,There is a complaint about vehicle that parked in front of driveway entrance outside my house.,,NYPD,synthetic_rule_training_v2
+71,blocked driveway,car obstructing garage entrance in front of the building.,,NYPD,synthetic_rule_training_v2
+72,blocked driveway,car preventing access to our driveway in front of the building.,,NYPD,synthetic_rule_training_v2
+73,blocked driveway,"Please send help, vehicle parked in front of my driveway near Main St.",,NYPD,synthetic_rule_training_v2
+74,blocked driveway,"Please send help, truck is blocking driveway entrance in front of the building.",,NYPD,synthetic_rule_training_v2
+75,blocked driveway,I need to report that truck preventing access to garage entrance on Forest Ave.,,NYPD,synthetic_rule_training_v2
+76,blocked driveway,I need to report that delivery vehicle preventing access to private driveway on Forest Ave.,,NYPD,synthetic_rule_training_v2
+77,blocked driveway,Resident reports truck blocked my driveway in front of the building.,,NYPD,synthetic_rule_training_v2
+78,blocked driveway,Resident reports truck parked in front of garage entrance near Main St.,,NYPD,synthetic_rule_training_v2
+79,blocked driveway,I need to report that truck is blocking private driveway in front of the building.,,NYPD,synthetic_rule_training_v2
+80,blocked driveway,There is a complaint about truck that blocked my driveway at the curb.,,NYPD,synthetic_rule_training_v2
+81,blocked driveway,"Please send help, car blocked private driveway near Main St.",,NYPD,synthetic_rule_training_v2
+82,blocked driveway,I need to report that truck is blocking driveway entrance in front of the building.,,NYPD,synthetic_rule_training_v2
+83,blocked driveway,I need to report that van preventing access to my driveway on Forest Ave.,,NYPD,synthetic_rule_training_v2
+84,blocked driveway,taxi is blocking garage entrance on Forest Ave.,,NYPD,synthetic_rule_training_v2
+85,blocked driveway,"Please send help, SUV preventing access to our driveway at the curb.",,NYPD,synthetic_rule_training_v2
+86,blocked driveway,Resident reports car parked in front of private driveway on Forest Ave.,,NYPD,synthetic_rule_training_v2
+87,blocked driveway,"Please send help, vehicle is blocking my driveway outside my house.",,NYPD,synthetic_rule_training_v2
+88,blocked driveway,blocked driveway: delivery vehicle obstructing garage entrance near Main St.,,NYPD,synthetic_rule_training_v2
+89,blocked driveway,Resident reports delivery vehicle is blocking our driveway at the curb.,,NYPD,synthetic_rule_training_v2
+90,blocked driveway,vehicle parked in front of driveway entrance near Main St.,,NYPD,synthetic_rule_training_v2
+91,blocked driveway,"Please send help, vehicle blocked driveway entrance on Forest Ave.",,NYPD,synthetic_rule_training_v2
+92,blocked driveway,There is a complaint about vehicle that is blocking driveway entrance outside my house.,,NYPD,synthetic_rule_training_v2
+93,blocked driveway,"Please send help, delivery vehicle is blocking our driveway on Forest Ave.",,NYPD,synthetic_rule_training_v2
+94,blocked driveway,I need to report that vehicle obstructing private driveway outside my house.,,NYPD,synthetic_rule_training_v2
+95,blocked driveway,delivery vehicle parked in front of private driveway in front of the building.,,NYPD,synthetic_rule_training_v2
+96,blocked driveway,There is a complaint about taxi that preventing access to private driveway on Forest Ave.,,NYPD,synthetic_rule_training_v2
+97,blocked driveway,truck is blocking garage entrance outside my house.,,NYPD,synthetic_rule_training_v2
+98,blocked driveway,car preventing access to driveway entrance outside my house.,,NYPD,synthetic_rule_training_v2
+99,blocked driveway,I need to report that delivery vehicle parked in front of driveway entrance in front of the building.,,NYPD,synthetic_rule_training_v2
+100,blocked driveway,blocked driveway: car obstructing garage entrance near Main St.,,NYPD,synthetic_rule_training_v2
+101,blocked driveway,"Please send help, car obstructing my driveway in front of the building.",,NYPD,synthetic_rule_training_v2
+102,blocked driveway,blocked driveway: taxi is blocking private driveway at the curb.,,NYPD,synthetic_rule_training_v2
+103,blocked driveway,taxi parked in front of garage entrance outside my house.,,NYPD,synthetic_rule_training_v2
+104,blocked driveway,I need to report that delivery vehicle blocked private driveway in front of the building.,,NYPD,synthetic_rule_training_v2
+105,blocked driveway,"Please send help, taxi obstructing private driveway at the curb.",,NYPD,synthetic_rule_training_v2
+106,blocked driveway,I need to report that truck preventing access to our driveway near Main St.,,NYPD,synthetic_rule_training_v2
+107,blocked driveway,There is a complaint about taxi that obstructing our driveway in front of the building.,,NYPD,synthetic_rule_training_v2
+108,blocked driveway,blocked driveway: truck obstructing garage entrance on Forest Ave.,,NYPD,synthetic_rule_training_v2
+109,blocked driveway,"Please send help, truck is blocking driveway entrance in front of the building.",,NYPD,synthetic_rule_training_v2
+110,blocked driveway,blocked driveway: taxi parked in front of driveway entrance at the curb.,,NYPD,synthetic_rule_training_v2
+111,blocked driveway,There is a complaint about taxi that is blocking garage entrance at the curb.,,NYPD,synthetic_rule_training_v2
+112,blocked driveway,I need to report that vehicle blocked private driveway in front of the building.,,NYPD,synthetic_rule_training_v2
+113,blocked driveway,I need to report that taxi preventing access to private driveway on Forest Ave.,,NYPD,synthetic_rule_training_v2
+114,blocked driveway,Resident reports taxi parked in front of our driveway near Main St.,,NYPD,synthetic_rule_training_v2
+115,blocked driveway,Resident reports car blocked our driveway at the curb.,,NYPD,synthetic_rule_training_v2
+116,blocked driveway,blocked driveway: delivery vehicle blocked driveway entrance at the curb.,,NYPD,synthetic_rule_training_v2
+117,blocked driveway,I need to report that SUV is blocking driveway entrance at the curb.,,NYPD,synthetic_rule_training_v2
+118,blocked driveway,There is a complaint about vehicle that is blocking my driveway on Forest Ave.,,NYPD,synthetic_rule_training_v2
+119,blocked driveway,There is a complaint about vehicle that is blocking garage entrance at the curb.,,NYPD,synthetic_rule_training_v2
+120,blocked driveway,SUV is blocking my driveway at the curb.,,NYPD,synthetic_rule_training_v2
+121,blocked driveway,Resident reports delivery vehicle obstructing garage entrance in front of the building.,,NYPD,synthetic_rule_training_v2
+122,blocked driveway,blocked driveway: truck obstructing garage entrance in front of the building.,,NYPD,synthetic_rule_training_v2
+123,blocked driveway,There is a complaint about delivery vehicle that preventing access to driveway entrance near Main St.,,NYPD,synthetic_rule_training_v2
+124,blocked driveway,I need to report that delivery vehicle obstructing driveway entrance outside my house.,,NYPD,synthetic_rule_training_v2
+125,blocked driveway,Resident reports delivery vehicle parked in front of garage entrance at the curb.,,NYPD,synthetic_rule_training_v2
+126,blocked driveway,I need to report that vehicle parked in front of driveway entrance on Forest Ave.,,NYPD,synthetic_rule_training_v2
+127,blocked driveway,I need to report that truck is blocking private driveway outside my house.,,NYPD,synthetic_rule_training_v2
+128,blocked driveway,"Please send help, SUV blocked our driveway near Main St.",,NYPD,synthetic_rule_training_v2
+129,blocked driveway,Resident reports van is blocking our driveway on Forest Ave.,,NYPD,synthetic_rule_training_v2
+130,blocked driveway,There is a complaint about van that parked in front of garage entrance at the curb.,,NYPD,synthetic_rule_training_v2
+131,blocked driveway,There is a complaint about car that is blocking driveway entrance at the curb.,,NYPD,synthetic_rule_training_v2
+132,blocked driveway,blocked driveway: taxi blocked garage entrance at the curb.,,NYPD,synthetic_rule_training_v2
+133,blocked driveway,There is a complaint about car that parked in front of private driveway at the curb.,,NYPD,synthetic_rule_training_v2
+134,blocked driveway,There is a complaint about SUV that preventing access to garage entrance near Main St.,,NYPD,synthetic_rule_training_v2
+135,blocked driveway,There is a complaint about vehicle that parked in front of driveway entrance at the curb.,,NYPD,synthetic_rule_training_v2
+136,blocked driveway,van parked in front of driveway entrance near Main St.,,NYPD,synthetic_rule_training_v2
+137,blocked driveway,There is a complaint about vehicle that preventing access to garage entrance on Forest Ave.,,NYPD,synthetic_rule_training_v2
+138,blocked driveway,There is a complaint about SUV that preventing access to my driveway on Forest Ave.,,NYPD,synthetic_rule_training_v2
+139,blocked driveway,I need to report that van is blocking driveway entrance near Main St.,,NYPD,synthetic_rule_training_v2
+140,blocked driveway,truck obstructing private driveway near Main St.,,NYPD,synthetic_rule_training_v2
+141,blocked driveway,There is a complaint about truck that parked in front of driveway entrance outside my house.,,NYPD,synthetic_rule_training_v2
+142,blocked driveway,There is a complaint about truck that blocked driveway entrance on Forest Ave.,,NYPD,synthetic_rule_training_v2
+143,blocked driveway,I need to report that SUV blocked private driveway near Main St.,,NYPD,synthetic_rule_training_v2
+144,blocked driveway,I need to report that car blocked my driveway near Main St.,,NYPD,synthetic_rule_training_v2
+145,blocked driveway,Resident reports delivery vehicle blocked garage entrance near Main St.,,NYPD,synthetic_rule_training_v2
+146,blocked driveway,Resident reports vehicle obstructing my driveway in front of the building.,,NYPD,synthetic_rule_training_v2
+147,blocked driveway,Resident reports van parked in front of private driveway near Main St.,,NYPD,synthetic_rule_training_v2
+148,blocked driveway,blocked driveway: SUV blocked our driveway outside my house.,,NYPD,synthetic_rule_training_v2
+149,blocked driveway,SUV blocked private driveway in front of the building.,,NYPD,synthetic_rule_training_v2
+150,blocked driveway,I need to report that van obstructing our driveway on Forest Ave.,,NYPD,synthetic_rule_training_v2
+151,blocked driveway,blocked driveway: taxi is blocking my driveway outside my house.,,NYPD,synthetic_rule_training_v2
+152,blocked driveway,I need to report that SUV blocked garage entrance on Forest Ave.,,NYPD,synthetic_rule_training_v2
+153,blocked driveway,"Please send help, SUV obstructing private driveway on Forest Ave.",,NYPD,synthetic_rule_training_v2
+154,blocked driveway,blocked driveway: taxi parked in front of my driveway at the curb.,,NYPD,synthetic_rule_training_v2
+155,blocked driveway,There is a complaint about car that obstructing private driveway at the curb.,,NYPD,synthetic_rule_training_v2
+156,blocked driveway,I need to report that vehicle obstructing our driveway in front of the building.,,NYPD,synthetic_rule_training_v2
+157,blocked driveway,I need to report that truck preventing access to garage entrance at the curb.,,NYPD,synthetic_rule_training_v2
+158,blocked driveway,There is a complaint about van that preventing access to private driveway outside my house.,,NYPD,synthetic_rule_training_v2
+159,blocked driveway,Resident reports delivery vehicle blocked private driveway at the curb.,,NYPD,synthetic_rule_training_v2
+160,blocked driveway,Resident reports delivery vehicle obstructing garage entrance in front of the building.,,NYPD,synthetic_rule_training_v2
+161,blocked driveway,I need to report that van parked in front of my driveway at the curb.,,NYPD,synthetic_rule_training_v2
+162,blocked driveway,"Please send help, vehicle obstructing our driveway outside my house.",,NYPD,synthetic_rule_training_v2
+163,blocked driveway,"Please send help, truck parked in front of garage entrance outside my house.",,NYPD,synthetic_rule_training_v2
+164,blocked driveway,blocked driveway: car preventing access to our driveway on Forest Ave.,,NYPD,synthetic_rule_training_v2
+165,blocked driveway,Resident reports taxi obstructing driveway entrance in front of the building.,,NYPD,synthetic_rule_training_v2
+166,blocked driveway,Resident reports taxi obstructing driveway entrance at the curb.,,NYPD,synthetic_rule_training_v2
+167,blocked driveway,car parked in front of our driveway at the curb.,,NYPD,synthetic_rule_training_v2
+168,blocked driveway,I need to report that vehicle parked in front of garage entrance outside my house.,,NYPD,synthetic_rule_training_v2
+169,blocked driveway,There is a complaint about SUV that preventing access to private driveway at the curb.,,NYPD,synthetic_rule_training_v2
+170,blocked driveway,I need to report that SUV parked in front of private driveway at the curb.,,NYPD,synthetic_rule_training_v2
+171,blocked driveway,"Please send help, truck parked in front of our driveway on Forest Ave.",,NYPD,synthetic_rule_training_v2
+172,blocked driveway,I need to report that vehicle parked in front of my driveway in front of the building.,,NYPD,synthetic_rule_training_v2
+173,blocked driveway,I need to report that vehicle is blocking our driveway at the curb.,,NYPD,synthetic_rule_training_v2
+174,blocked driveway,"Please send help, taxi preventing access to garage entrance in front of the building.",,NYPD,synthetic_rule_training_v2
+175,blocked driveway,"Please send help, car is blocking private driveway near Main St.",,NYPD,synthetic_rule_training_v2
+176,blocked driveway,"Please send help, vehicle parked in front of my driveway in front of the building.",,NYPD,synthetic_rule_training_v2
+177,blocked driveway,Resident reports truck blocked my driveway in front of the building.,,NYPD,synthetic_rule_training_v2
+178,blocked driveway,"Please send help, taxi is blocking driveway entrance on Forest Ave.",,NYPD,synthetic_rule_training_v2
+179,blocked driveway,SUV parked in front of driveway entrance at the curb.,,NYPD,synthetic_rule_training_v2
+180,blocked driveway,There is a complaint about truck that is blocking my driveway outside my house.,,NYPD,synthetic_rule_training_v2
+181,blocked driveway,There is a complaint about car that blocked driveway entrance at the curb.,,NYPD,synthetic_rule_training_v2
+182,blocked driveway,SUV blocked our driveway near Main St.,,NYPD,synthetic_rule_training_v2
+183,blocked driveway,blocked driveway: truck blocked our driveway on Forest Ave.,,NYPD,synthetic_rule_training_v2
+184,blocked driveway,blocked driveway: delivery vehicle obstructing garage entrance in front of the building.,,NYPD,synthetic_rule_training_v2
+185,blocked driveway,blocked driveway: vehicle preventing access to driveway entrance at the curb.,,NYPD,synthetic_rule_training_v2
+186,blocked driveway,There is a complaint about truck that preventing access to driveway entrance outside my house.,,NYPD,synthetic_rule_training_v2
+187,blocked driveway,blocked driveway: SUV blocked garage entrance on Forest Ave.,,NYPD,synthetic_rule_training_v2
+188,blocked driveway,Resident reports taxi is blocking private driveway on Forest Ave.,,NYPD,synthetic_rule_training_v2
+189,blocked driveway,Resident reports vehicle is blocking garage entrance on Forest Ave.,,NYPD,synthetic_rule_training_v2
+190,blocked driveway,Resident reports car obstructing driveway entrance in front of the building.,,NYPD,synthetic_rule_training_v2
+191,blocked driveway,There is a complaint about truck that blocked our driveway outside my house.,,NYPD,synthetic_rule_training_v2
+192,blocked driveway,I need to report that truck obstructing my driveway near Main St.,,NYPD,synthetic_rule_training_v2
+193,blocked driveway,"Please send help, delivery vehicle preventing access to our driveway at the curb.",,NYPD,synthetic_rule_training_v2
+194,blocked driveway,SUV is blocking our driveway outside my house.,,NYPD,synthetic_rule_training_v2
+195,blocked driveway,Resident reports car blocked our driveway outside my house.,,NYPD,synthetic_rule_training_v2
+196,blocked driveway,blocked driveway: taxi preventing access to private driveway at the curb.,,NYPD,synthetic_rule_training_v2
+197,blocked driveway,van parked in front of driveway entrance outside my house.,,NYPD,synthetic_rule_training_v2
+198,blocked driveway,blocked driveway: SUV obstructing driveway entrance on Forest Ave.,,NYPD,synthetic_rule_training_v2
+199,blocked driveway,blocked driveway: car obstructing private driveway in front of the building.,,NYPD,synthetic_rule_training_v2
+200,blocked driveway,"Please send help, car blocked our driveway in front of the building.",,NYPD,synthetic_rule_training_v2
+201,heat/hot water,heat/hot water: apartment has no heat or hot water and landlord has not fixed it on Forest Ave.,,HPD,synthetic_rule_training_v2
+202,heat/hot water,Resident reports residential building has cold radiators in the entire building at the building.,,HPD,synthetic_rule_training_v2
+203,heat/hot water,Resident reports tenant unit has broken boiler in the entire building on Forest Ave.,,HPD,synthetic_rule_training_v2
+204,heat/hot water,There is a complaint about unit that has broken boiler during cold weather at the building.,,HPD,synthetic_rule_training_v2
+205,heat/hot water,I need to report that apartment has no hot water during cold weather on the top floor.,,HPD,synthetic_rule_training_v2
+206,heat/hot water,I need to report that residential building has no heat or hot water in the entire building in the basement unit.,,HPD,synthetic_rule_training_v2
+207,heat/hot water,residential building has no heat during cold weather at the building.,,HPD,synthetic_rule_training_v2
+208,heat/hot water,"Please send help, apartment has broken boiler and landlord has not fixed it on Forest Ave.",,HPD,synthetic_rule_training_v2
+209,heat/hot water,I need to report that tenant unit has broken boiler in the entire building on Forest Ave.,,HPD,synthetic_rule_training_v2
+210,heat/hot water,Resident reports tenant unit has no heat or hot water and landlord has not fixed it on the top floor.,,HPD,synthetic_rule_training_v2
+211,heat/hot water,I need to report that residential building has no heat for three days at the building.,,HPD,synthetic_rule_training_v2
+212,heat/hot water,heat/hot water: building has no heat or hot water in the entire building on the top floor.,,HPD,synthetic_rule_training_v2
+213,heat/hot water,apartment has cold radiators for three days in apartment 4B.,,HPD,synthetic_rule_training_v2
+214,heat/hot water,"Please send help, tenant unit has no heat and landlord has not fixed it on the top floor.",,HPD,synthetic_rule_training_v2
+215,heat/hot water,building has no heat in the entire building on Forest Ave.,,HPD,synthetic_rule_training_v2
+216,heat/hot water,I need to report that building has broken boiler during cold weather in the basement unit.,,HPD,synthetic_rule_training_v2
+217,heat/hot water,I need to report that unit has broken boiler in the entire building on the top floor.,,HPD,synthetic_rule_training_v2
+218,heat/hot water,Resident reports residential building has cold radiators for three days on the top floor.,,HPD,synthetic_rule_training_v2
+219,heat/hot water,Resident reports tenant unit has cold radiators for three days on Forest Ave.,,HPD,synthetic_rule_training_v2
+220,heat/hot water,"Please send help, residential building has no heat or hot water and landlord has not fixed it at the building.",,HPD,synthetic_rule_training_v2
+221,heat/hot water,unit has no heat or hot water and landlord has not fixed it in the basement unit.,,HPD,synthetic_rule_training_v2
+222,heat/hot water,I need to report that residential building has no hot water in the entire building in the basement unit.,,HPD,synthetic_rule_training_v2
+223,heat/hot water,There is a complaint about unit that has no heat or hot water and landlord has not fixed it in the basement unit.,,HPD,synthetic_rule_training_v2
+224,heat/hot water,There is a complaint about residential building that has no heat or hot water for three days in apartment 4B.,,HPD,synthetic_rule_training_v2
+225,heat/hot water,heat/hot water: residential building has no hot water in the entire building on Forest Ave.,,HPD,synthetic_rule_training_v2
+226,heat/hot water,"Please send help, residential building has broken boiler in the entire building in apartment 4B.",,HPD,synthetic_rule_training_v2
+227,heat/hot water,There is a complaint about apartment that has no hot water and landlord has not fixed it in the basement unit.,,HPD,synthetic_rule_training_v2
+228,heat/hot water,"Please send help, apartment has broken boiler since yesterday in the basement unit.",,HPD,synthetic_rule_training_v2
+229,heat/hot water,There is a complaint about apartment that has no hot water in the entire building in apartment 4B.,,HPD,synthetic_rule_training_v2
+230,heat/hot water,residential building has no heat or hot water during cold weather in the basement unit.,,HPD,synthetic_rule_training_v2
+231,heat/hot water,I need to report that residential building has no heat during cold weather in the basement unit.,,HPD,synthetic_rule_training_v2
+232,heat/hot water,There is a complaint about unit that has broken boiler and landlord has not fixed it on Forest Ave.,,HPD,synthetic_rule_training_v2
+233,heat/hot water,heat/hot water: apartment has no hot water during cold weather in apartment 4B.,,HPD,synthetic_rule_training_v2
+234,heat/hot water,I need to report that apartment has broken boiler since yesterday on Forest Ave.,,HPD,synthetic_rule_training_v2
+235,heat/hot water,There is a complaint about building that has no heat or hot water since yesterday on Forest Ave.,,HPD,synthetic_rule_training_v2
+236,heat/hot water,"Please send help, apartment has no heat or hot water during cold weather at the building.",,HPD,synthetic_rule_training_v2
+237,heat/hot water,There is a complaint about building that has no hot water and landlord has not fixed it on the top floor.,,HPD,synthetic_rule_training_v2
+238,heat/hot water,heat/hot water: building has no hot water for three days on Forest Ave.,,HPD,synthetic_rule_training_v2
+239,heat/hot water,heat/hot water: residential building has cold radiators for three days on the top floor.,,HPD,synthetic_rule_training_v2
+240,heat/hot water,heat/hot water: building has no hot water in the entire building at the building.,,HPD,synthetic_rule_training_v2
+241,heat/hot water,There is a complaint about unit that has no heat in the entire building at the building.,,HPD,synthetic_rule_training_v2
+242,heat/hot water,I need to report that tenant unit has no hot water since yesterday on the top floor.,,HPD,synthetic_rule_training_v2
+243,heat/hot water,"Please send help, tenant unit has no heat or hot water in the entire building at the building.",,HPD,synthetic_rule_training_v2
+244,heat/hot water,There is a complaint about unit that has no hot water in the entire building on the top floor.,,HPD,synthetic_rule_training_v2
+245,heat/hot water,building has broken boiler and landlord has not fixed it at the building.,,HPD,synthetic_rule_training_v2
+246,heat/hot water,heat/hot water: unit has no heat or hot water since yesterday on the top floor.,,HPD,synthetic_rule_training_v2
+247,heat/hot water,"Please send help, apartment has cold radiators since yesterday in the basement unit.",,HPD,synthetic_rule_training_v2
+248,heat/hot water,I need to report that residential building has no heat or hot water for three days in the basement unit.,,HPD,synthetic_rule_training_v2
+249,heat/hot water,"Please send help, building has no hot water and landlord has not fixed it at the building.",,HPD,synthetic_rule_training_v2
+250,heat/hot water,I need to report that building has no heat since yesterday at the building.,,HPD,synthetic_rule_training_v2
+251,heat/hot water,There is a complaint about apartment that has cold radiators during cold weather in apartment 4B.,,HPD,synthetic_rule_training_v2
+252,heat/hot water,unit has no heat or hot water in the entire building in apartment 4B.,,HPD,synthetic_rule_training_v2
+253,heat/hot water,Resident reports building has cold radiators during cold weather in the basement unit.,,HPD,synthetic_rule_training_v2
+254,heat/hot water,heat/hot water: unit has no hot water during cold weather on the top floor.,,HPD,synthetic_rule_training_v2
+255,heat/hot water,"Please send help, unit has no heat in the entire building on Forest Ave.",,HPD,synthetic_rule_training_v2
+256,heat/hot water,Resident reports building has broken boiler and landlord has not fixed it at the building.,,HPD,synthetic_rule_training_v2
+257,heat/hot water,residential building has no heat during cold weather in the basement unit.,,HPD,synthetic_rule_training_v2
+258,heat/hot water,residential building has no heat or hot water during cold weather in the basement unit.,,HPD,synthetic_rule_training_v2
+259,heat/hot water,There is a complaint about unit that has no heat for three days on the top floor.,,HPD,synthetic_rule_training_v2
+260,heat/hot water,tenant unit has cold radiators during cold weather in the basement unit.,,HPD,synthetic_rule_training_v2
+261,heat/hot water,Resident reports apartment has broken boiler during cold weather on the top floor.,,HPD,synthetic_rule_training_v2
+262,heat/hot water,building has no heat since yesterday at the building.,,HPD,synthetic_rule_training_v2
+263,heat/hot water,There is a complaint about apartment that has no heat for three days in the basement unit.,,HPD,synthetic_rule_training_v2
+264,heat/hot water,Resident reports residential building has broken boiler during cold weather in the basement unit.,,HPD,synthetic_rule_training_v2
+265,heat/hot water,There is a complaint about tenant unit that has no hot water in the entire building on Forest Ave.,,HPD,synthetic_rule_training_v2
+266,heat/hot water,There is a complaint about tenant unit that has broken boiler during cold weather on Forest Ave.,,HPD,synthetic_rule_training_v2
+267,heat/hot water,I need to report that unit has no hot water in the entire building on the top floor.,,HPD,synthetic_rule_training_v2
+268,heat/hot water,Resident reports unit has no heat during cold weather in the basement unit.,,HPD,synthetic_rule_training_v2
+269,heat/hot water,I need to report that unit has no heat in the entire building at the building.,,HPD,synthetic_rule_training_v2
+270,heat/hot water,Resident reports apartment has broken boiler since yesterday in apartment 4B.,,HPD,synthetic_rule_training_v2
+271,heat/hot water,I need to report that tenant unit has no heat since yesterday at the building.,,HPD,synthetic_rule_training_v2
+272,heat/hot water,Resident reports building has cold radiators for three days on Forest Ave.,,HPD,synthetic_rule_training_v2
+273,heat/hot water,heat/hot water: building has cold radiators for three days in apartment 4B.,,HPD,synthetic_rule_training_v2
+274,heat/hot water,"Please send help, building has cold radiators since yesterday at the building.",,HPD,synthetic_rule_training_v2
+275,heat/hot water,Resident reports building has cold radiators during cold weather in apartment 4B.,,HPD,synthetic_rule_training_v2
+276,heat/hot water,apartment has no hot water since yesterday at the building.,,HPD,synthetic_rule_training_v2
+277,heat/hot water,Resident reports tenant unit has no heat or hot water since yesterday in apartment 4B.,,HPD,synthetic_rule_training_v2
+278,heat/hot water,"Please send help, apartment has no hot water in the entire building in the basement unit.",,HPD,synthetic_rule_training_v2
+279,heat/hot water,apartment has broken boiler in the entire building at the building.,,HPD,synthetic_rule_training_v2
+280,heat/hot water,heat/hot water: tenant unit has no heat in the entire building in the basement unit.,,HPD,synthetic_rule_training_v2
+281,heat/hot water,Resident reports tenant unit has no heat and landlord has not fixed it at the building.,,HPD,synthetic_rule_training_v2
+282,heat/hot water,There is a complaint about apartment that has no heat in the entire building on the top floor.,,HPD,synthetic_rule_training_v2
+283,heat/hot water,There is a complaint about apartment that has broken boiler in the entire building on Forest Ave.,,HPD,synthetic_rule_training_v2
+284,heat/hot water,unit has cold radiators for three days on Forest Ave.,,HPD,synthetic_rule_training_v2
+285,heat/hot water,Resident reports unit has cold radiators and landlord has not fixed it in the basement unit.,,HPD,synthetic_rule_training_v2
+286,heat/hot water,I need to report that unit has broken boiler and landlord has not fixed it in the basement unit.,,HPD,synthetic_rule_training_v2
+287,heat/hot water,"Please send help, residential building has cold radiators and landlord has not fixed it on the top floor.",,HPD,synthetic_rule_training_v2
+288,heat/hot water,apartment has cold radiators for three days on the top floor.,,HPD,synthetic_rule_training_v2
+289,heat/hot water,There is a complaint about building that has broken boiler during cold weather on the top floor.,,HPD,synthetic_rule_training_v2
+290,heat/hot water,There is a complaint about residential building that has no heat during cold weather on the top floor.,,HPD,synthetic_rule_training_v2
+291,heat/hot water,"Please send help, unit has no heat or hot water for three days on the top floor.",,HPD,synthetic_rule_training_v2
+292,heat/hot water,apartment has no heat since yesterday on the top floor.,,HPD,synthetic_rule_training_v2
+293,heat/hot water,unit has no hot water and landlord has not fixed it on Forest Ave.,,HPD,synthetic_rule_training_v2
+294,heat/hot water,heat/hot water: tenant unit has cold radiators during cold weather on Forest Ave.,,HPD,synthetic_rule_training_v2
+295,heat/hot water,There is a complaint about unit that has broken boiler since yesterday at the building.,,HPD,synthetic_rule_training_v2
+296,heat/hot water,heat/hot water: unit has no heat or hot water since yesterday in the basement unit.,,HPD,synthetic_rule_training_v2
+297,heat/hot water,heat/hot water: building has no hot water in the entire building in apartment 4B.,,HPD,synthetic_rule_training_v2
+298,heat/hot water,unit has cold radiators during cold weather on Forest Ave.,,HPD,synthetic_rule_training_v2
+299,heat/hot water,"Please send help, tenant unit has no hot water in the entire building in the basement unit.",,HPD,synthetic_rule_training_v2
+300,heat/hot water,heat/hot water: tenant unit has cold radiators since yesterday in the basement unit.,,HPD,synthetic_rule_training_v2
+301,heat/hot water,I need to report that unit has no heat for three days at the building.,,HPD,synthetic_rule_training_v2
+302,heat/hot water,I need to report that unit has no heat or hot water during cold weather on Forest Ave.,,HPD,synthetic_rule_training_v2
+303,heat/hot water,Resident reports building has cold radiators in the entire building on Forest Ave.,,HPD,synthetic_rule_training_v2
+304,heat/hot water,Resident reports apartment has no heat and landlord has not fixed it in apartment 4B.,,HPD,synthetic_rule_training_v2
+305,heat/hot water,There is a complaint about residential building that has broken boiler during cold weather in apartment 4B.,,HPD,synthetic_rule_training_v2
+306,heat/hot water,"Please send help, unit has no heat or hot water and landlord has not fixed it in the basement unit.",,HPD,synthetic_rule_training_v2
+307,heat/hot water,apartment has no hot water for three days in the basement unit.,,HPD,synthetic_rule_training_v2
+308,heat/hot water,apartment has no heat or hot water in the entire building on the top floor.,,HPD,synthetic_rule_training_v2
+309,heat/hot water,There is a complaint about tenant unit that has broken boiler in the entire building at the building.,,HPD,synthetic_rule_training_v2
+310,heat/hot water,Resident reports tenant unit has no heat during cold weather on the top floor.,,HPD,synthetic_rule_training_v2
+311,heat/hot water,unit has cold radiators in the entire building in the basement unit.,,HPD,synthetic_rule_training_v2
+312,heat/hot water,I need to report that unit has no heat for three days on the top floor.,,HPD,synthetic_rule_training_v2
+313,heat/hot water,heat/hot water: apartment has no heat for three days at the building.,,HPD,synthetic_rule_training_v2
+314,heat/hot water,Resident reports building has no heat or hot water during cold weather at the building.,,HPD,synthetic_rule_training_v2
+315,heat/hot water,apartment has broken boiler in the entire building in apartment 4B.,,HPD,synthetic_rule_training_v2
+316,heat/hot water,Resident reports residential building has cold radiators for three days in the basement unit.,,HPD,synthetic_rule_training_v2
+317,heat/hot water,heat/hot water: unit has no heat in the entire building on Forest Ave.,,HPD,synthetic_rule_training_v2
+318,heat/hot water,There is a complaint about apartment that has broken boiler since yesterday at the building.,,HPD,synthetic_rule_training_v2
+319,heat/hot water,heat/hot water: residential building has cold radiators in the entire building on the top floor.,,HPD,synthetic_rule_training_v2
+320,heat/hot water,"Please send help, apartment has broken boiler since yesterday at the building.",,HPD,synthetic_rule_training_v2
+321,heat/hot water,Resident reports tenant unit has broken boiler during cold weather on Forest Ave.,,HPD,synthetic_rule_training_v2
+322,heat/hot water,There is a complaint about apartment that has no hot water in the entire building in the basement unit.,,HPD,synthetic_rule_training_v2
+323,heat/hot water,There is a complaint about tenant unit that has no heat in the entire building at the building.,,HPD,synthetic_rule_training_v2
+324,heat/hot water,I need to report that unit has no hot water during cold weather in apartment 4B.,,HPD,synthetic_rule_training_v2
+325,heat/hot water,tenant unit has no heat and landlord has not fixed it in the basement unit.,,HPD,synthetic_rule_training_v2
+326,heat/hot water,Resident reports unit has no heat or hot water for three days in apartment 4B.,,HPD,synthetic_rule_training_v2
+327,heat/hot water,building has no heat or hot water for three days in apartment 4B.,,HPD,synthetic_rule_training_v2
+328,heat/hot water,heat/hot water: building has no heat for three days on the top floor.,,HPD,synthetic_rule_training_v2
+329,heat/hot water,There is a complaint about tenant unit that has cold radiators in the entire building in the basement unit.,,HPD,synthetic_rule_training_v2
+330,heat/hot water,I need to report that tenant unit has no heat or hot water during cold weather in apartment 4B.,,HPD,synthetic_rule_training_v2
+331,heat/hot water,There is a complaint about apartment that has broken boiler in the entire building at the building.,,HPD,synthetic_rule_training_v2
+332,heat/hot water,"Please send help, tenant unit has no heat during cold weather in the basement unit.",,HPD,synthetic_rule_training_v2
+333,heat/hot water,unit has broken boiler in the entire building on Forest Ave.,,HPD,synthetic_rule_training_v2
+334,heat/hot water,unit has no heat or hot water since yesterday on Forest Ave.,,HPD,synthetic_rule_training_v2
+335,heat/hot water,heat/hot water: tenant unit has cold radiators in the entire building on the top floor.,,HPD,synthetic_rule_training_v2
+336,heat/hot water,heat/hot water: tenant unit has no heat in the entire building in the basement unit.,,HPD,synthetic_rule_training_v2
+337,heat/hot water,I need to report that building has no heat or hot water and landlord has not fixed it on the top floor.,,HPD,synthetic_rule_training_v2
+338,heat/hot water,heat/hot water: building has no heat in the entire building on Forest Ave.,,HPD,synthetic_rule_training_v2
+339,heat/hot water,"Please send help, apartment has cold radiators for three days on Forest Ave.",,HPD,synthetic_rule_training_v2
+340,heat/hot water,Resident reports residential building has broken boiler and landlord has not fixed it in the basement unit.,,HPD,synthetic_rule_training_v2
+341,heat/hot water,heat/hot water: building has no heat or hot water during cold weather at the building.,,HPD,synthetic_rule_training_v2
+342,heat/hot water,There is a complaint about residential building that has no heat or hot water and landlord has not fixed it on Forest Ave.,,HPD,synthetic_rule_training_v2
+343,heat/hot water,I need to report that unit has no heat during cold weather on Forest Ave.,,HPD,synthetic_rule_training_v2
+344,heat/hot water,heat/hot water: residential building has no heat or hot water during cold weather in the basement unit.,,HPD,synthetic_rule_training_v2
+345,heat/hot water,Resident reports unit has no heat and landlord has not fixed it in apartment 4B.,,HPD,synthetic_rule_training_v2
+346,heat/hot water,"Please send help, unit has broken boiler for three days in the basement unit.",,HPD,synthetic_rule_training_v2
+347,heat/hot water,I need to report that apartment has no heat or hot water and landlord has not fixed it on the top floor.,,HPD,synthetic_rule_training_v2
+348,heat/hot water,I need to report that unit has no hot water and landlord has not fixed it on Forest Ave.,,HPD,synthetic_rule_training_v2
+349,heat/hot water,I need to report that residential building has cold radiators during cold weather on Forest Ave.,,HPD,synthetic_rule_training_v2
+350,heat/hot water,"Please send help, unit has no hot water for three days at the building.",,HPD,synthetic_rule_training_v2
+351,heat/hot water,There is a complaint about building that has no hot water for three days in apartment 4B.,,HPD,synthetic_rule_training_v2
+352,heat/hot water,unit has no heat and landlord has not fixed it in the basement unit.,,HPD,synthetic_rule_training_v2
+353,heat/hot water,I need to report that tenant unit has no heat during cold weather in the basement unit.,,HPD,synthetic_rule_training_v2
+354,heat/hot water,Resident reports tenant unit has broken boiler for three days in apartment 4B.,,HPD,synthetic_rule_training_v2
+355,heat/hot water,Resident reports tenant unit has no hot water in the entire building on Forest Ave.,,HPD,synthetic_rule_training_v2
+356,heat/hot water,There is a complaint about unit that has no hot water in the entire building in the basement unit.,,HPD,synthetic_rule_training_v2
+357,heat/hot water,"Please send help, residential building has no hot water and landlord has not fixed it in apartment 4B.",,HPD,synthetic_rule_training_v2
+358,heat/hot water,"Please send help, residential building has no hot water during cold weather in the basement unit.",,HPD,synthetic_rule_training_v2
+359,heat/hot water,There is a complaint about residential building that has no heat or hot water in the entire building in the basement unit.,,HPD,synthetic_rule_training_v2
+360,heat/hot water,heat/hot water: residential building has no hot water for three days in the basement unit.,,HPD,synthetic_rule_training_v2
+361,heat/hot water,Resident reports unit has no heat in the entire building at the building.,,HPD,synthetic_rule_training_v2
+362,heat/hot water,heat/hot water: apartment has cold radiators since yesterday at the building.,,HPD,synthetic_rule_training_v2
+363,heat/hot water,building has no heat or hot water in the entire building in the basement unit.,,HPD,synthetic_rule_training_v2
+364,heat/hot water,Resident reports residential building has no heat for three days on the top floor.,,HPD,synthetic_rule_training_v2
+365,heat/hot water,"Please send help, apartment has broken boiler since yesterday on the top floor.",,HPD,synthetic_rule_training_v2
+366,heat/hot water,heat/hot water: unit has no hot water in the entire building on Forest Ave.,,HPD,synthetic_rule_training_v2
+367,heat/hot water,"Please send help, building has no heat during cold weather on Forest Ave.",,HPD,synthetic_rule_training_v2
+368,heat/hot water,I need to report that unit has no hot water for three days on Forest Ave.,,HPD,synthetic_rule_training_v2
+369,heat/hot water,"Please send help, residential building has no hot water in the entire building on the top floor.",,HPD,synthetic_rule_training_v2
+370,heat/hot water,heat/hot water: apartment has no heat since yesterday at the building.,,HPD,synthetic_rule_training_v2
+371,heat/hot water,Resident reports building has cold radiators and landlord has not fixed it in the basement unit.,,HPD,synthetic_rule_training_v2
+372,heat/hot water,There is a complaint about apartment that has no heat or hot water for three days at the building.,,HPD,synthetic_rule_training_v2
+373,heat/hot water,apartment has no hot water in the entire building in the basement unit.,,HPD,synthetic_rule_training_v2
+374,heat/hot water,There is a complaint about apartment that has no heat in the entire building in the basement unit.,,HPD,synthetic_rule_training_v2
+375,heat/hot water,heat/hot water: apartment has cold radiators and landlord has not fixed it in apartment 4B.,,HPD,synthetic_rule_training_v2
+376,heat/hot water,I need to report that building has no heat or hot water in the entire building on Forest Ave.,,HPD,synthetic_rule_training_v2
+377,heat/hot water,heat/hot water: unit has no hot water and landlord has not fixed it on the top floor.,,HPD,synthetic_rule_training_v2
+378,heat/hot water,Resident reports apartment has cold radiators during cold weather on Forest Ave.,,HPD,synthetic_rule_training_v2
+379,heat/hot water,heat/hot water: tenant unit has cold radiators and landlord has not fixed it in the basement unit.,,HPD,synthetic_rule_training_v2
+380,heat/hot water,residential building has broken boiler since yesterday on the top floor.,,HPD,synthetic_rule_training_v2
+381,heat/hot water,"Please send help, unit has no heat during cold weather on Forest Ave.",,HPD,synthetic_rule_training_v2
+382,heat/hot water,"Please send help, building has no heat and landlord has not fixed it at the building.",,HPD,synthetic_rule_training_v2
+383,heat/hot water,Resident reports apartment has no heat or hot water and landlord has not fixed it at the building.,,HPD,synthetic_rule_training_v2
+384,heat/hot water,I need to report that building has broken boiler in the entire building in apartment 4B.,,HPD,synthetic_rule_training_v2
+385,heat/hot water,Resident reports apartment has broken boiler since yesterday at the building.,,HPD,synthetic_rule_training_v2
+386,heat/hot water,Resident reports apartment has no hot water since yesterday at the building.,,HPD,synthetic_rule_training_v2
+387,heat/hot water,"Please send help, tenant unit has broken boiler and landlord has not fixed it on the top floor.",,HPD,synthetic_rule_training_v2
+388,heat/hot water,"Please send help, apartment has no hot water during cold weather at the building.",,HPD,synthetic_rule_training_v2
+389,heat/hot water,unit has no heat or hot water since yesterday at the building.,,HPD,synthetic_rule_training_v2
+390,heat/hot water,There is a complaint about residential building that has broken boiler in the entire building at the building.,,HPD,synthetic_rule_training_v2
+391,heat/hot water,Resident reports residential building has broken boiler during cold weather in the basement unit.,,HPD,synthetic_rule_training_v2
+392,heat/hot water,"Please send help, apartment has broken boiler since yesterday on the top floor.",,HPD,synthetic_rule_training_v2
+393,heat/hot water,heat/hot water: building has cold radiators during cold weather at the building.,,HPD,synthetic_rule_training_v2
+394,heat/hot water,apartment has no heat or hot water during cold weather at the building.,,HPD,synthetic_rule_training_v2
+395,heat/hot water,There is a complaint about tenant unit that has broken boiler for three days on the top floor.,,HPD,synthetic_rule_training_v2
+396,heat/hot water,"Please send help, residential building has no heat during cold weather in the basement unit.",,HPD,synthetic_rule_training_v2
+397,heat/hot water,There is a complaint about unit that has no heat since yesterday on the top floor.,,HPD,synthetic_rule_training_v2
+398,heat/hot water,"Please send help, tenant unit has no hot water since yesterday in apartment 4B.",,HPD,synthetic_rule_training_v2
+399,heat/hot water,heat/hot water: residential building has no heat for three days on Forest Ave.,,HPD,synthetic_rule_training_v2
+400,heat/hot water,Resident reports unit has no heat or hot water in the entire building in the basement unit.,,HPD,synthetic_rule_training_v2
+401,illegal parking,motorcycle is double parked on the sidewalk outside school.,,NYPD,synthetic_rule_training_v2
+402,illegal parking,"Please send help, van is illegally parked in front of crosswalk near Main St.",,NYPD,synthetic_rule_training_v2
+403,illegal parking,illegal parking: truck is parked in no standing zone in the bike lane outside school.,,NYPD,synthetic_rule_training_v2
+404,illegal parking,Resident reports car is illegally parked near the corner by the intersection.,,NYPD,synthetic_rule_training_v2
+405,illegal parking,illegal parking: van is blocking traffic on the street outside school.,,NYPD,synthetic_rule_training_v2
+406,illegal parking,"Please send help, commercial vehicle is parked in no standing zone near the corner next to my building.",,NYPD,synthetic_rule_training_v2
+407,illegal parking,"Please send help, commercial vehicle is parked in no standing zone near the corner on Forest Ave.",,NYPD,synthetic_rule_training_v2
+408,illegal parking,Resident reports car is parked in no standing zone near the corner by the intersection.,,NYPD,synthetic_rule_training_v2
+409,illegal parking,commercial vehicle is parked at hydrant in the bike lane on Forest Ave.,,NYPD,synthetic_rule_training_v2
+410,illegal parking,illegal parking: motorcycle is parked at hydrant in the bike lane near Main St.,,NYPD,synthetic_rule_training_v2
+411,illegal parking,I need to report that commercial vehicle is double parked in the bike lane next to my building.,,NYPD,synthetic_rule_training_v2
+412,illegal parking,Resident reports car is double parked near the corner near Main St.,,NYPD,synthetic_rule_training_v2
+413,illegal parking,There is a complaint about car that is parked at hydrant in front of crosswalk next to my building.,,NYPD,synthetic_rule_training_v2
+414,illegal parking,"Please send help, van is blocking traffic near the corner next to my building.",,NYPD,synthetic_rule_training_v2
+415,illegal parking,car is parked at hydrant on the sidewalk by the intersection.,,NYPD,synthetic_rule_training_v2
+416,illegal parking,illegal parking: van is parked in no standing zone in front of crosswalk on Forest Ave.,,NYPD,synthetic_rule_training_v2
+417,illegal parking,Resident reports truck is illegally parked on the sidewalk by the intersection.,,NYPD,synthetic_rule_training_v2
+418,illegal parking,I need to report that motorcycle is parked at hydrant near the corner next to my building.,,NYPD,synthetic_rule_training_v2
+419,illegal parking,I need to report that motorcycle is double parked near the corner by the intersection.,,NYPD,synthetic_rule_training_v2
+420,illegal parking,illegal parking: car is illegally parked in front of crosswalk near Main St.,,NYPD,synthetic_rule_training_v2
+421,illegal parking,"Please send help, vehicle is double parked in the bike lane near Main St.",,NYPD,synthetic_rule_training_v2
+422,illegal parking,"Please send help, motorcycle is parked at hydrant on the street outside school.",,NYPD,synthetic_rule_training_v2
+423,illegal parking,Resident reports commercial vehicle is blocking traffic in the bike lane near Main St.,,NYPD,synthetic_rule_training_v2
+424,illegal parking,I need to report that truck is blocking traffic in front of crosswalk on Forest Ave.,,NYPD,synthetic_rule_training_v2
+425,illegal parking,illegal parking: commercial vehicle is double parked in front of crosswalk next to my building.,,NYPD,synthetic_rule_training_v2
+426,illegal parking,Resident reports vehicle is blocking traffic in front of crosswalk outside school.,,NYPD,synthetic_rule_training_v2
+427,illegal parking,illegal parking: car is illegally parked on the street on Forest Ave.,,NYPD,synthetic_rule_training_v2
+428,illegal parking,I need to report that motorcycle is parked at hydrant near the corner next to my building.,,NYPD,synthetic_rule_training_v2
+429,illegal parking,There is a complaint about motorcycle that is illegally parked on the sidewalk next to my building.,,NYPD,synthetic_rule_training_v2
+430,illegal parking,"Please send help, commercial vehicle is parked at hydrant on the sidewalk near Main St.",,NYPD,synthetic_rule_training_v2
+431,illegal parking,I need to report that van is parked at hydrant on the sidewalk on Forest Ave.,,NYPD,synthetic_rule_training_v2
+432,illegal parking,I need to report that car is double parked on the sidewalk by the intersection.,,NYPD,synthetic_rule_training_v2
+433,illegal parking,There is a complaint about van that is double parked in the bike lane next to my building.,,NYPD,synthetic_rule_training_v2
+434,illegal parking,Resident reports truck is parked at hydrant in the bike lane by the intersection.,,NYPD,synthetic_rule_training_v2
+435,illegal parking,Resident reports truck is blocking traffic in front of crosswalk on Forest Ave.,,NYPD,synthetic_rule_training_v2
+436,illegal parking,"Please send help, vehicle is parked in no standing zone on the street outside school.",,NYPD,synthetic_rule_training_v2
+437,illegal parking,There is a complaint about vehicle that is double parked on the street on Forest Ave.,,NYPD,synthetic_rule_training_v2
+438,illegal parking,"Please send help, van is blocking traffic on the sidewalk near Main St.",,NYPD,synthetic_rule_training_v2
+439,illegal parking,Resident reports truck is blocking traffic in the bike lane near Main St.,,NYPD,synthetic_rule_training_v2
+440,illegal parking,Resident reports van is blocking traffic on the sidewalk by the intersection.,,NYPD,synthetic_rule_training_v2
+441,illegal parking,"Please send help, van is illegally parked on the street by the intersection.",,NYPD,synthetic_rule_training_v2
+442,illegal parking,illegal parking: van is double parked near the corner next to my building.,,NYPD,synthetic_rule_training_v2
+443,illegal parking,"Please send help, car is illegally parked in the bike lane by the intersection.",,NYPD,synthetic_rule_training_v2
+444,illegal parking,illegal parking: commercial vehicle is parked in no standing zone in the bike lane next to my building.,,NYPD,synthetic_rule_training_v2
+445,illegal parking,car is parked in no standing zone near the corner outside school.,,NYPD,synthetic_rule_training_v2
+446,illegal parking,I need to report that truck is parked in no standing zone in the bike lane on Forest Ave.,,NYPD,synthetic_rule_training_v2
+447,illegal parking,There is a complaint about car that is blocking traffic in front of crosswalk near Main St.,,NYPD,synthetic_rule_training_v2
+448,illegal parking,"Please send help, motorcycle is parked at hydrant on the street by the intersection.",,NYPD,synthetic_rule_training_v2
+449,illegal parking,illegal parking: van is blocking traffic in the bike lane next to my building.,,NYPD,synthetic_rule_training_v2
+450,illegal parking,I need to report that motorcycle is illegally parked near the corner on Forest Ave.,,NYPD,synthetic_rule_training_v2
+451,illegal parking,There is a complaint about truck that is parked at hydrant in front of crosswalk outside school.,,NYPD,synthetic_rule_training_v2
+452,illegal parking,Resident reports vehicle is blocking traffic in front of crosswalk by the intersection.,,NYPD,synthetic_rule_training_v2
+453,illegal parking,illegal parking: car is illegally parked on the street near Main St.,,NYPD,synthetic_rule_training_v2
+454,illegal parking,I need to report that truck is parked in no standing zone in front of crosswalk by the intersection.,,NYPD,synthetic_rule_training_v2
+455,illegal parking,Resident reports motorcycle is blocking traffic near the corner outside school.,,NYPD,synthetic_rule_training_v2
+456,illegal parking,illegal parking: truck is double parked on the sidewalk next to my building.,,NYPD,synthetic_rule_training_v2
+457,illegal parking,I need to report that truck is blocking traffic in the bike lane next to my building.,,NYPD,synthetic_rule_training_v2
+458,illegal parking,illegal parking: motorcycle is parked in no standing zone in front of crosswalk outside school.,,NYPD,synthetic_rule_training_v2
+459,illegal parking,There is a complaint about car that is parked at hydrant in the bike lane on Forest Ave.,,NYPD,synthetic_rule_training_v2
+460,illegal parking,There is a complaint about motorcycle that is parked at hydrant on the street next to my building.,,NYPD,synthetic_rule_training_v2
+461,illegal parking,There is a complaint about truck that is blocking traffic in front of crosswalk near Main St.,,NYPD,synthetic_rule_training_v2
+462,illegal parking,I need to report that car is blocking traffic on the sidewalk near Main St.,,NYPD,synthetic_rule_training_v2
+463,illegal parking,illegal parking: commercial vehicle is blocking traffic on the sidewalk near Main St.,,NYPD,synthetic_rule_training_v2
+464,illegal parking,I need to report that vehicle is illegally parked in front of crosswalk on Forest Ave.,,NYPD,synthetic_rule_training_v2
+465,illegal parking,Resident reports car is parked in no standing zone in the bike lane by the intersection.,,NYPD,synthetic_rule_training_v2
+466,illegal parking,Resident reports van is double parked on the sidewalk next to my building.,,NYPD,synthetic_rule_training_v2
+467,illegal parking,illegal parking: van is illegally parked near the corner next to my building.,,NYPD,synthetic_rule_training_v2
+468,illegal parking,Resident reports motorcycle is parked at hydrant on the sidewalk next to my building.,,NYPD,synthetic_rule_training_v2
+469,illegal parking,There is a complaint about truck that is double parked on the sidewalk next to my building.,,NYPD,synthetic_rule_training_v2
+470,illegal parking,"Please send help, motorcycle is parked at hydrant in the bike lane next to my building.",,NYPD,synthetic_rule_training_v2
+471,illegal parking,There is a complaint about vehicle that is double parked in the bike lane next to my building.,,NYPD,synthetic_rule_training_v2
+472,illegal parking,"Please send help, vehicle is parked at hydrant in the bike lane near Main St.",,NYPD,synthetic_rule_training_v2
+473,illegal parking,I need to report that commercial vehicle is parked in no standing zone in the bike lane by the intersection.,,NYPD,synthetic_rule_training_v2
+474,illegal parking,"Please send help, motorcycle is parked at hydrant in the bike lane on Forest Ave.",,NYPD,synthetic_rule_training_v2
+475,illegal parking,illegal parking: commercial vehicle is blocking traffic on the sidewalk by the intersection.,,NYPD,synthetic_rule_training_v2
+476,illegal parking,"Please send help, vehicle is parked at hydrant on the street outside school.",,NYPD,synthetic_rule_training_v2
+477,illegal parking,I need to report that car is parked at hydrant on the sidewalk outside school.,,NYPD,synthetic_rule_training_v2
+478,illegal parking,I need to report that van is double parked near the corner next to my building.,,NYPD,synthetic_rule_training_v2
+479,illegal parking,"Please send help, motorcycle is parked at hydrant near the corner on Forest Ave.",,NYPD,synthetic_rule_training_v2
+480,illegal parking,illegal parking: commercial vehicle is blocking traffic near the corner near Main St.,,NYPD,synthetic_rule_training_v2
+481,illegal parking,commercial vehicle is blocking traffic near the corner near Main St.,,NYPD,synthetic_rule_training_v2
+482,illegal parking,car is parked in no standing zone in the bike lane by the intersection.,,NYPD,synthetic_rule_training_v2
+483,illegal parking,commercial vehicle is double parked on the street next to my building.,,NYPD,synthetic_rule_training_v2
+484,illegal parking,Resident reports van is parked in no standing zone on the sidewalk near Main St.,,NYPD,synthetic_rule_training_v2
+485,illegal parking,"Please send help, truck is parked at hydrant on the street on Forest Ave.",,NYPD,synthetic_rule_training_v2
+486,illegal parking,I need to report that motorcycle is double parked in front of crosswalk on Forest Ave.,,NYPD,synthetic_rule_training_v2
+487,illegal parking,Resident reports van is double parked on the street by the intersection.,,NYPD,synthetic_rule_training_v2
+488,illegal parking,There is a complaint about vehicle that is parked at hydrant on the street on Forest Ave.,,NYPD,synthetic_rule_training_v2
+489,illegal parking,"Please send help, motorcycle is blocking traffic on the street outside school.",,NYPD,synthetic_rule_training_v2
+490,illegal parking,"Please send help, van is blocking traffic in front of crosswalk by the intersection.",,NYPD,synthetic_rule_training_v2
+491,illegal parking,Resident reports motorcycle is parked in no standing zone in the bike lane near Main St.,,NYPD,synthetic_rule_training_v2
+492,illegal parking,truck is double parked on the sidewalk outside school.,,NYPD,synthetic_rule_training_v2
+493,illegal parking,I need to report that vehicle is illegally parked in the bike lane outside school.,,NYPD,synthetic_rule_training_v2
+494,illegal parking,illegal parking: commercial vehicle is double parked near the corner next to my building.,,NYPD,synthetic_rule_training_v2
+495,illegal parking,I need to report that van is parked in no standing zone in front of crosswalk outside school.,,NYPD,synthetic_rule_training_v2
+496,illegal parking,van is illegally parked near the corner near Main St.,,NYPD,synthetic_rule_training_v2
+497,illegal parking,There is a complaint about truck that is double parked on the street outside school.,,NYPD,synthetic_rule_training_v2
+498,illegal parking,There is a complaint about vehicle that is parked in no standing zone in the bike lane outside school.,,NYPD,synthetic_rule_training_v2
+499,illegal parking,"Please send help, motorcycle is blocking traffic on the street outside school.",,NYPD,synthetic_rule_training_v2
+500,illegal parking,I need to report that truck is double parked on the street on Forest Ave.,,NYPD,synthetic_rule_training_v2
+501,illegal parking,There is a complaint about truck that is double parked on the sidewalk next to my building.,,NYPD,synthetic_rule_training_v2
+502,illegal parking,I need to report that truck is illegally parked in the bike lane outside school.,,NYPD,synthetic_rule_training_v2
+503,illegal parking,illegal parking: vehicle is double parked near the corner by the intersection.,,NYPD,synthetic_rule_training_v2
+504,illegal parking,Resident reports van is blocking traffic in the bike lane by the intersection.,,NYPD,synthetic_rule_training_v2
+505,illegal parking,I need to report that motorcycle is parked in no standing zone in front of crosswalk near Main St.,,NYPD,synthetic_rule_training_v2
+506,illegal parking,Resident reports commercial vehicle is blocking traffic on the street next to my building.,,NYPD,synthetic_rule_training_v2
+507,illegal parking,There is a complaint about motorcycle that is parked at hydrant on the street next to my building.,,NYPD,synthetic_rule_training_v2
+508,illegal parking,car is blocking traffic in front of crosswalk near Main St.,,NYPD,synthetic_rule_training_v2
+509,illegal parking,illegal parking: motorcycle is double parked near the corner outside school.,,NYPD,synthetic_rule_training_v2
+510,illegal parking,illegal parking: van is illegally parked near the corner next to my building.,,NYPD,synthetic_rule_training_v2
+511,illegal parking,There is a complaint about car that is blocking traffic on the sidewalk on Forest Ave.,,NYPD,synthetic_rule_training_v2
+512,illegal parking,There is a complaint about vehicle that is blocking traffic on the sidewalk by the intersection.,,NYPD,synthetic_rule_training_v2
+513,illegal parking,illegal parking: car is blocking traffic on the sidewalk outside school.,,NYPD,synthetic_rule_training_v2
+514,illegal parking,I need to report that car is parked in no standing zone in the bike lane on Forest Ave.,,NYPD,synthetic_rule_training_v2
+515,illegal parking,I need to report that vehicle is blocking traffic on the street on Forest Ave.,,NYPD,synthetic_rule_training_v2
+516,illegal parking,There is a complaint about truck that is illegally parked in front of crosswalk on Forest Ave.,,NYPD,synthetic_rule_training_v2
+517,illegal parking,van is illegally parked in the bike lane by the intersection.,,NYPD,synthetic_rule_training_v2
+518,illegal parking,Resident reports vehicle is parked in no standing zone in the bike lane by the intersection.,,NYPD,synthetic_rule_training_v2
+519,illegal parking,There is a complaint about van that is parked in no standing zone on the street next to my building.,,NYPD,synthetic_rule_training_v2
+520,illegal parking,Resident reports commercial vehicle is parked at hydrant on the street near Main St.,,NYPD,synthetic_rule_training_v2
+521,illegal parking,illegal parking: van is blocking traffic near the corner near Main St.,,NYPD,synthetic_rule_training_v2
+522,illegal parking,car is parked at hydrant on the sidewalk next to my building.,,NYPD,synthetic_rule_training_v2
+523,illegal parking,There is a complaint about motorcycle that is parked in no standing zone near the corner near Main St.,,NYPD,synthetic_rule_training_v2
+524,illegal parking,There is a complaint about truck that is double parked in the bike lane near Main St.,,NYPD,synthetic_rule_training_v2
+525,illegal parking,I need to report that car is illegally parked on the sidewalk next to my building.,,NYPD,synthetic_rule_training_v2
+526,illegal parking,vehicle is double parked on the street on Forest Ave.,,NYPD,synthetic_rule_training_v2
+527,illegal parking,illegal parking: car is parked in no standing zone in front of crosswalk on Forest Ave.,,NYPD,synthetic_rule_training_v2
+528,illegal parking,Resident reports commercial vehicle is illegally parked on the sidewalk by the intersection.,,NYPD,synthetic_rule_training_v2
+529,illegal parking,Resident reports motorcycle is double parked on the street near Main St.,,NYPD,synthetic_rule_training_v2
+530,illegal parking,illegal parking: truck is double parked in front of crosswalk outside school.,,NYPD,synthetic_rule_training_v2
+531,illegal parking,illegal parking: motorcycle is parked at hydrant near the corner outside school.,,NYPD,synthetic_rule_training_v2
+532,illegal parking,Resident reports commercial vehicle is blocking traffic near the corner by the intersection.,,NYPD,synthetic_rule_training_v2
+533,illegal parking,"Please send help, truck is illegally parked in front of crosswalk next to my building.",,NYPD,synthetic_rule_training_v2
+534,illegal parking,I need to report that vehicle is parked in no standing zone in front of crosswalk by the intersection.,,NYPD,synthetic_rule_training_v2
+535,illegal parking,truck is parked in no standing zone in front of crosswalk outside school.,,NYPD,synthetic_rule_training_v2
+536,illegal parking,I need to report that van is parked in no standing zone near the corner outside school.,,NYPD,synthetic_rule_training_v2
+537,illegal parking,There is a complaint about vehicle that is blocking traffic on the sidewalk near Main St.,,NYPD,synthetic_rule_training_v2
+538,illegal parking,Resident reports truck is double parked on the sidewalk on Forest Ave.,,NYPD,synthetic_rule_training_v2
+539,illegal parking,illegal parking: van is parked in no standing zone in front of crosswalk next to my building.,,NYPD,synthetic_rule_training_v2
+540,illegal parking,Resident reports van is double parked in the bike lane near Main St.,,NYPD,synthetic_rule_training_v2
+541,illegal parking,"Please send help, commercial vehicle is illegally parked on the sidewalk outside school.",,NYPD,synthetic_rule_training_v2
+542,illegal parking,motorcycle is double parked on the street outside school.,,NYPD,synthetic_rule_training_v2
+543,illegal parking,There is a complaint about commercial vehicle that is blocking traffic in front of crosswalk on Forest Ave.,,NYPD,synthetic_rule_training_v2
+544,illegal parking,vehicle is blocking traffic in front of crosswalk near Main St.,,NYPD,synthetic_rule_training_v2
+545,illegal parking,There is a complaint about vehicle that is parked at hydrant in the bike lane on Forest Ave.,,NYPD,synthetic_rule_training_v2
+546,illegal parking,Resident reports vehicle is illegally parked on the sidewalk near Main St.,,NYPD,synthetic_rule_training_v2
+547,illegal parking,I need to report that motorcycle is double parked on the sidewalk near Main St.,,NYPD,synthetic_rule_training_v2
+548,illegal parking,illegal parking: truck is parked at hydrant on the sidewalk by the intersection.,,NYPD,synthetic_rule_training_v2
+549,illegal parking,illegal parking: commercial vehicle is parked at hydrant in the bike lane outside school.,,NYPD,synthetic_rule_training_v2
+550,illegal parking,"Please send help, motorcycle is parked in no standing zone on the sidewalk on Forest Ave.",,NYPD,synthetic_rule_training_v2
+551,illegal parking,I need to report that van is parked at hydrant near the corner outside school.,,NYPD,synthetic_rule_training_v2
+552,illegal parking,"Please send help, van is illegally parked in front of crosswalk near Main St.",,NYPD,synthetic_rule_training_v2
+553,illegal parking,I need to report that vehicle is illegally parked in the bike lane next to my building.,,NYPD,synthetic_rule_training_v2
+554,illegal parking,illegal parking: motorcycle is parked in no standing zone in the bike lane near Main St.,,NYPD,synthetic_rule_training_v2
+555,illegal parking,Resident reports truck is double parked on the sidewalk next to my building.,,NYPD,synthetic_rule_training_v2
+556,illegal parking,Resident reports van is blocking traffic in the bike lane outside school.,,NYPD,synthetic_rule_training_v2
+557,illegal parking,There is a complaint about commercial vehicle that is parked in no standing zone on the sidewalk near Main St.,,NYPD,synthetic_rule_training_v2
+558,illegal parking,I need to report that truck is double parked near the corner next to my building.,,NYPD,synthetic_rule_training_v2
+559,illegal parking,There is a complaint about vehicle that is blocking traffic on the street next to my building.,,NYPD,synthetic_rule_training_v2
+560,illegal parking,car is illegally parked on the street by the intersection.,,NYPD,synthetic_rule_training_v2
+561,illegal parking,Resident reports commercial vehicle is double parked on the street near Main St.,,NYPD,synthetic_rule_training_v2
+562,illegal parking,vehicle is blocking traffic on the sidewalk outside school.,,NYPD,synthetic_rule_training_v2
+563,illegal parking,motorcycle is blocking traffic on the sidewalk by the intersection.,,NYPD,synthetic_rule_training_v2
+564,illegal parking,car is blocking traffic in front of crosswalk by the intersection.,,NYPD,synthetic_rule_training_v2
+565,illegal parking,car is blocking traffic in the bike lane next to my building.,,NYPD,synthetic_rule_training_v2
+566,illegal parking,"Please send help, car is blocking traffic on the sidewalk near Main St.",,NYPD,synthetic_rule_training_v2
+567,illegal parking,car is blocking traffic near the corner near Main St.,,NYPD,synthetic_rule_training_v2
+568,illegal parking,Resident reports motorcycle is blocking traffic in the bike lane outside school.,,NYPD,synthetic_rule_training_v2
+569,illegal parking,"Please send help, van is illegally parked in the bike lane by the intersection.",,NYPD,synthetic_rule_training_v2
+570,illegal parking,There is a complaint about motorcycle that is double parked near the corner outside school.,,NYPD,synthetic_rule_training_v2
+571,illegal parking,I need to report that car is illegally parked on the street by the intersection.,,NYPD,synthetic_rule_training_v2
+572,illegal parking,There is a complaint about van that is blocking traffic on the sidewalk on Forest Ave.,,NYPD,synthetic_rule_training_v2
+573,illegal parking,I need to report that car is double parked on the street by the intersection.,,NYPD,synthetic_rule_training_v2
+574,illegal parking,There is a complaint about commercial vehicle that is parked at hydrant in front of crosswalk on Forest Ave.,,NYPD,synthetic_rule_training_v2
+575,illegal parking,illegal parking: car is double parked near the corner next to my building.,,NYPD,synthetic_rule_training_v2
+576,illegal parking,There is a complaint about truck that is illegally parked on the street outside school.,,NYPD,synthetic_rule_training_v2
+577,illegal parking,illegal parking: motorcycle is illegally parked near the corner outside school.,,NYPD,synthetic_rule_training_v2
+578,illegal parking,vehicle is blocking traffic near the corner by the intersection.,,NYPD,synthetic_rule_training_v2
+579,illegal parking,truck is double parked in front of crosswalk near Main St.,,NYPD,synthetic_rule_training_v2
+580,illegal parking,illegal parking: van is blocking traffic in the bike lane by the intersection.,,NYPD,synthetic_rule_training_v2
+581,illegal parking,I need to report that vehicle is illegally parked in front of crosswalk outside school.,,NYPD,synthetic_rule_training_v2
+582,illegal parking,car is parked in no standing zone near the corner on Forest Ave.,,NYPD,synthetic_rule_training_v2
+583,illegal parking,"Please send help, motorcycle is blocking traffic in front of crosswalk by the intersection.",,NYPD,synthetic_rule_training_v2
+584,illegal parking,"Please send help, car is parked at hydrant on the sidewalk by the intersection.",,NYPD,synthetic_rule_training_v2
+585,illegal parking,Resident reports truck is blocking traffic on the sidewalk by the intersection.,,NYPD,synthetic_rule_training_v2
+586,illegal parking,Resident reports commercial vehicle is blocking traffic on the sidewalk on Forest Ave.,,NYPD,synthetic_rule_training_v2
+587,illegal parking,illegal parking: truck is double parked on the street on Forest Ave.,,NYPD,synthetic_rule_training_v2
+588,illegal parking,"Please send help, vehicle is parked in no standing zone near the corner by the intersection.",,NYPD,synthetic_rule_training_v2
+589,illegal parking,"Please send help, truck is illegally parked on the street on Forest Ave.",,NYPD,synthetic_rule_training_v2
+590,illegal parking,"Please send help, van is parked at hydrant in the bike lane on Forest Ave.",,NYPD,synthetic_rule_training_v2
+591,illegal parking,Resident reports car is double parked on the sidewalk by the intersection.,,NYPD,synthetic_rule_training_v2
+592,illegal parking,illegal parking: motorcycle is blocking traffic on the sidewalk on Forest Ave.,,NYPD,synthetic_rule_training_v2
+593,illegal parking,car is parked at hydrant in front of crosswalk on Forest Ave.,,NYPD,synthetic_rule_training_v2
+594,illegal parking,illegal parking: motorcycle is parked at hydrant on the sidewalk on Forest Ave.,,NYPD,synthetic_rule_training_v2
+595,illegal parking,"Please send help, van is parked in no standing zone on the street next to my building.",,NYPD,synthetic_rule_training_v2
+596,illegal parking,Resident reports motorcycle is blocking traffic near the corner by the intersection.,,NYPD,synthetic_rule_training_v2
+597,illegal parking,Resident reports vehicle is parked at hydrant in the bike lane outside school.,,NYPD,synthetic_rule_training_v2
+598,illegal parking,There is a complaint about vehicle that is illegally parked near the corner by the intersection.,,NYPD,synthetic_rule_training_v2
+599,illegal parking,"Please send help, van is parked at hydrant on the sidewalk on Forest Ave.",,NYPD,synthetic_rule_training_v2
+600,illegal parking,"Please send help, truck is double parked on the sidewalk next to my building.",,NYPD,synthetic_rule_training_v2
+601,noise - residential,noise - residential: apartment upstairs yelling loudly after midnight on Forest Ave.,,NYPD,synthetic_rule_training_v2
+602,noise - residential,"Please send help, neighbor yelling loudly for several hours in residential building.",,NYPD,synthetic_rule_training_v2
+603,noise - residential,There is a complaint about residential unit that yelling loudly for several hours above my apartment.,,NYPD,synthetic_rule_training_v2
+604,noise - residential,I need to report that people next door making loud noise for several hours next door.,,NYPD,synthetic_rule_training_v2
+605,noise - residential,noise - residential: apartment upstairs yelling loudly for several hours on Forest Ave.,,NYPD,synthetic_rule_training_v2
+606,noise - residential,There is a complaint about residential unit that banging on walls every night in residential building.,,NYPD,synthetic_rule_training_v2
+607,noise - residential,Resident reports residential unit yelling loudly for several hours above my apartment.,,NYPD,synthetic_rule_training_v2
+608,noise - residential,"Please send help, neighbor having a loud party late at night in residential building.",,NYPD,synthetic_rule_training_v2
+609,noise - residential,noise - residential: apartment upstairs having a loud party after midnight above my apartment.,,NYPD,synthetic_rule_training_v2
+610,noise - residential,I need to report that apartment upstairs yelling loudly for several hours in the building.,,NYPD,synthetic_rule_training_v2
+611,noise - residential,There is a complaint about party that making loud noise for several hours on Forest Ave.,,NYPD,synthetic_rule_training_v2
+612,noise - residential,"Please send help, apartment upstairs yelling loudly every night in the building.",,NYPD,synthetic_rule_training_v2
+613,noise - residential,There is a complaint about people next door that yelling loudly during quiet hours above my apartment.,,NYPD,synthetic_rule_training_v2
+614,noise - residential,noise - residential: people next door yelling loudly during quiet hours in the building.,,NYPD,synthetic_rule_training_v2
+615,noise - residential,"Please send help, people next door having a loud party after midnight in the building.",,NYPD,synthetic_rule_training_v2
+616,noise - residential,Resident reports residential unit making loud noise during quiet hours in the building.,,NYPD,synthetic_rule_training_v2
+617,noise - residential,noise - residential: party banging on walls every night in the building.,,NYPD,synthetic_rule_training_v2
+618,noise - residential,neighbor banging on walls late at night in residential building.,,NYPD,synthetic_rule_training_v2
+619,noise - residential,I need to report that people next door having a loud party during quiet hours in residential building.,,NYPD,synthetic_rule_training_v2
+620,noise - residential,Resident reports party banging on walls every night above my apartment.,,NYPD,synthetic_rule_training_v2
+621,noise - residential,I need to report that people next door having a loud party late at night next door.,,NYPD,synthetic_rule_training_v2
+622,noise - residential,party playing loud music for several hours above my apartment.,,NYPD,synthetic_rule_training_v2
+623,noise - residential,neighbor making loud noise for several hours next door.,,NYPD,synthetic_rule_training_v2
+624,noise - residential,"Please send help, party making loud noise during quiet hours above my apartment.",,NYPD,synthetic_rule_training_v2
+625,noise - residential,"Please send help, party playing loud music every night above my apartment.",,NYPD,synthetic_rule_training_v2
+626,noise - residential,"Please send help, neighbor banging on walls after midnight in the building.",,NYPD,synthetic_rule_training_v2
+627,noise - residential,residential unit playing loud music late at night on Forest Ave.,,NYPD,synthetic_rule_training_v2
+628,noise - residential,noise - residential: apartment upstairs having a loud party late at night next door.,,NYPD,synthetic_rule_training_v2
+629,noise - residential,noise - residential: party yelling loudly late at night above my apartment.,,NYPD,synthetic_rule_training_v2
+630,noise - residential,I need to report that apartment upstairs making loud noise every night above my apartment.,,NYPD,synthetic_rule_training_v2
+631,noise - residential,people next door making loud noise every night in residential building.,,NYPD,synthetic_rule_training_v2
+632,noise - residential,There is a complaint about party that playing loud music late at night on Forest Ave.,,NYPD,synthetic_rule_training_v2
+633,noise - residential,"Please send help, neighbor having a loud party after midnight in residential building.",,NYPD,synthetic_rule_training_v2
+634,noise - residential,Resident reports residential unit banging on walls late at night above my apartment.,,NYPD,synthetic_rule_training_v2
+635,noise - residential,residential unit yelling loudly during quiet hours next door.,,NYPD,synthetic_rule_training_v2
+636,noise - residential,noise - residential: party having a loud party every night in residential building.,,NYPD,synthetic_rule_training_v2
+637,noise - residential,residential unit banging on walls every night in residential building.,,NYPD,synthetic_rule_training_v2
+638,noise - residential,Resident reports residential unit having a loud party during quiet hours in the building.,,NYPD,synthetic_rule_training_v2
+639,noise - residential,I need to report that apartment upstairs banging on walls after midnight on Forest Ave.,,NYPD,synthetic_rule_training_v2
+640,noise - residential,"Please send help, neighbor making loud noise for several hours on Forest Ave.",,NYPD,synthetic_rule_training_v2
+641,noise - residential,noise - residential: party yelling loudly during quiet hours on Forest Ave.,,NYPD,synthetic_rule_training_v2
+642,noise - residential,noise - residential: party yelling loudly late at night above my apartment.,,NYPD,synthetic_rule_training_v2
+643,noise - residential,I need to report that people next door making loud noise during quiet hours on Forest Ave.,,NYPD,synthetic_rule_training_v2
+644,noise - residential,There is a complaint about residential unit that making loud noise late at night next door.,,NYPD,synthetic_rule_training_v2
+645,noise - residential,There is a complaint about people next door that playing loud music for several hours in the building.,,NYPD,synthetic_rule_training_v2
+646,noise - residential,There is a complaint about apartment upstairs that making loud noise every night in residential building.,,NYPD,synthetic_rule_training_v2
+647,noise - residential,noise - residential: party yelling loudly every night above my apartment.,,NYPD,synthetic_rule_training_v2
+648,noise - residential,I need to report that party yelling loudly late at night in the building.,,NYPD,synthetic_rule_training_v2
+649,noise - residential,noise - residential: neighbor making loud noise for several hours in the building.,,NYPD,synthetic_rule_training_v2
+650,noise - residential,"Please send help, apartment upstairs having a loud party for several hours on Forest Ave.",,NYPD,synthetic_rule_training_v2
+651,noise - residential,There is a complaint about people next door that yelling loudly during quiet hours in residential building.,,NYPD,synthetic_rule_training_v2
+652,noise - residential,people next door playing loud music for several hours in residential building.,,NYPD,synthetic_rule_training_v2
+653,noise - residential,"Please send help, people next door playing loud music every night in residential building.",,NYPD,synthetic_rule_training_v2
+654,noise - residential,Resident reports party playing loud music late at night next door.,,NYPD,synthetic_rule_training_v2
+655,noise - residential,party banging on walls for several hours in the building.,,NYPD,synthetic_rule_training_v2
+656,noise - residential,There is a complaint about neighbor that making loud noise late at night in residential building.,,NYPD,synthetic_rule_training_v2
+657,noise - residential,I need to report that residential unit having a loud party every night on Forest Ave.,,NYPD,synthetic_rule_training_v2
+658,noise - residential,noise - residential: apartment upstairs making loud noise late at night in the building.,,NYPD,synthetic_rule_training_v2
+659,noise - residential,noise - residential: residential unit having a loud party for several hours in residential building.,,NYPD,synthetic_rule_training_v2
+660,noise - residential,noise - residential: apartment upstairs banging on walls for several hours next door.,,NYPD,synthetic_rule_training_v2
+661,noise - residential,noise - residential: residential unit having a loud party after midnight on Forest Ave.,,NYPD,synthetic_rule_training_v2
+662,noise - residential,There is a complaint about neighbor that banging on walls late at night on Forest Ave.,,NYPD,synthetic_rule_training_v2
+663,noise - residential,Resident reports apartment upstairs banging on walls late at night above my apartment.,,NYPD,synthetic_rule_training_v2
+664,noise - residential,There is a complaint about apartment upstairs that having a loud party for several hours above my apartment.,,NYPD,synthetic_rule_training_v2
+665,noise - residential,There is a complaint about party that playing loud music after midnight above my apartment.,,NYPD,synthetic_rule_training_v2
+666,noise - residential,noise - residential: residential unit banging on walls every night above my apartment.,,NYPD,synthetic_rule_training_v2
+667,noise - residential,"Please send help, people next door playing loud music after midnight above my apartment.",,NYPD,synthetic_rule_training_v2
+668,noise - residential,I need to report that residential unit playing loud music during quiet hours above my apartment.,,NYPD,synthetic_rule_training_v2
+669,noise - residential,Resident reports party making loud noise every night next door.,,NYPD,synthetic_rule_training_v2
+670,noise - residential,"Please send help, residential unit banging on walls during quiet hours in residential building.",,NYPD,synthetic_rule_training_v2
+671,noise - residential,Resident reports people next door yelling loudly for several hours in the building.,,NYPD,synthetic_rule_training_v2
+672,noise - residential,neighbor yelling loudly after midnight in the building.,,NYPD,synthetic_rule_training_v2
+673,noise - residential,Resident reports party yelling loudly after midnight above my apartment.,,NYPD,synthetic_rule_training_v2
+674,noise - residential,Resident reports apartment upstairs banging on walls late at night next door.,,NYPD,synthetic_rule_training_v2
+675,noise - residential,residential unit banging on walls after midnight next door.,,NYPD,synthetic_rule_training_v2
+676,noise - residential,I need to report that apartment upstairs playing loud music every night next door.,,NYPD,synthetic_rule_training_v2
+677,noise - residential,I need to report that apartment upstairs yelling loudly after midnight in the building.,,NYPD,synthetic_rule_training_v2
+678,noise - residential,apartment upstairs yelling loudly after midnight on Forest Ave.,,NYPD,synthetic_rule_training_v2
+679,noise - residential,noise - residential: apartment upstairs having a loud party every night in the building.,,NYPD,synthetic_rule_training_v2
+680,noise - residential,residential unit playing loud music every night on Forest Ave.,,NYPD,synthetic_rule_training_v2
+681,noise - residential,There is a complaint about neighbor that making loud noise every night in the building.,,NYPD,synthetic_rule_training_v2
+682,noise - residential,I need to report that neighbor playing loud music for several hours next door.,,NYPD,synthetic_rule_training_v2
+683,noise - residential,"Please send help, apartment upstairs yelling loudly late at night on Forest Ave.",,NYPD,synthetic_rule_training_v2
+684,noise - residential,people next door having a loud party after midnight in residential building.,,NYPD,synthetic_rule_training_v2
+685,noise - residential,I need to report that apartment upstairs yelling loudly for several hours on Forest Ave.,,NYPD,synthetic_rule_training_v2
+686,noise - residential,I need to report that apartment upstairs yelling loudly during quiet hours above my apartment.,,NYPD,synthetic_rule_training_v2
+687,noise - residential,Resident reports neighbor playing loud music late at night in the building.,,NYPD,synthetic_rule_training_v2
+688,noise - residential,noise - residential: party banging on walls every night next door.,,NYPD,synthetic_rule_training_v2
+689,noise - residential,Resident reports apartment upstairs banging on walls after midnight on Forest Ave.,,NYPD,synthetic_rule_training_v2
+690,noise - residential,noise - residential: people next door having a loud party during quiet hours next door.,,NYPD,synthetic_rule_training_v2
+691,noise - residential,I need to report that neighbor banging on walls late at night in residential building.,,NYPD,synthetic_rule_training_v2
+692,noise - residential,noise - residential: people next door making loud noise every night next door.,,NYPD,synthetic_rule_training_v2
+693,noise - residential,I need to report that neighbor making loud noise every night above my apartment.,,NYPD,synthetic_rule_training_v2
+694,noise - residential,apartment upstairs yelling loudly during quiet hours in the building.,,NYPD,synthetic_rule_training_v2
+695,noise - residential,noise - residential: neighbor banging on walls for several hours on Forest Ave.,,NYPD,synthetic_rule_training_v2
+696,noise - residential,There is a complaint about people next door that yelling loudly for several hours in residential building.,,NYPD,synthetic_rule_training_v2
+697,noise - residential,I need to report that apartment upstairs yelling loudly after midnight in the building.,,NYPD,synthetic_rule_training_v2
+698,noise - residential,noise - residential: neighbor playing loud music for several hours on Forest Ave.,,NYPD,synthetic_rule_training_v2
+699,noise - residential,neighbor yelling loudly during quiet hours next door.,,NYPD,synthetic_rule_training_v2
+700,noise - residential,I need to report that people next door yelling loudly every night above my apartment.,,NYPD,synthetic_rule_training_v2
+701,noise - residential,people next door having a loud party during quiet hours on Forest Ave.,,NYPD,synthetic_rule_training_v2
+702,noise - residential,"Please send help, neighbor banging on walls after midnight in residential building.",,NYPD,synthetic_rule_training_v2
+703,noise - residential,Resident reports apartment upstairs having a loud party for several hours above my apartment.,,NYPD,synthetic_rule_training_v2
+704,noise - residential,noise - residential: neighbor banging on walls every night on Forest Ave.,,NYPD,synthetic_rule_training_v2
+705,noise - residential,apartment upstairs playing loud music every night in the building.,,NYPD,synthetic_rule_training_v2
+706,noise - residential,There is a complaint about people next door that having a loud party after midnight next door.,,NYPD,synthetic_rule_training_v2
+707,noise - residential,I need to report that apartment upstairs playing loud music after midnight on Forest Ave.,,NYPD,synthetic_rule_training_v2
+708,noise - residential,I need to report that neighbor making loud noise every night next door.,,NYPD,synthetic_rule_training_v2
+709,noise - residential,noise - residential: people next door banging on walls late at night next door.,,NYPD,synthetic_rule_training_v2
+710,noise - residential,Resident reports residential unit playing loud music after midnight next door.,,NYPD,synthetic_rule_training_v2
+711,noise - residential,There is a complaint about residential unit that having a loud party after midnight next door.,,NYPD,synthetic_rule_training_v2
+712,noise - residential,I need to report that people next door playing loud music every night above my apartment.,,NYPD,synthetic_rule_training_v2
+713,noise - residential,noise - residential: residential unit playing loud music every night in residential building.,,NYPD,synthetic_rule_training_v2
+714,noise - residential,Resident reports residential unit making loud noise for several hours in the building.,,NYPD,synthetic_rule_training_v2
+715,noise - residential,noise - residential: neighbor making loud noise during quiet hours in the building.,,NYPD,synthetic_rule_training_v2
+716,noise - residential,neighbor making loud noise after midnight above my apartment.,,NYPD,synthetic_rule_training_v2
+717,noise - residential,"Please send help, party making loud noise late at night in the building.",,NYPD,synthetic_rule_training_v2
+718,noise - residential,noise - residential: party making loud noise for several hours on Forest Ave.,,NYPD,synthetic_rule_training_v2
+719,noise - residential,There is a complaint about residential unit that banging on walls after midnight in residential building.,,NYPD,synthetic_rule_training_v2
+720,noise - residential,"Please send help, neighbor having a loud party after midnight on Forest Ave.",,NYPD,synthetic_rule_training_v2
+721,noise - residential,Resident reports people next door playing loud music every night in the building.,,NYPD,synthetic_rule_training_v2
+722,noise - residential,There is a complaint about residential unit that banging on walls for several hours in the building.,,NYPD,synthetic_rule_training_v2
+723,noise - residential,noise - residential: party playing loud music for several hours on Forest Ave.,,NYPD,synthetic_rule_training_v2
+724,noise - residential,"Please send help, people next door banging on walls during quiet hours on Forest Ave.",,NYPD,synthetic_rule_training_v2
+725,noise - residential,There is a complaint about residential unit that having a loud party every night on Forest Ave.,,NYPD,synthetic_rule_training_v2
+726,noise - residential,I need to report that people next door making loud noise late at night in the building.,,NYPD,synthetic_rule_training_v2
+727,noise - residential,There is a complaint about neighbor that making loud noise during quiet hours next door.,,NYPD,synthetic_rule_training_v2
+728,noise - residential,I need to report that neighbor banging on walls after midnight above my apartment.,,NYPD,synthetic_rule_training_v2
+729,noise - residential,I need to report that residential unit playing loud music late at night in residential building.,,NYPD,synthetic_rule_training_v2
+730,noise - residential,Resident reports party yelling loudly after midnight on Forest Ave.,,NYPD,synthetic_rule_training_v2
+731,noise - residential,I need to report that residential unit playing loud music after midnight on Forest Ave.,,NYPD,synthetic_rule_training_v2
+732,noise - residential,noise - residential: party banging on walls every night in the building.,,NYPD,synthetic_rule_training_v2
+733,noise - residential,noise - residential: neighbor having a loud party late at night above my apartment.,,NYPD,synthetic_rule_training_v2
+734,noise - residential,people next door having a loud party after midnight above my apartment.,,NYPD,synthetic_rule_training_v2
+735,noise - residential,I need to report that apartment upstairs making loud noise for several hours next door.,,NYPD,synthetic_rule_training_v2
+736,noise - residential,"Please send help, party banging on walls for several hours above my apartment.",,NYPD,synthetic_rule_training_v2
+737,noise - residential,"Please send help, apartment upstairs playing loud music late at night on Forest Ave.",,NYPD,synthetic_rule_training_v2
+738,noise - residential,noise - residential: neighbor making loud noise after midnight on Forest Ave.,,NYPD,synthetic_rule_training_v2
+739,noise - residential,There is a complaint about party that banging on walls every night in the building.,,NYPD,synthetic_rule_training_v2
+740,noise - residential,noise - residential: residential unit making loud noise every night next door.,,NYPD,synthetic_rule_training_v2
+741,noise - residential,There is a complaint about residential unit that playing loud music after midnight on Forest Ave.,,NYPD,synthetic_rule_training_v2
+742,noise - residential,I need to report that residential unit having a loud party after midnight on Forest Ave.,,NYPD,synthetic_rule_training_v2
+743,noise - residential,"Please send help, apartment upstairs playing loud music late at night next door.",,NYPD,synthetic_rule_training_v2
+744,noise - residential,There is a complaint about people next door that playing loud music for several hours next door.,,NYPD,synthetic_rule_training_v2
+745,noise - residential,Resident reports neighbor yelling loudly every night in residential building.,,NYPD,synthetic_rule_training_v2
+746,noise - residential,I need to report that people next door making loud noise after midnight above my apartment.,,NYPD,synthetic_rule_training_v2
+747,noise - residential,apartment upstairs playing loud music after midnight in the building.,,NYPD,synthetic_rule_training_v2
+748,noise - residential,Resident reports apartment upstairs making loud noise every night next door.,,NYPD,synthetic_rule_training_v2
+749,noise - residential,I need to report that neighbor having a loud party during quiet hours next door.,,NYPD,synthetic_rule_training_v2
+750,noise - residential,neighbor playing loud music late at night above my apartment.,,NYPD,synthetic_rule_training_v2
+751,noise - residential,Resident reports neighbor banging on walls after midnight in the building.,,NYPD,synthetic_rule_training_v2
+752,noise - residential,There is a complaint about neighbor that making loud noise during quiet hours above my apartment.,,NYPD,synthetic_rule_training_v2
+753,noise - residential,I need to report that party yelling loudly after midnight above my apartment.,,NYPD,synthetic_rule_training_v2
+754,noise - residential,I need to report that party making loud noise for several hours on Forest Ave.,,NYPD,synthetic_rule_training_v2
+755,noise - residential,Resident reports residential unit banging on walls every night on Forest Ave.,,NYPD,synthetic_rule_training_v2
+756,noise - residential,people next door having a loud party during quiet hours on Forest Ave.,,NYPD,synthetic_rule_training_v2
+757,noise - residential,I need to report that residential unit yelling loudly every night in residential building.,,NYPD,synthetic_rule_training_v2
+758,noise - residential,There is a complaint about neighbor that playing loud music for several hours above my apartment.,,NYPD,synthetic_rule_training_v2
+759,noise - residential,Resident reports party making loud noise during quiet hours on Forest Ave.,,NYPD,synthetic_rule_training_v2
+760,noise - residential,I need to report that people next door playing loud music every night next door.,,NYPD,synthetic_rule_training_v2
+761,noise - residential,There is a complaint about people next door that yelling loudly for several hours in residential building.,,NYPD,synthetic_rule_training_v2
+762,noise - residential,noise - residential: residential unit yelling loudly for several hours on Forest Ave.,,NYPD,synthetic_rule_training_v2
+763,noise - residential,residential unit having a loud party late at night in the building.,,NYPD,synthetic_rule_training_v2
+764,noise - residential,"Please send help, neighbor yelling loudly during quiet hours next door.",,NYPD,synthetic_rule_training_v2
+765,noise - residential,noise - residential: apartment upstairs making loud noise after midnight on Forest Ave.,,NYPD,synthetic_rule_training_v2
+766,noise - residential,I need to report that apartment upstairs banging on walls during quiet hours in the building.,,NYPD,synthetic_rule_training_v2
+767,noise - residential,Resident reports people next door yelling loudly for several hours on Forest Ave.,,NYPD,synthetic_rule_training_v2
+768,noise - residential,Resident reports apartment upstairs having a loud party for several hours next door.,,NYPD,synthetic_rule_training_v2
+769,noise - residential,noise - residential: neighbor banging on walls during quiet hours in residential building.,,NYPD,synthetic_rule_training_v2
+770,noise - residential,Resident reports people next door making loud noise every night in residential building.,,NYPD,synthetic_rule_training_v2
+771,noise - residential,"Please send help, apartment upstairs yelling loudly after midnight in the building.",,NYPD,synthetic_rule_training_v2
+772,noise - residential,apartment upstairs having a loud party late at night in the building.,,NYPD,synthetic_rule_training_v2
+773,noise - residential,noise - residential: party playing loud music for several hours in residential building.,,NYPD,synthetic_rule_training_v2
+774,noise - residential,Resident reports apartment upstairs banging on walls late at night next door.,,NYPD,synthetic_rule_training_v2
+775,noise - residential,neighbor making loud noise during quiet hours on Forest Ave.,,NYPD,synthetic_rule_training_v2
+776,noise - residential,people next door banging on walls after midnight next door.,,NYPD,synthetic_rule_training_v2
+777,noise - residential,I need to report that party having a loud party after midnight next door.,,NYPD,synthetic_rule_training_v2
+778,noise - residential,"Please send help, residential unit making loud noise late at night above my apartment.",,NYPD,synthetic_rule_training_v2
+779,noise - residential,I need to report that party banging on walls late at night in residential building.,,NYPD,synthetic_rule_training_v2
+780,noise - residential,I need to report that people next door banging on walls late at night in residential building.,,NYPD,synthetic_rule_training_v2
+781,noise - residential,Resident reports party banging on walls for several hours on Forest Ave.,,NYPD,synthetic_rule_training_v2
+782,noise - residential,Resident reports neighbor having a loud party every night in residential building.,,NYPD,synthetic_rule_training_v2
+783,noise - residential,apartment upstairs having a loud party for several hours in residential building.,,NYPD,synthetic_rule_training_v2
+784,noise - residential,Resident reports people next door playing loud music every night on Forest Ave.,,NYPD,synthetic_rule_training_v2
+785,noise - residential,"Please send help, neighbor making loud noise for several hours next door.",,NYPD,synthetic_rule_training_v2
+786,noise - residential,Resident reports neighbor banging on walls every night in the building.,,NYPD,synthetic_rule_training_v2
+787,noise - residential,"Please send help, apartment upstairs making loud noise after midnight next door.",,NYPD,synthetic_rule_training_v2
+788,noise - residential,"Please send help, neighbor playing loud music after midnight above my apartment.",,NYPD,synthetic_rule_training_v2
+789,noise - residential,There is a complaint about party that making loud noise every night above my apartment.,,NYPD,synthetic_rule_training_v2
+790,noise - residential,There is a complaint about residential unit that having a loud party every night in the building.,,NYPD,synthetic_rule_training_v2
+791,noise - residential,There is a complaint about people next door that making loud noise late at night above my apartment.,,NYPD,synthetic_rule_training_v2
+792,noise - residential,neighbor banging on walls after midnight next door.,,NYPD,synthetic_rule_training_v2
+793,noise - residential,"Please send help, neighbor playing loud music for several hours on Forest Ave.",,NYPD,synthetic_rule_training_v2
+794,noise - residential,There is a complaint about apartment upstairs that playing loud music during quiet hours in the building.,,NYPD,synthetic_rule_training_v2
+795,noise - residential,"Please send help, people next door having a loud party every night in the building.",,NYPD,synthetic_rule_training_v2
+796,noise - residential,There is a complaint about apartment upstairs that having a loud party every night on Forest Ave.,,NYPD,synthetic_rule_training_v2
+797,noise - residential,neighbor banging on walls late at night on Forest Ave.,,NYPD,synthetic_rule_training_v2
+798,noise - residential,There is a complaint about people next door that having a loud party for several hours next door.,,NYPD,synthetic_rule_training_v2
+799,noise - residential,"Please send help, apartment upstairs playing loud music after midnight above my apartment.",,NYPD,synthetic_rule_training_v2
+800,noise - residential,noise - residential: people next door yelling loudly late at night in the building.,,NYPD,synthetic_rule_training_v2
+801,snow or ice,"Please send help, snow needs to be cleared from the road outside my building.",,DSNY,synthetic_rule_training_v2
+802,snow or ice,I need to report that ice buildup is causing hazard on the curb near Main St.,,DSNY,synthetic_rule_training_v2
+803,snow or ice,snow is blocking the sidewalk outside my building.,,DSNY,synthetic_rule_training_v2
+804,snow or ice,snow and ice is covering the crosswalk at the corner.,,DSNY,synthetic_rule_training_v2
+805,snow or ice,There is a complaint about snow and ice that was not removed from the road in front of school.,,DSNY,synthetic_rule_training_v2
+806,snow or ice,There is a complaint about ice that was not removed from the curb outside my building.,,DSNY,synthetic_rule_training_v2
+807,snow or ice,Resident reports snow and ice is covering the crosswalk at the corner.,,DSNY,synthetic_rule_training_v2
+808,snow or ice,There is a complaint about icy condition that is blocking the crosswalk in front of school.,,DSNY,synthetic_rule_training_v2
+809,snow or ice,ice is covering the road outside my building.,,DSNY,synthetic_rule_training_v2
+810,snow or ice,snow or ice: snow and ice is causing hazard on the sidewalk in front of school.,,DSNY,synthetic_rule_training_v2
+811,snow or ice,snow and ice is causing hazard on the curb in front of school.,,DSNY,synthetic_rule_training_v2
+812,snow or ice,I need to report that snow and ice is causing hazard on the sidewalk at the corner.,,DSNY,synthetic_rule_training_v2
+813,snow or ice,"Please send help, snow needs to be cleared from the street on Forest Ave.",,DSNY,synthetic_rule_training_v2
+814,snow or ice,snow or ice: snow buildup is causing hazard on the bus stop in front of school.,,DSNY,synthetic_rule_training_v2
+815,snow or ice,Resident reports snow needs to be cleared from the sidewalk near Main St.,,DSNY,synthetic_rule_training_v2
+816,snow or ice,Resident reports ice is blocking the road at the corner.,,DSNY,synthetic_rule_training_v2
+817,snow or ice,ice buildup needs to be cleared from the sidewalk near Main St.,,DSNY,synthetic_rule_training_v2
+818,snow or ice,snow or ice: icy condition was not removed from the street on Forest Ave.,,DSNY,synthetic_rule_training_v2
+819,snow or ice,snow and ice is causing hazard on the curb in front of school.,,DSNY,synthetic_rule_training_v2
+820,snow or ice,"Please send help, icy condition is causing hazard on the curb on Forest Ave.",,DSNY,synthetic_rule_training_v2
+821,snow or ice,I need to report that snow buildup is causing hazard on the bus stop at the corner.,,DSNY,synthetic_rule_training_v2
+822,snow or ice,snow and ice is blocking the sidewalk in front of school.,,DSNY,synthetic_rule_training_v2
+823,snow or ice,snow or ice: snow buildup is covering the road in front of school.,,DSNY,synthetic_rule_training_v2
+824,snow or ice,icy condition is causing hazard on the crosswalk at the corner.,,DSNY,synthetic_rule_training_v2
+825,snow or ice,"Please send help, snow and ice needs to be cleared from the bus stop in front of school.",,DSNY,synthetic_rule_training_v2
+826,snow or ice,There is a complaint about snow that is blocking the crosswalk at the corner.,,DSNY,synthetic_rule_training_v2
+827,snow or ice,Resident reports snow buildup is causing hazard on the street at the corner.,,DSNY,synthetic_rule_training_v2
+828,snow or ice,snow and ice was not removed from the street near Main St.,,DSNY,synthetic_rule_training_v2
+829,snow or ice,ice buildup needs to be cleared from the crosswalk outside my building.,,DSNY,synthetic_rule_training_v2
+830,snow or ice,icy condition was not removed from the crosswalk outside my building.,,DSNY,synthetic_rule_training_v2
+831,snow or ice,There is a complaint about ice buildup that is covering the sidewalk near Main St.,,DSNY,synthetic_rule_training_v2
+832,snow or ice,"Please send help, ice buildup needs to be cleared from the crosswalk outside my building.",,DSNY,synthetic_rule_training_v2
+833,snow or ice,I need to report that snow and ice is causing hazard on the street on Forest Ave.,,DSNY,synthetic_rule_training_v2
+834,snow or ice,Resident reports snow and ice is blocking the curb at the corner.,,DSNY,synthetic_rule_training_v2
+835,snow or ice,snow or ice: icy condition is covering the bus stop near Main St.,,DSNY,synthetic_rule_training_v2
+836,snow or ice,icy condition is causing hazard on the curb near Main St.,,DSNY,synthetic_rule_training_v2
+837,snow or ice,snow or ice: snow buildup is covering the sidewalk near Main St.,,DSNY,synthetic_rule_training_v2
+838,snow or ice,Resident reports snow is blocking the road at the corner.,,DSNY,synthetic_rule_training_v2
+839,snow or ice,icy condition is blocking the crosswalk outside my building.,,DSNY,synthetic_rule_training_v2
+840,snow or ice,There is a complaint about snow buildup that needs to be cleared from the street on Forest Ave.,,DSNY,synthetic_rule_training_v2
+841,snow or ice,I need to report that snow is blocking the crosswalk at the corner.,,DSNY,synthetic_rule_training_v2
+842,snow or ice,snow or ice: snow and ice is blocking the curb in front of school.,,DSNY,synthetic_rule_training_v2
+843,snow or ice,snow or ice: icy condition was not removed from the sidewalk outside my building.,,DSNY,synthetic_rule_training_v2
+844,snow or ice,I need to report that ice buildup is covering the crosswalk on Forest Ave.,,DSNY,synthetic_rule_training_v2
+845,snow or ice,There is a complaint about snow that is blocking the bus stop near Main St.,,DSNY,synthetic_rule_training_v2
+846,snow or ice,Resident reports ice buildup is blocking the street near Main St.,,DSNY,synthetic_rule_training_v2
+847,snow or ice,"Please send help, ice buildup needs to be cleared from the bus stop on Forest Ave.",,DSNY,synthetic_rule_training_v2
+848,snow or ice,I need to report that snow needs to be cleared from the sidewalk near Main St.,,DSNY,synthetic_rule_training_v2
+849,snow or ice,snow or ice: snow is blocking the crosswalk in front of school.,,DSNY,synthetic_rule_training_v2
+850,snow or ice,"Please send help, ice buildup was not removed from the curb at the corner.",,DSNY,synthetic_rule_training_v2
+851,snow or ice,"Please send help, snow and ice was not removed from the sidewalk at the corner.",,DSNY,synthetic_rule_training_v2
+852,snow or ice,"Please send help, ice buildup is causing hazard on the bus stop at the corner.",,DSNY,synthetic_rule_training_v2
+853,snow or ice,snow or ice: snow is covering the bus stop outside my building.,,DSNY,synthetic_rule_training_v2
+854,snow or ice,snow or ice: ice buildup is causing hazard on the bus stop outside my building.,,DSNY,synthetic_rule_training_v2
+855,snow or ice,"Please send help, ice buildup is covering the curb on Forest Ave.",,DSNY,synthetic_rule_training_v2
+856,snow or ice,"Please send help, icy condition was not removed from the crosswalk outside my building.",,DSNY,synthetic_rule_training_v2
+857,snow or ice,I need to report that ice buildup was not removed from the sidewalk near Main St.,,DSNY,synthetic_rule_training_v2
+858,snow or ice,snow or ice: ice is covering the bus stop at the corner.,,DSNY,synthetic_rule_training_v2
+859,snow or ice,I need to report that icy condition is blocking the street on Forest Ave.,,DSNY,synthetic_rule_training_v2
+860,snow or ice,I need to report that snow and ice was not removed from the crosswalk at the corner.,,DSNY,synthetic_rule_training_v2
+861,snow or ice,There is a complaint about snow and ice that is covering the bus stop in front of school.,,DSNY,synthetic_rule_training_v2
+862,snow or ice,Resident reports icy condition is blocking the street in front of school.,,DSNY,synthetic_rule_training_v2
+863,snow or ice,I need to report that snow and ice was not removed from the bus stop outside my building.,,DSNY,synthetic_rule_training_v2
+864,snow or ice,Resident reports ice buildup is causing hazard on the sidewalk outside my building.,,DSNY,synthetic_rule_training_v2
+865,snow or ice,snow and ice is blocking the street outside my building.,,DSNY,synthetic_rule_training_v2
+866,snow or ice,I need to report that snow buildup is blocking the street outside my building.,,DSNY,synthetic_rule_training_v2
+867,snow or ice,I need to report that snow is blocking the crosswalk near Main St.,,DSNY,synthetic_rule_training_v2
+868,snow or ice,I need to report that icy condition needs to be cleared from the crosswalk outside my building.,,DSNY,synthetic_rule_training_v2
+869,snow or ice,"Please send help, snow buildup was not removed from the curb on Forest Ave.",,DSNY,synthetic_rule_training_v2
+870,snow or ice,There is a complaint about snow that is causing hazard on the bus stop in front of school.,,DSNY,synthetic_rule_training_v2
+871,snow or ice,snow and ice is blocking the bus stop on Forest Ave.,,DSNY,synthetic_rule_training_v2
+872,snow or ice,I need to report that snow and ice is causing hazard on the crosswalk at the corner.,,DSNY,synthetic_rule_training_v2
+873,snow or ice,ice is blocking the sidewalk outside my building.,,DSNY,synthetic_rule_training_v2
+874,snow or ice,There is a complaint about snow buildup that needs to be cleared from the sidewalk outside my building.,,DSNY,synthetic_rule_training_v2
+875,snow or ice,I need to report that ice is covering the curb outside my building.,,DSNY,synthetic_rule_training_v2
+876,snow or ice,I need to report that ice was not removed from the street on Forest Ave.,,DSNY,synthetic_rule_training_v2
+877,snow or ice,snow and ice was not removed from the sidewalk near Main St.,,DSNY,synthetic_rule_training_v2
+878,snow or ice,snow or ice: ice needs to be cleared from the road near Main St.,,DSNY,synthetic_rule_training_v2
+879,snow or ice,snow or ice: snow and ice needs to be cleared from the curb at the corner.,,DSNY,synthetic_rule_training_v2
+880,snow or ice,There is a complaint about snow and ice that is covering the road in front of school.,,DSNY,synthetic_rule_training_v2
+881,snow or ice,Resident reports ice buildup was not removed from the road outside my building.,,DSNY,synthetic_rule_training_v2
+882,snow or ice,snow or ice: ice is covering the street on Forest Ave.,,DSNY,synthetic_rule_training_v2
+883,snow or ice,I need to report that ice buildup is blocking the sidewalk outside my building.,,DSNY,synthetic_rule_training_v2
+884,snow or ice,"Please send help, ice is covering the curb in front of school.",,DSNY,synthetic_rule_training_v2
+885,snow or ice,snow or ice: icy condition is blocking the road on Forest Ave.,,DSNY,synthetic_rule_training_v2
+886,snow or ice,"Please send help, icy condition needs to be cleared from the street in front of school.",,DSNY,synthetic_rule_training_v2
+887,snow or ice,snow or ice: snow buildup was not removed from the curb near Main St.,,DSNY,synthetic_rule_training_v2
+888,snow or ice,"Please send help, snow and ice was not removed from the sidewalk near Main St.",,DSNY,synthetic_rule_training_v2
+889,snow or ice,There is a complaint about snow that is blocking the sidewalk near Main St.,,DSNY,synthetic_rule_training_v2
+890,snow or ice,Resident reports ice buildup is covering the bus stop in front of school.,,DSNY,synthetic_rule_training_v2
+891,snow or ice,Resident reports snow was not removed from the street on Forest Ave.,,DSNY,synthetic_rule_training_v2
+892,snow or ice,There is a complaint about ice buildup that was not removed from the bus stop in front of school.,,DSNY,synthetic_rule_training_v2
+893,snow or ice,snow buildup is covering the street on Forest Ave.,,DSNY,synthetic_rule_training_v2
+894,snow or ice,I need to report that snow is covering the street on Forest Ave.,,DSNY,synthetic_rule_training_v2
+895,snow or ice,There is a complaint about snow and ice that needs to be cleared from the road in front of school.,,DSNY,synthetic_rule_training_v2
+896,snow or ice,"Please send help, snow and ice is blocking the sidewalk on Forest Ave.",,DSNY,synthetic_rule_training_v2
+897,snow or ice,"Please send help, snow and ice is covering the street in front of school.",,DSNY,synthetic_rule_training_v2
+898,snow or ice,"Please send help, snow buildup is causing hazard on the street near Main St.",,DSNY,synthetic_rule_training_v2
+899,snow or ice,There is a complaint about snow that is causing hazard on the street in front of school.,,DSNY,synthetic_rule_training_v2
+900,snow or ice,icy condition is covering the road at the corner.,,DSNY,synthetic_rule_training_v2
+901,snow or ice,Resident reports snow buildup is blocking the crosswalk in front of school.,,DSNY,synthetic_rule_training_v2
+902,snow or ice,Resident reports icy condition needs to be cleared from the crosswalk near Main St.,,DSNY,synthetic_rule_training_v2
+903,snow or ice,snow buildup needs to be cleared from the sidewalk at the corner.,,DSNY,synthetic_rule_training_v2
+904,snow or ice,"Please send help, ice is covering the road on Forest Ave.",,DSNY,synthetic_rule_training_v2
+905,snow or ice,snow buildup needs to be cleared from the sidewalk on Forest Ave.,,DSNY,synthetic_rule_training_v2
+906,snow or ice,snow or ice: snow is covering the crosswalk near Main St.,,DSNY,synthetic_rule_training_v2
+907,snow or ice,There is a complaint about icy condition that was not removed from the curb on Forest Ave.,,DSNY,synthetic_rule_training_v2
+908,snow or ice,ice is covering the crosswalk outside my building.,,DSNY,synthetic_rule_training_v2
+909,snow or ice,I need to report that icy condition needs to be cleared from the street on Forest Ave.,,DSNY,synthetic_rule_training_v2
+910,snow or ice,snow is covering the sidewalk near Main St.,,DSNY,synthetic_rule_training_v2
+911,snow or ice,"Please send help, icy condition needs to be cleared from the bus stop outside my building.",,DSNY,synthetic_rule_training_v2
+912,snow or ice,I need to report that snow was not removed from the crosswalk near Main St.,,DSNY,synthetic_rule_training_v2
+913,snow or ice,snow and ice needs to be cleared from the curb outside my building.,,DSNY,synthetic_rule_training_v2
+914,snow or ice,There is a complaint about ice buildup that needs to be cleared from the curb near Main St.,,DSNY,synthetic_rule_training_v2
+915,snow or ice,ice is covering the sidewalk on Forest Ave.,,DSNY,synthetic_rule_training_v2
+916,snow or ice,There is a complaint about snow buildup that needs to be cleared from the bus stop at the corner.,,DSNY,synthetic_rule_training_v2
+917,snow or ice,Resident reports snow buildup needs to be cleared from the crosswalk in front of school.,,DSNY,synthetic_rule_training_v2
+918,snow or ice,ice buildup is blocking the curb at the corner.,,DSNY,synthetic_rule_training_v2
+919,snow or ice,snow and ice needs to be cleared from the road on Forest Ave.,,DSNY,synthetic_rule_training_v2
+920,snow or ice,"Please send help, ice buildup was not removed from the road in front of school.",,DSNY,synthetic_rule_training_v2
+921,snow or ice,I need to report that snow buildup is causing hazard on the sidewalk outside my building.,,DSNY,synthetic_rule_training_v2
+922,snow or ice,snow or ice: snow buildup is causing hazard on the road at the corner.,,DSNY,synthetic_rule_training_v2
+923,snow or ice,I need to report that ice buildup is blocking the curb outside my building.,,DSNY,synthetic_rule_training_v2
+924,snow or ice,I need to report that ice buildup needs to be cleared from the sidewalk in front of school.,,DSNY,synthetic_rule_training_v2
+925,snow or ice,snow or ice: snow is covering the street near Main St.,,DSNY,synthetic_rule_training_v2
+926,snow or ice,snow or ice: snow and ice needs to be cleared from the sidewalk on Forest Ave.,,DSNY,synthetic_rule_training_v2
+927,snow or ice,There is a complaint about icy condition that is blocking the crosswalk outside my building.,,DSNY,synthetic_rule_training_v2
+928,snow or ice,snow buildup is blocking the bus stop at the corner.,,DSNY,synthetic_rule_training_v2
+929,snow or ice,There is a complaint about ice that is covering the curb at the corner.,,DSNY,synthetic_rule_training_v2
+930,snow or ice,snow or ice: snow and ice is covering the curb at the corner.,,DSNY,synthetic_rule_training_v2
+931,snow or ice,"Please send help, snow needs to be cleared from the street on Forest Ave.",,DSNY,synthetic_rule_training_v2
+932,snow or ice,snow and ice needs to be cleared from the road in front of school.,,DSNY,synthetic_rule_training_v2
+933,snow or ice,snow or ice: snow is covering the bus stop in front of school.,,DSNY,synthetic_rule_training_v2
+934,snow or ice,I need to report that icy condition is causing hazard on the bus stop near Main St.,,DSNY,synthetic_rule_training_v2
+935,snow or ice,I need to report that ice buildup needs to be cleared from the crosswalk outside my building.,,DSNY,synthetic_rule_training_v2
+936,snow or ice,ice needs to be cleared from the crosswalk in front of school.,,DSNY,synthetic_rule_training_v2
+937,snow or ice,snow or ice: snow buildup needs to be cleared from the street outside my building.,,DSNY,synthetic_rule_training_v2
+938,snow or ice,I need to report that snow and ice is covering the road near Main St.,,DSNY,synthetic_rule_training_v2
+939,snow or ice,icy condition was not removed from the street outside my building.,,DSNY,synthetic_rule_training_v2
+940,snow or ice,snow or ice: snow buildup was not removed from the street on Forest Ave.,,DSNY,synthetic_rule_training_v2
+941,snow or ice,ice needs to be cleared from the sidewalk at the corner.,,DSNY,synthetic_rule_training_v2
+942,snow or ice,icy condition is causing hazard on the sidewalk near Main St.,,DSNY,synthetic_rule_training_v2
+943,snow or ice,snow and ice is blocking the curb near Main St.,,DSNY,synthetic_rule_training_v2
+944,snow or ice,I need to report that icy condition is covering the curb on Forest Ave.,,DSNY,synthetic_rule_training_v2
+945,snow or ice,I need to report that ice buildup is causing hazard on the road at the corner.,,DSNY,synthetic_rule_training_v2
+946,snow or ice,There is a complaint about ice buildup that is causing hazard on the bus stop near Main St.,,DSNY,synthetic_rule_training_v2
+947,snow or ice,There is a complaint about snow that is causing hazard on the street on Forest Ave.,,DSNY,synthetic_rule_training_v2
+948,snow or ice,snow or ice: snow and ice is causing hazard on the curb in front of school.,,DSNY,synthetic_rule_training_v2
+949,snow or ice,Resident reports ice buildup is causing hazard on the sidewalk near Main St.,,DSNY,synthetic_rule_training_v2
+950,snow or ice,snow and ice is causing hazard on the bus stop outside my building.,,DSNY,synthetic_rule_training_v2
+951,snow or ice,snow or ice: snow and ice needs to be cleared from the bus stop near Main St.,,DSNY,synthetic_rule_training_v2
+952,snow or ice,"Please send help, snow and ice was not removed from the crosswalk at the corner.",,DSNY,synthetic_rule_training_v2
+953,snow or ice,Resident reports ice needs to be cleared from the bus stop in front of school.,,DSNY,synthetic_rule_training_v2
+954,snow or ice,"Please send help, ice buildup is causing hazard on the crosswalk in front of school.",,DSNY,synthetic_rule_training_v2
+955,snow or ice,I need to report that ice is blocking the sidewalk in front of school.,,DSNY,synthetic_rule_training_v2
+956,snow or ice,I need to report that icy condition was not removed from the street near Main St.,,DSNY,synthetic_rule_training_v2
+957,snow or ice,I need to report that ice buildup is blocking the bus stop in front of school.,,DSNY,synthetic_rule_training_v2
+958,snow or ice,I need to report that ice buildup was not removed from the street on Forest Ave.,,DSNY,synthetic_rule_training_v2
+959,snow or ice,"Please send help, snow buildup needs to be cleared from the bus stop in front of school.",,DSNY,synthetic_rule_training_v2
+960,snow or ice,I need to report that ice buildup needs to be cleared from the street in front of school.,,DSNY,synthetic_rule_training_v2
+961,snow or ice,"Please send help, snow and ice is covering the bus stop on Forest Ave.",,DSNY,synthetic_rule_training_v2
+962,snow or ice,snow and ice is blocking the road on Forest Ave.,,DSNY,synthetic_rule_training_v2
+963,snow or ice,Resident reports icy condition is blocking the crosswalk outside my building.,,DSNY,synthetic_rule_training_v2
+964,snow or ice,Resident reports snow was not removed from the sidewalk in front of school.,,DSNY,synthetic_rule_training_v2
+965,snow or ice,icy condition needs to be cleared from the road in front of school.,,DSNY,synthetic_rule_training_v2
+966,snow or ice,I need to report that ice buildup is causing hazard on the sidewalk in front of school.,,DSNY,synthetic_rule_training_v2
+967,snow or ice,There is a complaint about ice that is causing hazard on the street outside my building.,,DSNY,synthetic_rule_training_v2
+968,snow or ice,I need to report that ice buildup is covering the curb at the corner.,,DSNY,synthetic_rule_training_v2
+969,snow or ice,There is a complaint about ice buildup that was not removed from the bus stop on Forest Ave.,,DSNY,synthetic_rule_training_v2
+970,snow or ice,ice buildup was not removed from the sidewalk in front of school.,,DSNY,synthetic_rule_training_v2
+971,snow or ice,There is a complaint about ice that was not removed from the bus stop in front of school.,,DSNY,synthetic_rule_training_v2
+972,snow or ice,I need to report that snow buildup is blocking the street near Main St.,,DSNY,synthetic_rule_training_v2
+973,snow or ice,"Please send help, snow and ice is blocking the street on Forest Ave.",,DSNY,synthetic_rule_training_v2
+974,snow or ice,Resident reports ice is causing hazard on the road at the corner.,,DSNY,synthetic_rule_training_v2
+975,snow or ice,snow and ice was not removed from the bus stop outside my building.,,DSNY,synthetic_rule_training_v2
+976,snow or ice,Resident reports ice is causing hazard on the crosswalk on Forest Ave.,,DSNY,synthetic_rule_training_v2
+977,snow or ice,"Please send help, snow and ice is blocking the road near Main St.",,DSNY,synthetic_rule_training_v2
+978,snow or ice,"Please send help, snow buildup is covering the street in front of school.",,DSNY,synthetic_rule_training_v2
+979,snow or ice,I need to report that icy condition needs to be cleared from the bus stop in front of school.,,DSNY,synthetic_rule_training_v2
+980,snow or ice,"Please send help, snow was not removed from the bus stop near Main St.",,DSNY,synthetic_rule_training_v2
+981,snow or ice,Resident reports snow buildup is covering the bus stop near Main St.,,DSNY,synthetic_rule_training_v2
+982,snow or ice,There is a complaint about snow buildup that is causing hazard on the curb on Forest Ave.,,DSNY,synthetic_rule_training_v2
+983,snow or ice,"Please send help, ice is blocking the street outside my building.",,DSNY,synthetic_rule_training_v2
+984,snow or ice,"Please send help, icy condition was not removed from the sidewalk in front of school.",,DSNY,synthetic_rule_training_v2
+985,snow or ice,snow or ice: snow and ice is causing hazard on the street on Forest Ave.,,DSNY,synthetic_rule_training_v2
+986,snow or ice,ice buildup was not removed from the curb near Main St.,,DSNY,synthetic_rule_training_v2
+987,snow or ice,I need to report that snow buildup is causing hazard on the sidewalk on Forest Ave.,,DSNY,synthetic_rule_training_v2
+988,snow or ice,I need to report that icy condition needs to be cleared from the road at the corner.,,DSNY,synthetic_rule_training_v2
+989,snow or ice,"Please send help, snow buildup was not removed from the road in front of school.",,DSNY,synthetic_rule_training_v2
+990,snow or ice,"Please send help, snow buildup is causing hazard on the curb at the corner.",,DSNY,synthetic_rule_training_v2
+991,snow or ice,icy condition is blocking the crosswalk in front of school.,,DSNY,synthetic_rule_training_v2
+992,snow or ice,snow is blocking the bus stop in front of school.,,DSNY,synthetic_rule_training_v2
+993,snow or ice,ice buildup is covering the sidewalk near Main St.,,DSNY,synthetic_rule_training_v2
+994,snow or ice,I need to report that snow and ice is covering the sidewalk in front of school.,,DSNY,synthetic_rule_training_v2
+995,snow or ice,I need to report that ice buildup needs to be cleared from the street on Forest Ave.,,DSNY,synthetic_rule_training_v2
+996,snow or ice,I need to report that ice buildup is blocking the road at the corner.,,DSNY,synthetic_rule_training_v2
+997,snow or ice,I need to report that icy condition is covering the road on Forest Ave.,,DSNY,synthetic_rule_training_v2
+998,snow or ice,ice was not removed from the bus stop on Forest Ave.,,DSNY,synthetic_rule_training_v2
+999,snow or ice,snow or ice: ice was not removed from the curb at the corner.,,DSNY,synthetic_rule_training_v2
+1000,snow or ice,There is a complaint about ice buildup that needs to be cleared from the curb outside my building.,,DSNY,synthetic_rule_training_v2

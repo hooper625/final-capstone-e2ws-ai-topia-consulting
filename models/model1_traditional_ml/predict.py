@@ -1,11 +1,16 @@
 #!/usr/bin/env python3
 """
 Model 1: Traditional ML — Prediction Script
-=============================================
-Loads your trained model and generates predictions on test data.
+===========================================
+Loads the trained XGBoost model bundle and generates predictions on test data.
 
-Usage: python predict.py
-Output: test_data/model1_results.csv
+Usage examples:
+    python -m models.model1_traditional_ml.predict
+    python -m models.model1_traditional_ml.predict --input test_data/test_data_file.csv
+    python -m models.model1_traditional_ml.predict --self-test
+
+Output:
+    test_data/model1_results.csv
 """
 import sys
 import pandas as pd
