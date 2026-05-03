@@ -27,6 +27,75 @@ class ExtraTextFeatures(BaseEstimator, TransformerMixin):
 CITY_CENTER_ZIP = "95336"
 
 # ===========================================================================
+# MODEL 5 — Urgency / keyword analysis helpers (module-level, no ML required)
+# ===========================================================================
+import re as _re
+
+_URGENT_PATTERNS = [
+    r"\bfire\b", r"\bflood\b", r"\bflooding\b", r"\bgas leak\b", r"\bleak\b",
+    r"\bsmoke\b", r"\bexplosion\b", r"\bunsafe\b", r"\bdanger\b", r"\bhazard\b",
+    r"\bhazardous\b", r"\binjury\b", r"\binjured\b", r"\bblood\b",
+    r"\baccident\b", r"\bcrash\b", r"\bcollapse\b", r"\bsinkhole\b",
+    r"\bblocked\b", r"\bno heat\b", r"\bno heating\b", r"\bno water\b", r"\bsewage\b",
+    r"\blive wire\b", r"\belectrical\b", r"\bpower outage\b",
+    r"\bemergency\b", r"\burgent\b", r"\bimmediately\b", r"\basap\b",
+    r"\bchild\b", r"\belderly\b", r"\bdisabled\b", r"\bwheelchair\b",
+    r"\bmedical\b", r"\bambulance\b", r"\b911\b", r"\bviolence\b",
+    r"\bassault\b", r"\bthreat\b", r"\bweapon\b",
+]
+
+_DISTRESS_PATTERNS = [
+    r"\bhelp\b", r"\bplease help\b", r"\bdesperate\b", r"\bcrying\b",
+    r"\bscared\b", r"\bterrified\b", r"\bcannot breathe\b", r"\bpanic\b",
+    r"\bstuck\b", r"\btrapped\b", r"\bstranded\b", r"\bno response\b",
+    r"\bkids\b", r"\bbaby\b", r"\bgrandma\b", r"\bgrandfather\b",
+    r"\bsick\b", r"\bunsafe for family\b",
+]
+
+_MODERATE_PATTERNS = [
+    r"\brepair\b", r"\bbroken\b", r"\bcracked\b", r"\bpothole\b",
+    r"\btrash\b", r"\bgarbage\b", r"\bnoise\b", r"\bparking\b",
+    r"\bstreet light\b", r"\blight out\b", r"\bsign missing\b",
+    r"\bwater leak\b", r"\bmold\b", r"\bdrain\b", r"\bstanding water\b",
+    r"\broad damage\b", r"\bsidewalk\b", r"\btraffic signal\b",
+    r"\bmissed pickup\b", r"\brodent\b", r"\binfestation\b",
+    r"\bsnow\b", r"\bice\b", r"\bicy\b",
+]
+
+_DISTRICT_MAP = {
+    "Central District":  "MANHATTAN",
+    "East District":     "BROOKLYN",
+    "North District":    "BRONX",
+    "West District":     "QUEENS",
+    "South District":    "STATEN ISLAND",
+    "All Districts":     "Unspecified",
+}
+
+def _count_hits(text: str, patterns: list) -> int:
+    if not isinstance(text, str) or not text.strip():
+        return 0
+    t = text.lower()
+    return sum(1 for p in patterns if _re.search(p, t))
+
+def _find_hit_words(text: str, patterns: list) -> list:
+    if not isinstance(text, str) or not text.strip():
+        return []
+    t = text.lower()
+    found = []
+    for p in patterns:
+        m = _re.search(p, t)
+        if m:
+            found.append(m.group(0).strip())
+    return list(dict.fromkeys(found))  # dedupe, preserve order
+
+def _urgency_tier(urgent: int, distress: int, moderate: int):
+    if urgent > 0 or distress > 0:
+        return "🚨 Urgent", "error"
+    if moderate > 0:
+        return "⚠️ Elevated", "warning"
+    return "✅ Normal", "success"
+
+# ===========================================================================
 # 1. PAGE CONFIGURATION & BRANDING
 # ===========================================================================
 st.set_page_config(
@@ -704,140 +773,190 @@ elif model_choice == "Model 4: 311 Classifier (NLP)":
 
 # --- MODEL 5: INNOVATION ---
 elif model_choice == "Model 5: Innovation Module":
-    import re as _re
 
-    st.header("🔍 Resolution Outcome Predictor")
-    st.write(
-        "Predict whether a 311 complaint is likely to be **Resolved**, **Unresolved**, "
-        "or **Referred** to another department — and estimate how long it will take. "
-        "Trained on resolution text from 378 K closed complaints using NLP."
+    st.header("🔍 Smart Complaint Intelligence")
+    st.markdown(
+        "A **dual-signal system** that combines ML-predicted resolution outcome with "
+        "real-time NLP urgency analysis — giving dispatchers two independent signals "
+        "on every complaint. Trained on **378 K** closed 311 records."
     )
 
-    _CITY_SUBS = [
-        (_re.compile(r"New York City Police Department", _re.I), "Nova Haven Police Department"),
-        (_re.compile(r"New York City",                   _re.I), "Nova Haven"),
-        (_re.compile(r"New Yorkers?",                    _re.I), "Nova Haven residents"),
-        (_re.compile(r"\bNYC\b",                         _re.I), "Nova Haven"),
-        (_re.compile(r"\bNYPD\b",                        _re.I), "NHPD"),
-        (_re.compile(r"\bManhattan\b",                   _re.I), "Central District"),
-        (_re.compile(r"\bBrooklyn\b",                    _re.I), "East District"),
-        (_re.compile(r"\bBronx\b",                       _re.I), "North District"),
-        (_re.compile(r"\bQueens\b",                      _re.I), "West District"),
-        (_re.compile(r"Staten Island",                   _re.I), "South District"),
-    ]
+    st.divider()
 
-    def _clean(text):
-        if not text:
-            return ""
-        text = _re.sub(r"[^\w\s\-/&]", " ", str(text).strip().lower())
-        return _re.sub(r"\s+", " ", text).strip()
+    # ── Input form ────────────────────────────────────────────────────────────
+    col_a, col_b = st.columns([3, 2])
 
-    col1, col2 = st.columns(2)
-    with col1:
-        complaint_type = st.text_input(
-            "Complaint Type",
-            placeholder="e.g. Noise - Residential, Heat/Hot Water, Illegal Parking",
+    with col_a:
+
+        description = st.text_area(
+            "Complaint Description  *(optional — used for urgency analysis)*",
+            placeholder="Describe the issue in your own words…",
+            height=100,
+            key="m5_freetext",
         )
-        descriptor = st.text_input(
-            "Descriptor",
-            placeholder="e.g. Loud Music/Party, Entire Building, Pothole",
-        )
-    with col2:
-        m5_agency  = st.selectbox(
+
+    with col_b:
+        m5_agency = st.selectbox(
             "Agency",
-            ["DCWP", "DEP", "DHS", "DOB", "DOE", "DOHMH", "DOT", "DPR", "DSNY", "HPD", "NPD", "TLC"],
+            ["DCWP", "DEP", "DHS", "DOB", "DOE", "DOHMH", "DOT", "DPR",
+             "DSNY", "HPD", "NPD", "OOS", "OTI", "TLC"],
             key="m5_agency",
+        )
+        m5_district = st.selectbox(
+            "District",
+            ["All Districts", "Central District", "East District",
+             "North District", "West District", "South District"],
+            key="m5_district",
         )
         m5_channel = st.selectbox(
             "Submission Channel",
             ["MOBILE", "ONLINE", "PHONE", "UNKNOWN"],
             key="m5_channel",
         )
-
-    col3, col4 = st.columns(2)
-    with col3:
         m5_date = st.date_input("Complaint Date", key="m5_date")
-    with col4:
-        m5_hour = st.slider("Hour of Day", 0, 23, 12, key="m5_hour")
+        m5_hour = st.slider("Hour of Day", 0, 23, 12, key="m5_hour",
+                            format="%d:00")
 
-    if st.button("Predict Outcome"):
-        if not complaint_type.strip():
-            st.warning("Please enter a complaint type.")
+    # ── Live urgency preview (updates as user types, no button needed) ────────
+    _combined_text = " ".join(filter(None, [
+        description.strip(),
+    ]))
+    _u = _count_hits(_combined_text, _URGENT_PATTERNS)
+    _d = _count_hits(_combined_text, _DISTRESS_PATTERNS)
+    _m = _count_hits(_combined_text, _MODERATE_PATTERNS)
+    _tier_label, _tier_color = _urgency_tier(_u, _d, _m)
+
+    st.markdown("**Real-Time Signal**")
+    _sig_col1, _sig_col2, _sig_col3, _sig_col4 = st.columns(4)
+    _sig_col1.metric("Priority Tier",    _tier_label)
+    _sig_col2.metric("Urgent Keywords",  _u)
+    _sig_col3.metric("Distress Signals", _d)
+    _sig_col4.metric("Moderate Issues",  _m)
+
+    st.divider()
+
+    if st.button("Run Full Analysis", type="primary"):
+        if not description.strip():
+            st.warning("Please enter a complaint description.")
         else:
             try:
                 (outcome_clf, time_clf, tfidf, ord_enc,
                  outcome_le, time_le, metrics) = load_innovation_model()
 
-                input_text = _clean(complaint_type.strip() + " " + descriptor.strip())
-                X_tfidf    = tfidf.transform([input_text])
+                from scipy.sparse import hstack as sp_hstack, csr_matrix as _csr
 
-                cat_arr    = np.array([[m5_agency, "Unspecified", m5_channel]])
-                X_cat_enc  = ord_enc.transform(cat_arr)
-                X_num      = np.array([[
-                    m5_hour,
-                    m5_date.weekday(),
-                    m5_date.month,
-                ]], dtype=float)
-                X_numeric  = np.hstack([X_cat_enc, X_num])
+                def _clean_text(t):
+                    t = _re.sub(r"[^\w\s\-/&]", " ", str(t).strip().lower())
+                    return _re.sub(r"\s+", " ", t).strip()
 
-                from scipy.sparse import hstack as sp_hstack, csr_matrix
-                X_full = sp_hstack([X_tfidf, csr_matrix(X_numeric)])
+                input_text = _clean_text(
+                description.strip()
+                )
+                X_tfidf   = tfidf.transform([input_text])
+                borough   = _DISTRICT_MAP.get(m5_district, "Unspecified")
+                cat_arr   = np.array([[m5_agency, borough, m5_channel]])
+                X_cat_enc = ord_enc.transform(cat_arr)
+                X_num     = np.array([[m5_hour, m5_date.weekday(), m5_date.month]], dtype=float)
+                X_full    = sp_hstack([X_tfidf, _csr(np.hstack([X_cat_enc, X_num]))])
 
-                # Outcome prediction
+                # ML predictions
                 out_proba  = outcome_clf.predict_proba(X_full)[0]
                 out_idx    = int(np.argmax(out_proba))
                 outcome    = outcome_le.inverse_transform([out_idx])[0]
                 out_conf   = float(out_proba[out_idx])
 
-                # Time prediction
                 time_proba = time_clf.predict_proba(X_full)[0]
                 time_idx   = int(np.argmax(time_proba))
                 time_lbl   = time_le.inverse_transform([time_idx])[0]
                 time_conf  = float(time_proba[time_idx])
 
-                outcome_color = {
-                    "Resolved":   "success",
-                    "Unresolved": "error",
-                    "Referred":   "warning",
-                }.get(outcome, "info")
+                # Urgency keywords found
+                urgent_words   = _find_hit_words(_combined_text, _URGENT_PATTERNS)
+                distress_words = _find_hit_words(_combined_text, _DISTRESS_PATTERNS)
+                moderate_words = _find_hit_words(_combined_text, _MODERATE_PATTERNS)
 
-                time_color = {
-                    "Same Day": "success",
-                    "1–7 Days": "warning",
-                    "8+ Days":  "error",
-                }.get(time_lbl, "info")
+                # Combined action recommendation
+                _signals_agree = (
+                    (outcome == "Unresolved" and (_u > 0 or _d > 0)) or
+                    (outcome == "Resolved"   and _tier_label == "✅ Normal")
+                )
+
+                if (_u > 0 or _d > 0) and outcome == "Unresolved":
+                    rec_icon, rec_msg, rec_fn = "🚨", "HIGH PRIORITY — Escalate Immediately", st.error
+                elif (_u > 0 or _d > 0) and outcome in ("Referred", "Resolved"):
+                    rec_icon, rec_msg, rec_fn = "⚠️", "Urgency Detected — Verify Routing", st.warning
+                elif outcome == "Unresolved" and _m > 0:
+                    rec_icon, rec_msg, rec_fn = "⚠️", "Elevated Risk of Non-Resolution", st.warning
+                elif outcome == "Referred":
+                    rec_icon, rec_msg, rec_fn = "↗️", "Route to Specialist Agency", st.info
+                else:
+                    rec_icon, rec_msg, rec_fn = "✅", "Normal Processing — On Track", st.success
+
+                st.subheader("Action Recommendation")
+                rec_fn(f"{rec_icon} **{rec_msg}**")
+                if not _signals_agree and _combined_text.strip():
+                    st.caption(
+                        "ℹ️ ML model and urgency signals differ — "
+                        "human review recommended before closing."
+                    )
 
                 st.divider()
-                getattr(st, outcome_color)(f"Predicted Outcome: **{outcome}**")
-                getattr(st, time_color)(f"Estimated Resolution Time: **{time_lbl}**")
+
+                # Side-by-side: ML vs Urgency
+                ml_col, urg_col = st.columns(2)
+
+                with ml_col:
+                    st.subheader("ML Prediction")
+                    c1, c2 = st.columns(2)
+                    outcome_color = {"Resolved": "normal", "Unresolved": "inverse", "Referred": "off"}.get(outcome, "normal")
+                    c1.metric("Outcome",   outcome,  delta=f"{out_conf:.0%} confidence")
+                    c2.metric("Est. Time", time_lbl, delta=f"{time_conf:.0%} confidence")
+
+                    st.markdown("**Outcome probabilities**")
+                    for cls, prob in zip(outcome_le.classes_, out_proba):
+                        st.progress(float(prob), text=f"{cls} — {prob:.1%}")
+
+                    st.markdown("**Resolution time probabilities**")
+                    for cls, prob in zip(time_le.classes_, time_proba):
+                        st.progress(float(prob), text=f"{cls} — {prob:.1%}")
+
+                with urg_col:
+                    st.subheader("Urgency Analysis")
+                    u1, u2 = st.columns(2)
+                    u1.metric("Priority Tier",    _tier_label)
+                    u2.metric("Text Length",       len(_combined_text))
+
+                    u3, u4 = st.columns(2)
+                    u3.metric("Urgent Keywords",   _u)
+                    u4.metric("Distress Signals",  _d)
+
+                    if urgent_words:
+                        st.markdown(
+                            "🚨 **Urgent signals:** " +
+                            ", ".join(f"`{w}`" for w in urgent_words[:8])
+                        )
+                    if distress_words:
+                        st.markdown(
+                            "😟 **Distress signals:** " +
+                            ", ".join(f"`{w}`" for w in distress_words[:6])
+                        )
+                    if moderate_words:
+                        st.markdown(
+                            "🔧 **Issues mentioned:** " +
+                            ", ".join(f"`{w}`" for w in moderate_words[:8])
+                        )
+                    if not (_combined_text.strip()):
+                        st.caption("Add a description to enable keyword analysis.")
 
                 st.divider()
-                c1, c2, c3, c4 = st.columns(4)
-                c1.metric("Outcome",          outcome)
-                c2.metric("Outcome Conf.",     f"{out_conf:.1%}")
-                c3.metric("Est. Time",         time_lbl)
-                c4.metric("Time Conf.",        f"{time_conf:.1%}")
-
-                st.divider()
-                st.markdown("**Outcome probabilities**")
-                for cls, prob in zip(
-                    outcome_le.classes_,
-                    outcome_clf.predict_proba(X_full)[0],
-                ):
-                    st.markdown(f"- **{cls}** — {prob:.1%}")
-
-                st.markdown("**Time probabilities**")
-                for cls, prob in zip(
-                    time_le.classes_,
-                    time_clf.predict_proba(X_full)[0],
-                ):
-                    st.markdown(f"- **{cls}** — {prob:.1%}")
-
-                with st.expander("Model performance"):
-                    st.markdown(
-                        f"Outcome weighted F1: **{metrics['outcome_f1']:.4f}**  \n"
-                        f"Time weighted F1: **{metrics['time_f1']:.4f}**  \n"
-                        f"Trained on **{metrics['n_train']:,}** closed complaints"
+                with st.expander("Model performance & training info"):
+                    p1, p2, p3 = st.columns(3)
+                    p1.metric("Outcome F1 (weighted)", f"{metrics['outcome_f1']:.4f}")
+                    p2.metric("Time F1 (weighted)",    f"{metrics['time_f1']:.4f}")
+                    p3.metric("Training records",      f"{metrics['n_train']:,}")
+                    st.caption(
+                        "Both models are Logistic Regression trained on TF-IDF text features "
+                        "combined with agency, district, channel and temporal encodings."
                     )
 
             except Exception as e:

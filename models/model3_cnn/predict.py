@@ -23,7 +23,7 @@ import numpy as np
 import pandas as pd
 import tensorflow as tf
 
-PROJECT_ROOT    = Path.cwd()
+PROJECT_ROOT    = Path(__file__).resolve().parents[2]
 MODEL_DIR       = PROJECT_ROOT / "models" / "model3_cnn" / "saved_model"
 TEST_DATA_DIR   = PROJECT_ROOT / "test_data"
 OUTPUT_FILE     = TEST_DATA_DIR / "model3_results.csv"
